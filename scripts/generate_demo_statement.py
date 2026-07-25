@@ -33,13 +33,19 @@ MONTHS = 6
 #: fall BEFORE the next salary. That ordering is the entire point of the demo:
 #: raw round-up maths looks generous, but the money is already spoken for.
 PAYDAY = 28
-MONTHLY_INCOME = Decimal("3200.00")
+
+#: Rupees. Figures are set at a plausible Indian urban salaried level — a
+#: ₹65,000 take-home against ₹18,000 rent — because a demo showing ₹1,450 rent
+#: would be immediately unbelievable to anyone it is meant for.
+CURRENCY = "INR"
+CURRENCY_SYMBOL = "\u20b9"
+MONTHLY_INCOME = Decimal("65000.00")
 
 #: The closing balance is pinned rather than left to drift, so the demo tells the
 #: same story on every machine: enough to clear the safety buffer by a little,
 #: not enough to make the round-up cap irrelevant. The opening balance is solved
 #: backwards from this figure.
-TARGET_CLOSING_BALANCE = Decimal("2880.00")
+TARGET_CLOSING_BALANCE = Decimal("58400.00")
 
 
 def _month_start(index: int) -> date:
@@ -65,27 +71,28 @@ def build_rows():
 
     for m in range(MONTHS):
         # --- income -------------------------------------------------------
-        credit(_d(m, PAYDAY), "ACME ANALYTICS PAYROLL DIRECT DEPOSIT", str(MONTHLY_INCOME))
+        credit(_d(m, PAYDAY), "ACME ANALYTICS PAYROLL NEFT CREDIT", str(MONTHLY_INCOME))
 
         # --- essentials, deliberately landing before the next payday ------
-        debit(_d(m, 3), "GREENFIELD PROPERTIES RENT", "1450.00")
-        debit(_d(m, 6), "SECURELIFE INSURANCE PREMIUM", "128.00")
-        debit(_d(m, 8), "FIRSTBANK AUTO LOAN EMI 55212", "312.40")
-        debit(_d(m, 11), "CITY POWER + WATER UTILITY BILL", str(88 + random.randint(-14, 26)))
+        debit(_d(m, 3), "GREENFIELD RESIDENCY RENT NEFT", "18000.00")
+        debit(_d(m, 6), "SECURELIFE INSURANCE PREMIUM ECS", "2450.00")
+        debit(_d(m, 8), "FIRSTBANK AUTO LOAN EMI 55212", "8500.00")
+        debit(_d(m, 11), "STATE POWER + WATER UTILITY BILL", str(2100 + random.randint(-350, 900)))
 
         # --- groceries (essential, variable) ------------------------------
         for day in (4, 12, 19, 26):
-            debit(_d(m, day), "CORNER SUPERMARKET", str(random.randint(42, 96)) + ".%02d" % random.randint(0, 99))
+            debit(_d(m, day), "APNA KIRANA SUPERMARKET",
+                  str(random.randint(1450, 3200)) + ".%02d" % random.randint(0, 99))
 
         # --- subscriptions ------------------------------------------------
-        debit(_d(m, 14), "NETFLIX.COM SUBSCRIPTION", "15.99")
+        debit(_d(m, 14), "NETFLIX.COM SUBSCRIPTION", "649.00")
         # Silent price increase from month 3 onward (§23 "subscription price increase")
-        debit(_d(m, 17), "CLOUDVAULT STORAGE PLUS", "9.99" if m < 3 else "13.99")
+        debit(_d(m, 17), "CLOUDVAULT STORAGE PLUS", "199.00" if m < 3 else "299.00")
         # Duplicate cloud-storage service (§23 "duplicate cloud-storage service")
-        debit(_d(m, 21), "DROPBOX PLUS ANNUALBILL MONTHLY", "11.99")
+        debit(_d(m, 21), "DROPBOX PLUS MONTHLY BILLING", "399.00")
         # Gym — the demo's "user confirms unused" subscription
-        debit(_d(m, 9), "PEAK FITNESS GYM MEMBERSHIP", "49.00")
-        debit(_d(m, 23), "ADOBE CREATIVE CLOUD", "22.99")
+        debit(_d(m, 9), "PEAK FITNESS GYM MEMBERSHIP", "1500.00")
+        debit(_d(m, 23), "ADOBE CREATIVE CLOUD", "1675.00")
 
         # --- discretionary: the spending that generates the round-ups -----
         # Fractional cents are drawn deliberately so round-ups are non-trivial;
@@ -93,34 +100,36 @@ def build_rows():
         for day in (2, 4, 5, 7, 10, 12, 13, 15, 16, 18, 19, 22, 24, 26, 27):
             desc = random.choice(
                 [
-                    "UBER EATS DELIVERY",
-                    "STARBUCKS COFFEE",
-                    "THE DAILY GRIND CAFE",
-                    "PIZZA PLACE #221",
+                    "SWIGGY ORDER",
+                    "ZOMATO ORDER",
+                    "CHAI POINT",
+                    "CAFE COFFEE DAY",
+                    "OLA CABS TRIP",
                     "UBER TRIP",
-                    "SHELL FUEL",
-                    "AMZN MKTP US*2K4LP",
-                    "NORTHGATE RETAIL PARK",
+                    "INDIAN OIL PETROL PUMP",
+                    "AMAZON IN MKTP",
+                    "BIG BAZAAR RETAIL",
                 ]
             )
-            amount = Decimal(str(random.randint(18, 78))) + Decimal(
+            # Paise are kept deliberately non-zero so round-ups are non-trivial.
+            amount = Decimal(str(random.randint(120, 1450))) + Decimal(
                 str(random.choice([0.10, 0.25, 0.30, 0.45, 0.60, 0.75, 0.85, 0.90, 0.99]))
             )
             debit(_d(m, day), desc, str(amount))
 
         # --- internal transfer (§23) --------------------------------------
-        debit(_d(m, 25), "TRANSFER TO OWN SAVINGS ACCOUNT", "200.00")
-        credit(_d(m, 25), "TRANSFER FROM CURRENT ACCOUNT", "200.00")
+        debit(_d(m, 25), "TRANSFER TO OWN SAVINGS ACCOUNT", "3000.00")
+        credit(_d(m, 25), "TRANSFER FROM CURRENT ACCOUNT", "3000.00")
 
         # --- unknown merchant (§23) ---------------------------------------
-        debit(_d(m, 20), "QX7 TRADING 99231", "18.75")
+        debit(_d(m, 20), "QX7 TRADING 99231", "540.75")
 
     # --- one-off refund (§23) --------------------------------------------
-    credit(_d(2, 16), "REFUND AMZN MKTP US ORDER 114-22", "34.60")
+    credit(_d(2, 16), "REFUND AMAZON IN ORDER 114-22", "1240.60")
 
     # --- an ATM withdrawal and a bank charge, both round-up excluded ------
-    debit(_d(1, 15), "ATM CASH WITHDRAWAL", "100.00")
-    debit(_d(4, 28), "MONTHLY ACCOUNT SERVICE CHARGE", "4.50")
+    debit(_d(1, 15), "ATM CASH WITHDRAWAL", "5000.00")
+    debit(_d(4, 28), "MONTHLY ACCOUNT SERVICE CHARGE", "118.00")
 
     return rows
 
@@ -186,8 +195,8 @@ def write_pdf(rows, path, opening_balance):
     header = [
         SYNTHETIC_BANNER,
         "",
-        "NORTHWIND COMMUNITY BANK (fictional)",
-        "Account: Everyday Checking  ****4417   Currency: USD",
+        "NORTHWIND BANK OF INDIA (fictional)",
+        "Account: Savings A/c  ****4417   Currency: INR",
         "Statement period: %s to %s" % (rows[0][0].isoformat(), rows[-1][0].isoformat()),
         "Opening balance: %.2f" % opening_balance,
         "",
