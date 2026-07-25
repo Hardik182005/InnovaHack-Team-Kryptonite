@@ -12,6 +12,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useI18n } from '../i18n/I18nProvider';
+import { Icon } from './Icon';
 
 /** Minimal shape of the vendor-prefixed Web Speech API. */
 interface SpeechRecognitionLike extends EventTarget {
@@ -161,7 +162,7 @@ export function VoiceExpense({
           aria-pressed={listening}
           aria-label={listening ? t('cta.stop') : t('cta.speak')}
         >
-          <span aria-hidden="true">{listening ? '■' : '🎤'}</span>
+          {listening ? <Icon.stop size={30} /> : <Icon.mic size={34} />}
         </button>
         <span className="voice-status" aria-live="polite">
           {listening ? t('voice.listening') : t('cta.speak')}
@@ -212,7 +213,7 @@ export function VoiceExpense({
               {t('common.cancel')}
             </button>
             <button type="button" className="btn btn--quiet" onClick={() => speak(captured.transcript)}>
-              {t('cta.listen')}
+              <Icon.speaker size={15} /> {t('cta.listen')}
             </button>
           </div>
         </div>

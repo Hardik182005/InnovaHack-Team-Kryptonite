@@ -9,6 +9,7 @@ import { ReactNode, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '../api/errors';
+import { useI18n } from '../i18n/I18nProvider';
 
 /** Section heading with the design's mono eyebrow above it. */
 export function SectionHead({
@@ -115,14 +116,15 @@ export function EmptyState({
 
 /** Shown when a page needs an analysis and none exists yet. */
 export function NeedsAnalysis() {
+  const { t } = useI18n();
   return (
     <div className="wrap section">
       <EmptyState
-        title="No analysis yet"
-        body="Upload a statement or try the demo statement, and this page will fill with figures calculated from it."
+        title={t('empty.noAnalysis')}
+        body={t('empty.noAnalysisBody')}
         action={
           <Link className="btn btn--primary" to="/upload">
-            Analyze my spending
+            {t('cta.analyze')}
           </Link>
         }
       />
@@ -245,20 +247,33 @@ export function ConfirmDialog({
   );
 }
 
-/** Reveal-on-scroll wrapper matching the design's `data-reveal` stagger. */
+/** Reveal-on-scroll wrapper matching the design's `data-reveal` stagger.
+ *
+ * Fails open. An element that starts at `opacity: 0` and waits for
+ * IntersectionObserver is invisible forever if the observer never fires — which
+ * is exactly what happened in right-to-left layouts, where the element sat
+ * outside the observer's bounds and the whole page rendered blank. A guaranteed
+ * timeout now reveals the content regardless, so the animation is an
+ * enhancement and never a precondition for seeing the page.
+ */
 export function Reveal({ index = 1, children }: { index?: number; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return undefined;
-    // Respect reduced-motion: show immediately rather than animating (§31).
-    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reduced || typeof IntersectionObserver === 'undefined') {
+
+    const show = () => {
       node.style.opacity = '1';
       node.style.transform = 'none';
+    };
+
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || typeof IntersectionObserver === 'undefined') {
+      show();
       return undefined;
     }
+
     node.style.opacity = '0';
     node.style.transform = 'translateY(16px)';
     node.style.transition =
@@ -269,8 +284,7 @@ export function Reveal({ index = 1, children }: { index?: number; children: Reac
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            node.style.opacity = '1';
-            node.style.transform = 'none';
+            show();
             observer.disconnect();
           }
         });
@@ -278,7 +292,18 @@ export function Reveal({ index = 1, children }: { index?: number; children: Reac
       { rootMargin: '0px 0px -12% 0px' },
     );
     observer.observe(node);
-    return () => observer.disconnect();
+
+    // The safety net: whatever the observer does or does not do, the content
+    // becomes visible.
+    const failsafe = window.setTimeout(() => {
+      show();
+      observer.disconnect();
+    }, 1200);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(failsafe);
+    };
   }, [index]);
 
   return <div ref={ref}>{children}</div>;
