@@ -2245,6 +2245,92 @@ body { color: var(--ink-90); }
 .handle__stat, .handle__num { color: rgba(255, 255, 255, 0.78); }
 .hero-panel--dark .lede, .card--dark .prose { color: rgba(247, 244, 237, 0.9); }
 
+/* --- text on dark and accent surfaces -------------------------------------
+   The block above sets a colour on `.prose`, `.micro`, `.t-muted` and friends
+   directly. Those utilities sit *inside* dark panels, and a colour set on the
+   child always beats one inherited from the parent — so a surface declaring
+   `color: #fff` on itself does nothing for the paragraph within it. The Coach's
+   own messages rendered as near-black `.prose` on a solid blue bubble.
+
+   Rather than patch each surface as it is reported, every dark and accent
+   surface is listed here once and its text descendants are told to inherit.
+   `inherit` and not a literal white: the surface already knows what colour it
+   needs, and this way a future panel gets readable text by being added to this
+   list rather than by re-picking a colour that might not match it.
+
+   Placed after the block above so specificity ties resolve in favour of
+   legibility, which is the only outcome that is never wrong.
+
+   `app-shell.css` loads after this file and restates these utilities against
+   its own `--app-ink-*` scale, so the in-app surfaces are repeated there. Both
+   copies are needed: this one covers the marketing pages, which render outside
+   `.app`. */
+.bubble--user .prose,
+.bubble--user .micro,
+.bubble--user .mono,
+.bubble--user .t-muted,
+.bubble--user .bubble__meta,
+.card--accent .prose,
+.card--accent .lede,
+.card--accent .micro,
+.card--accent .eyebrow,
+.card--accent .t-muted,
+.hero-panel--accent .prose,
+.hero-panel--accent .micro,
+.hero-panel--accent .eyebrow,
+.hero-panel--accent .t-muted,
+.hero-panel--dark .prose,
+.hero-panel--dark .micro,
+.hero-panel--dark .eyebrow,
+.hero-panel--dark .t-muted,
+.card--dark .t-muted,
+.stat--dark .t-muted,
+.toast .prose,
+.toast .micro,
+.toast .t-muted,
+.player .prose,
+.player .micro,
+.player .mono,
+.player .t-muted {
+  color: inherit;
+}
+
+/* Secondary copy still needs to read as secondary, so it is dimmed with opacity
+   against whatever the surface colour happens to be, rather than by swapping in
+   a grey that would sink into a dark ground. */
+.bubble--user .bubble__meta,
+.card--accent .micro,
+.card--accent .eyebrow,
+.hero-panel--accent .micro,
+.hero-panel--accent .eyebrow,
+.hero-panel--dark .micro,
+.hero-panel--dark .eyebrow,
+.toast .micro,
+.player .micro {
+  opacity: 0.78;
+}
+
+/* The divider above a bubble's footnote was a dark hairline that vanished on
+   blue. */
+.bubble--user .bubble__meta {
+  border-top-color: rgba(255, 255, 255, 0.28);
+}
+
+/* A `.chip` inside an accent or dark surface kept its light-ground palette and
+   came out as pale text on a pale pill. */
+.bubble--user .chip,
+.card--accent .chip,
+.hero-panel--accent .chip {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.34);
+  color: inherit;
+}
+.bubble--user .chip:hover:not(:disabled),
+.card--accent .chip:hover:not(:disabled),
+.hero-panel--accent .chip:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.26);
+}
+
 /* The rings live on their own square stage so they stay circular, and the bars
    sit beneath it as an ordinary block. Previously the bars were absolutely
    positioned inside the orbit, so an orbiting chip could rotate down on top of

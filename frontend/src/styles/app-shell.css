@@ -357,8 +357,94 @@ body:has(.app) { background: var(--app-bg); }
   color: var(--app-ink-2);
 }
 .app .card--accent { background: var(--app-blue); border-color: var(--app-blue); color: #fff; }
-.app .card--accent .figure, .app .card--accent .micro, .app .card--accent .prose { color: #fff; }
 .app .card--dark { background: var(--app-ink); border-color: var(--app-ink); color: #fff; }
+
+/* --- text on the app's dark and accent surfaces ----------------------------
+   `.app .prose`, `.app .micro` and `.app .t-muted` above set a colour directly
+   on the child, which always beats the white the surface sets on itself. So a
+   solid blue panel still rendered near-black body copy inside it — the Coach's
+   own chat bubbles were unreadable.
+
+   Every dark or accent surface in the shell is listed here rather than fixed as
+   each one is reported. `inherit` and not a literal white: the surface already
+   declares the colour it needs, so a new panel becomes legible by joining this
+   list instead of by re-picking a colour that may not match it. This mirrors the
+   block at the foot of base.css, which covers the same utilities on the
+   marketing pages; this file loads last, so the in-app surfaces need it here. */
+.app .bubble--user,
+.app .card--accent,
+.app .card--dark,
+.app .stat--dark,
+.app .toast,
+.app .player {
+  color: #fff;
+}
+.app .bubble--user .prose,
+.app .bubble--user .micro,
+.app .bubble--user .mono,
+.app .bubble--user .t-muted,
+.app .bubble--user .bubble__meta,
+.app .card--accent .prose,
+.app .card--accent .lede,
+.app .card--accent .micro,
+.app .card--accent .eyebrow,
+.app .card--accent .figure,
+.app .card--accent .t-muted,
+.app .card--dark .prose,
+.app .card--dark .lede,
+.app .card--dark .micro,
+.app .card--dark .eyebrow,
+.app .card--dark .figure,
+.app .card--dark .t-muted,
+.app .stat--dark .prose,
+.app .stat--dark .micro,
+.app .stat--dark .t-muted,
+.app .stat--dark .stat__label,
+.app .stat--dark .stat__note,
+.app .stat--dark .stat__value,
+.app .stat--dark .figure,
+.app .toast .prose,
+.app .toast .micro,
+.app .toast .t-muted,
+.app .player .prose,
+.app .player .micro,
+.app .player .mono,
+.app .player .t-muted {
+  color: inherit;
+}
+
+/* Secondary copy must still read as secondary. Dimming with opacity keeps it
+   relative to whatever the surface colour is, where a fixed grey would sink
+   into a dark ground. */
+.app .bubble--user .bubble__meta,
+.app .card--accent .micro,
+.app .card--accent .eyebrow,
+.app .card--dark .micro,
+.app .card--dark .eyebrow,
+.app .stat--dark .stat__label,
+.app .stat--dark .stat__note,
+.app .toast .micro,
+.app .player .micro {
+  opacity: 0.78;
+}
+
+/* The rule above the bubble's footnote was a dark hairline, invisible on blue. */
+.app .bubble--user .bubble__meta { border-top-color: rgba(255, 255, 255, 0.28); }
+
+/* A `.chip` kept its light-ground palette on these surfaces and came out as
+   pale text on a pale pill. */
+.app .bubble--user .chip,
+.app .card--accent .chip,
+.app .card--dark .chip {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.34);
+  color: inherit;
+}
+.app .bubble--user .chip:hover:not(:disabled),
+.app .card--accent .chip:hover:not(:disabled),
+.app .card--dark .chip:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.26);
+}
 .app .btn--primary { background: var(--app-blue); border-color: var(--app-blue); }
 .app .btn--dark { background: var(--app-ink); border-color: var(--app-ink); }
 .app .badge { border-radius: 5px; font-size: 11.5px; font-weight: 600; }
