@@ -66,6 +66,7 @@
 - [Security & privacy](#-security--privacy)
 - [Known limits](#-known-limits)
 - [Contributing](#-contributing)
+- [Team &amp; submission](#-team--submission)
 
 ---
 
@@ -759,6 +760,34 @@ value must originate in `backend/app/services/`, and no service module may impor
 make a network call, or accept a parameter that overrides a computed `Decimal`.
 
 `pytest` and `npm run typecheck` must both be clean.
+
+---
+
+## 🏅 Team &amp; submission
+
+**Team Kryptonite** — Vivekanand Education Society's Institute of Technology
+
+| | |
+|---|---|
+| **Hardik Hinduja** | Team lead |
+| **Avinash Gehi** | |
+
+**Track:** FinTech — Problem Statement 2, *Smart Expense &amp; Micro-Investment Assistant*
+&nbsp;·&nbsp; build an application that tracks spending, categorizes transactions, rounds up purchases,
+and simulates spare change into a portfolio with actionable insights.
+
+| Submission asset | Link |
+|---|---|
+| 🌐 Deployed application | https://da2u5q8s30wam.cloudfront.net |
+| 💻 GitHub repository | https://github.com/Hardik182005/InnovaHack-Team-Kryptonite |
+| ▶️ Demo video | https://youtu.be/wDqa_rXf8d4 |
+| 📑 Pitch deck | [SafeSpare_AI_Team_Kryptonite_Finale.pdf](SafeSpare_AI_Team_Kryptonite_Finale.pdf) |
+
+> **The gap we built for.** Most round-up tools assume every spare rupee is safe to save — but the
+> user may still have rent, EMI, insurance, bills, groceries and salary-timing risk ahead. SafeSpare
+> does not ask users to invest more. It first determines what their life can safely spare.
+>
+> *Your bills first. Your goals next.*
 
 ---
 
