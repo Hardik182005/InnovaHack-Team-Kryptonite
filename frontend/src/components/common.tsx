@@ -146,8 +146,9 @@ export function Badge({
 export function Disclaimer({ onDark }: { onDark?: boolean }) {
   return (
     <p className={onDark ? 'disclaimer disclaimer--on-dark' : 'disclaimer'}>
-      Illustrative simulation only. Actual returns may be higher, lower or negative.
-      SafeSpare does not invest money and does not recommend specific investments.
+      <strong>Illustrative simulation only.</strong> Mutual-fund investments are market-linked, and
+      actual returns may be higher, lower, or negative. SafeSpare does not execute investments and
+      does not recommend a specific fund.
     </p>
   );
 }
