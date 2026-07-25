@@ -9,7 +9,7 @@
 <br>
 
 [![Demo Video](https://img.shields.io/badge/▶_watch_the_demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=wDqa_rXf8d4)
-[![Pitch Deck](https://img.shields.io/badge/📑_pitch_deck-PDF-b91c1c?style=for-the-badge)](SafeSpare_AI_Team_Kryptonite_Final.pdf)
+[![Pitch Deck](https://img.shields.io/badge/📑_pitch_deck-PDF-b91c1c?style=for-the-badge)](SafeSpare_AI_Team_Kryptonite_Finale.pdf)
 [![Live Demo](https://img.shields.io/badge/demo-live-22c55e?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://da2u5q8s30wam.cloudfront.net)
 [![API](https://img.shields.io/badge/API-online-22c55e?style=for-the-badge&logo=fastapi&logoColor=white)](https://100-48-40-252.sslip.io/health)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](#-license)
@@ -200,7 +200,7 @@ and *Safe Spare* are masked out of translation entirely.
 
 <br>
 
-📑 **[Pitch deck — SafeSpare_AI_Team_Kryptonite_Final.pdf](SafeSpare_AI_Team_Kryptonite_Final.pdf)**
+📑 **[Pitch deck — SafeSpare_AI_Team_Kryptonite_Finale.pdf](SafeSpare_AI_Team_Kryptonite_Finale.pdf)**
 &nbsp;·&nbsp; 7 slides: problem, solution, stack, architecture, conclusion.
 
 </div>
