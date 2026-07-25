@@ -27,12 +27,12 @@
   --warning-soft: #ffb08f;
 
   /* --- ink washes (the design uses rgba(20,18,15,x) everywhere) ---------- */
-  --ink-90: rgba(20, 18, 15, 0.9);
-  --ink-72: rgba(20, 18, 15, 0.72);
-  --ink-66: rgba(20, 18, 15, 0.66);
-  --ink-55: rgba(20, 18, 15, 0.55);
-  --ink-45: rgba(20, 18, 15, 0.45);
-  --ink-30: rgba(20, 18, 15, 0.3);
+  --ink-90: rgba(20, 18, 15, 0.95);
+  --ink-72: rgba(20, 18, 15, 0.86);   /* body copy */
+  --ink-66: rgba(20, 18, 15, 0.8);    /* secondary */
+  --ink-55: rgba(20, 18, 15, 0.7);    /* captions */
+  --ink-45: rgba(20, 18, 15, 0.62);   /* mono micro-labels */
+  --ink-30: rgba(20, 18, 15, 0.45);   /* disabled */
   --ink-17: rgba(20, 18, 15, 0.17);
   --ink-12: rgba(20, 18, 15, 0.12);
   --ink-09: rgba(20, 18, 15, 0.09);
