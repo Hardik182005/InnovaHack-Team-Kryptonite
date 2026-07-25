@@ -206,17 +206,56 @@ def _decode(data: bytes) -> str:
 # ---------------------------------------------------------------------------
 
 
+def _repair_unbalanced_quotes(text: str) -> Tuple[str, int]:
+    """Strip quotes from lines that have an odd number of them.
+
+    An unclosed quote makes Python's csv module treat every following line as a
+    continuation of that field, so one malformed row silently swallows the rest
+    of the statement. That is a §8 violation — a good transaction after a bad one
+    would disappear without a warning.
+
+    Removing the quotes on the offending line confines the damage to that row,
+    which is then reported as skipped like any other bad row.
+    """
+    lines = text.splitlines()
+    repaired = 0
+    for index, line in enumerate(lines):
+        if line.count('"') % 2 == 1:
+            lines[index] = line.replace('"', "")
+            repaired += 1
+    return "\n".join(lines), repaired
+
+
 def extract_csv(data, currency_default: str = "USD") -> ExtractionResult:
     """Parse a CSV export with flexible column mapping (§7)."""
     text = _decode(data) if isinstance(data, (bytes, bytearray)) else str(data)
     result = ExtractionResult(parser="csv")
+
+    # A NUL byte means this is not text at all — a binary or corrupted upload.
+    # Reported as a warning rather than allowed to raise `_csv.Error`, which
+    # would surface to the user as a 500 (§7: errors must not expose internals).
+    if "\x00" in text:
+        text = text.replace("\x00", "")
+        result.warnings.append("binary_content_detected")
+
+    text, repaired = _repair_unbalanced_quotes(text)
+    if repaired:
+        result.warnings.append("unbalanced_quotes_repaired_on_%d_rows" % repaired)
 
     try:
         dialect = csv.Sniffer().sniff(text[:4096], delimiters=",;\t|")
     except csv.Error:
         dialect = csv.excel
 
-    reader = list(csv.reader(io.StringIO(text), dialect))
+    try:
+        reader = list(csv.reader(io.StringIO(text), dialect))
+    except csv.Error as exc:
+        # Never let a malformed file raise out of the parser.
+        result.warnings.append("csv_parse_failed")
+        logger_message = str(exc)[:80]
+        result.rows_skipped.append((0, "csv_parse_failed:%s" % logger_message))
+        return result
+
     if not reader:
         result.warnings.append("empty_file")
         return result
