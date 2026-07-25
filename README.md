@@ -130,3 +130,40 @@ down).
 - Rent, EMI, insurance, taxes, medical, utilities, education and childcare are never recommended for
   cancellation, regardless of leak score (`PROTECTED_FROM_CANCELLATION` in
   `backend/app/models/enums.py`).
+
+## Voice and language access
+
+SafeSpare is usable by people who have no bank statement to upload — or who cannot read one.
+
+**Speak your expenses** (`/speak`). Say *"मैंने सब्ज़ी पर 250 रुपये खर्च किए"* and it becomes a
+transaction that flows through the same engines as a parsed statement row. The parser
+(`backend/app/services/spoken_expenses.py`) is deterministic Python — §3.7 forbids an LLM computing
+a financial value — and handles Indic digits (२५०, ৫০০, ௧௦௦), Indian numbering (lakh, crore,
+hazaar), and spoken fractions (`dhai sau` = 2.5 × 100 = 250).
+
+It refuses to guess. "I bought something" returns *no amount*, because an invented number would flow
+straight into the Safe Spare calculation.
+
+**26 languages** — all 22 Eighth Schedule languages plus English, Bhojpuri, Rajasthani and Tulu.
+Each is listed in its own script, since that is the only label a non-English reader can recognise.
+Urdu, Kashmiri and Sindhi render right-to-left. Every captured expense is *spoken back* in the
+user's language before it counts.
+
+Honest limits: 11 of 26 languages have full UI translation and the switcher displays the percentage
+rather than silently showing a half-English screen; dictation depends on browser support, and
+languages without it fall back to typing.
+
+## Verified status
+
+| Check | Result |
+| --- | --- |
+| Backend tests | **270 passed, 0 failed** |
+| Frontend type check | **0 errors** (`strict: true`) |
+| Frontend build | **passes** |
+| Docker build | **passes** — 420 MB, non-root uid 10001 |
+| Smoke test vs uvicorn | **16/16** |
+| Smoke test vs container | **16/16** |
+| Secret scan | **clean** — no credential tracked or bundled |
+| AWS deployment | **NOT DEPLOYED** — terraform and aws CLI unavailable |
+
+See `TEST_REPORT.md` for the full evidence and `BUGS_FOUND.md` for the nine defects found and fixed.

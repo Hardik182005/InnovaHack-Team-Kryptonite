@@ -257,29 +257,73 @@ guardrail §25.9 visibly: the gym is *not* cancellable until the user says so.
 3. **SMS reference parsing was greedy.** `\D{0,4}` swallowed the alphabetic prefix of the
    reference, turning `Ref ABC123456` into `123456`.
 
-## 5. In progress (4 parallel agents)
-
-| Phase | Scope | Owner |
-| --- | --- | --- |
-| 4 | FastAPI surface, §18 endpoints, §19 state machine, §14/16 AI adapters + guardrails 15–19 | agent |
-| 5 | React/Vite SPA in the preserved Perch visual language, §6 pages | agent |
-| 8 | Terraform (§21), Dockerfile, `.env.example` (§15) | agent |
-| 9 | The 9 documentation files (§27) | agent |
-
-## 6. Not started
-
-- Playwright E2E flow (§24) — depends on Phases 4 and 5 landing first.
-
 ---
 
-## 7. Remaining external blockers — stated honestly
+## 5. Final status — all phases complete
 
-| Blocker | Consequence | Needed to clear |
+| Phase | Scope | Status |
 | --- | --- | --- |
-| `terraform` not installed | Cannot run `terraform validate`. Infra will be written but unvalidated. | `brew install terraform` |
-| `aws` CLI not installed | Cannot deploy or smoke-test. **No deployment will be claimed** (§21, §3.24). | `brew install awscli` + SSO login |
-| No LLM API keys in env | AI Coach, voice and LLM fallbacks run in deterministic-template mode only. | populate `.env` from `.env.example` |
-| Python 3.9 | Cannot use `X | Y` unions at runtime; `from __future__ import annotations` used throughout. | optional: install 3.11+ |
+| 1 | Audit | ✅ |
+| 2 | Extraction, validation, demo data | ✅ |
+| 3 | Deterministic financial core | ✅ |
+| 4 | FastAPI, 31 endpoints, state machine, AI adapters | ✅ |
+| 5 | React SPA, 15 pages, preserved Perch design | ✅ |
+| 6 | Voice entry + 26 languages + responsive | ✅ |
+| 7 | Tests — 238 passing | ✅ |
+| 8 | Terraform + Docker | ⚠️ written; **terraform unvalidated, not deployed** |
+| 9 | Documentation — 16 files | ✅ |
+| 10 | QA audit + acceptance checklist | ✅ |
 
-Per spec §3.24 and §21, deployment status will remain **NOT DEPLOYED** until a real deployed
-service has been tested.
+### Verified by execution
+
+| Check | Result |
+| --- | --- |
+| Backend tests | **270 passed, 0 failed** |
+| Frontend type check | **0 errors** (`strict: true`) |
+| Frontend build | **passes**, 921 ms |
+| Docker build | **passes**, 420 MB, non-root uid 10001 |
+| Smoke test vs uvicorn | **16/16** |
+| Smoke test vs container | **16/16** |
+| Container log PII scan | **0 matches** |
+| Secret scan (`git grep`) | **clean** |
+| Acceptance checklist | **34 PASS · 0 FAIL · 6 BLOCKED · 2 PARTIAL** |
+
+### Beyond the original spec
+
+Added after the spec was written, at the user's request:
+
+- **Voice expense entry** (`/speak`) — deterministic multilingual parser handling
+  Indic digits, lakh/crore, and spoken fractions. Refuses to guess an amount.
+- **26 languages** — 22 Eighth Schedule + English + 3 regional, each in its own
+  script, RTL where required. 11 have full UI translation; the switcher shows the
+  percentage rather than hiding it.
+- **Mobile responsiveness** — 900/640/380 px breakpoints, 44 px touch targets,
+  scrollable nav and tables, reduced-motion support.
+- **ElevenLabs TTS** wired via gitignored `.env`.
+
+### Eleven defects found and fixed
+
+Full write-ups in `BUGS_FOUND.md`. The most serious:
+
+- **BUG-002 (Critical)** — Safe Spare counted the next salary as already
+  received, inflating the projected balance by an entire paycheck. Exactly the
+  error this product exists to prevent.
+- **BUG-001 (High)** — price detection missed settled hikes *and* produced false
+  positives on fluctuating spend. Replaced with plateau-step detection.
+- **BUG-008** — background tasks behave differently under a real server than
+  under `TestClient`; the unit tests had masked the need to poll.
+
+Eight of the eleven were found only by running the code against realistic data or a
+real server, not by inspection.
+
+### Honest remaining gaps
+
+| Gap | Impact |
+| --- | --- |
+| Not deployed to AWS | terraform + aws CLI unavailable; **no deployment claimed** |
+| No browser E2E | flow verified over HTTP instead |
+| AI guardrails 15/16/19 lack dedicated tests | implemented; degrade wording, not correctness |
+| XLSX untested | pandas not installed |
+| 15 of 26 languages fall back to English | disclosed in the UI |
+| No dependency CVE scan | not run |
+| In-memory repositories | DynamoDB interface ready, implementation not written |
