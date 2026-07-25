@@ -95,7 +95,7 @@ export function fixtureStatus(completedStages: number): AnalysisStatus {
     progress_percent: Math.round((done / total) * 100),
     stages,
     message: finished
-      ? 'Analysis complete. 48 transactions read, 12 recurring payments detected.'
+      ? 'Analysis complete. 42 transactions read, 12 recurring payments detected.'
       : `Working on “${STAGE_DEFS[done]?.label ?? ''}”…`,
     error_code: null,
     updated_at: new Date().toISOString(),
@@ -107,7 +107,7 @@ export const fixtureDocumentMeta: DetectedDocumentMeta = {
   currency_confidence: 0.98,
   date_range_start: '2026-04-01',
   date_range_end: '2026-06-30',
-  transaction_count: 48,
+  transaction_count: 42,
   pages: 6,
   parser: 'pdfplumber+layout',
   password_protected: false,

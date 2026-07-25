@@ -17,6 +17,9 @@ export type DataMode = 'auto' | 'live' | 'fixtures';
 const STORAGE_KEY = 'safespare.dataMode';
 
 function envMode(): DataMode {
+  // VITE_USE_FIXTURES=true is a convenience alias for VITE_DATA_MODE=fixtures.
+  const alias = (import.meta.env.VITE_USE_FIXTURES ?? '').toString().toLowerCase();
+  if (alias === 'true' || alias === '1') return 'fixtures';
   const raw = (import.meta.env.VITE_DATA_MODE ?? 'auto').toString().toLowerCase();
   return raw === 'live' || raw === 'fixtures' ? raw : 'auto';
 }
