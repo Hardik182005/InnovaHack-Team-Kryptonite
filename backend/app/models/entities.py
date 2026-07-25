@@ -164,7 +164,7 @@ class ExtractionRecord:
     id: str = field(default_factory=new_id)
     analysis_id: str = ""
     parser: str = ""
-    currency: str = "USD"
+    currency: str = "INR"
     rows_seen: int = 0
     rows_extracted: int = 0
     rows_skipped: List[Dict[str, Any]] = field(default_factory=list)
@@ -195,7 +195,7 @@ class AnalysisSession:
     idempotency_key: Optional[str] = None
     auto_confirm: bool = False
     delete_after_processing: bool = True
-    currency: str = "USD"
+    currency: str = "INR"
     history: List[Dict[str, str]] = field(default_factory=list)
     calculation_version: str = "pipeline.v1"
 

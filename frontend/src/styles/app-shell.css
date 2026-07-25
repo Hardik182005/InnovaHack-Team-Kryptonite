@@ -1,0 +1,564 @@
+/* ==========================================================================
+   Application shell — the signed-in product surface.
+
+   The marketing pages keep the approved cream Perch identity. Once a user is
+   inside their own financial data, the surface switches to a neutral
+   white/slate/blue system: cream reads as a brochure, and a dashboard someone
+   reads every day needs quiet ground so the figures carry the colour.
+   ========================================================================== */
+
+:root {
+  /* --- app surfaces (cool neutrals, not warm cream) --------------------- */
+  --app-bg: #f7f8fa;          /* page ground — off-white, not glaring */
+  --app-surface: #ffffff;     /* cards */
+  --app-sidebar: #ffffff;
+  --app-ink: #0b1220;         /* near-black slate */
+  --app-ink-2: #1e293b;       /* secondary text — was #334155, too light at 13px */
+  --app-ink-3: #475569;       /* tertiary / labels — was #64748b */
+  --app-ink-4: #64748b;       /* axis ticks, disabled — was #94a3b8 */
+  --app-line: #e2e8f0;        /* borders */
+  --app-line-2: #eef2f6;      /* subtle dividers */
+
+  --app-blue: #2438e0;        /* carried over from the brand */
+  --app-blue-600: #1d2fc4;
+  --app-blue-50: #eef1ff;
+  --app-blue-100: #dbe1ff;
+
+  --app-green: #047857;
+  --app-green-50: #ecfdf5;
+  --app-red: #b91c1c;
+  --app-red-50: #fef2f2;
+  --app-amber: #b45309;
+  --app-amber-50: #fffbeb;
+
+  --sidebar-w: 264px;
+  --r-app: 12px;
+}
+
+/* --- layout --------------------------------------------------------------- */
+
+/* Painted on <body> too: without this the marketing cream shows above the
+   shell wherever the app is shorter than the viewport, or during overscroll. */
+body:has(.app) { background: var(--app-bg); }
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--app-bg);
+  color: var(--app-ink);
+}
+
+.app__main { min-width: 0; display: flex; flex-direction: column; }
+
+.app__body {
+  padding: 28px clamp(20px, 3vw, 40px) 64px;
+  max-width: 1360px;
+  width: 100%;
+}
+
+/* --- sidebar -------------------------------------------------------------- */
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 16px;
+  background: var(--app-sidebar);
+  border-right: 1px solid var(--app-line);
+  overflow-y: auto;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px 0;
+  text-decoration: none;
+  color: inherit;
+}
+.sidebar__logo {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: var(--app-ink);
+  color: #fff;
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 15px;
+  flex: none;
+}
+.sidebar__name { font-size: 15.5px; font-weight: 650; letter-spacing: -0.015em; line-height: 1.1; }
+.sidebar__tag {
+  font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--app-ink-4); margin-top: 2px;
+}
+
+/* The account card, per the reference: identity plus the one headline metric. */
+.sidebar__card {
+  border: 1px solid var(--app-line);
+  border-radius: var(--r-app);
+  padding: 14px;
+  background: var(--app-surface);
+}
+.sidebar__avatar {
+  width: 40px; height: 40px; border-radius: 999px;
+  background: var(--app-ink); color: #fff;
+  display: grid; place-items: center;
+  font-size: 13px; font-weight: 650; flex: none;
+}
+.sidebar__who { font-size: 14px; font-weight: 600; line-height: 1.2; }
+.sidebar__meta { font-size: 12px; color: var(--app-ink-3); margin-top: 2px; }
+.sidebar__chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-top: 10px; padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--app-blue-50);
+  color: var(--app-blue);
+  font-size: 11.5px; font-weight: 600;
+}
+.sidebar__chip--ok { background: var(--app-green-50); color: var(--app-green); }
+
+.sidebar__group { display: grid; gap: 2px; }
+.sidebar__label {
+  font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--app-ink-4); padding: 0 10px; margin-bottom: 6px;
+}
+
+.sidebar__link {
+  display: flex; align-items: center; gap: 11px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  color: var(--app-ink-2);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  transition: background 140ms ease, color 140ms ease;
+}
+.sidebar__link:hover { background: var(--app-line-2); color: var(--app-ink); }
+.sidebar__link--on {
+  background: var(--app-surface);
+  color: var(--app-ink);
+  font-weight: 600;
+  border: 1px solid var(--app-line);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.sidebar__icon { width: 17px; height: 17px; flex: none; color: currentColor; opacity: 0.85; }
+.sidebar__badge {
+  margin-left: auto;
+  font-size: 11px; font-weight: 650;
+  padding: 1px 7px; border-radius: 999px;
+  background: var(--app-blue-50); color: var(--app-blue);
+}
+.sidebar__foot { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--app-line-2); }
+
+/* --- top bar -------------------------------------------------------------- */
+
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  padding: 14px clamp(20px, 3vw, 40px);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--app-line);
+}
+.topbar__title { font-size: 17px; font-weight: 650; letter-spacing: -0.015em; line-height: 1.2; }
+.topbar__sub { font-size: 13px; color: var(--app-ink-3); margin-top: 1px; }
+.topbar__right { display: flex; align-items: center; gap: 10px; flex: none; }
+
+.demo-tag {
+  font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 6px;
+  background: var(--app-amber-50); color: var(--app-amber);
+  font-weight: 600; white-space: nowrap;
+}
+
+/* --- cards / metrics ------------------------------------------------------ */
+
+.panel {
+  background: var(--app-surface);
+  border: 1px solid var(--app-line);
+  border-radius: var(--r-app);
+  padding: 18px 20px;
+}
+.panel__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.panel__title { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; }
+.panel__sub { font-size: 12.5px; color: var(--app-ink-3); margin-top: 3px; line-height: 1.45; }
+
+.metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.metric { background: var(--app-surface); border: 1px solid var(--app-line); border-radius: var(--r-app); padding: 16px 18px; }
+.metric__label {
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--app-ink-3); font-weight: 600;
+}
+.metric__value {
+  margin-top: 8px;
+  font-size: 25px; font-weight: 660; letter-spacing: -0.03em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  color: var(--app-ink);
+}
+.metric__value--blue { color: var(--app-blue); }
+.metric__value--green { color: var(--app-green); }
+.metric__value--red { color: var(--app-red); }
+.metric__hint { margin-top: 6px; font-size: 12.5px; color: var(--app-ink-3); line-height: 1.4; }
+.metric__hint a { color: var(--app-blue); text-decoration: none; font-weight: 550; }
+.metric__hint a:hover { text-decoration: underline; }
+
+/* --- data table ----------------------------------------------------------- */
+
+.dtable { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.dtable th {
+  text-align: left;
+  font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--app-ink-3); font-weight: 600;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--app-line);
+  white-space: nowrap;
+}
+.dtable td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--app-line-2);
+  color: var(--app-ink-2);
+  vertical-align: middle;
+}
+.dtable tr:last-child td { border-bottom: 0; }
+.dtable tbody tr:hover { background: #fafbfc; }
+.dtable .num { text-align: right; font-variant-numeric: tabular-nums; color: var(--app-ink); }
+
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 5px;
+  font-size: 11.5px; font-weight: 600; white-space: nowrap;
+}
+.tag--blue { background: var(--app-blue-50); color: var(--app-blue); }
+.tag--green { background: var(--app-green-50); color: var(--app-green); }
+.tag--red { background: var(--app-red-50); color: var(--app-red); }
+.tag--amber { background: var(--app-amber-50); color: var(--app-amber); }
+.tag--grey { background: var(--app-line-2); color: var(--app-ink-3); }
+
+/* --- misc ----------------------------------------------------------------- */
+
+.bar { height: 6px; border-radius: 999px; background: var(--app-line); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--app-blue); border-radius: 999px; }
+.bar > i.is-warn { background: var(--app-amber); }
+.bar > i.is-ok { background: var(--app-green); }
+
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.stack-14 { display: grid; gap: 14px; }
+
+.app a { color: var(--app-blue); }
+.app .mono, .app .num { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+
+/* --- responsive ----------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar {
+    position: static; height: auto;
+    flex-direction: row; align-items: center; gap: 12px;
+    overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--app-line);
+    padding: 12px 16px;
+  }
+  .sidebar__card, .sidebar__label, .sidebar__foot { display: none; }
+  .sidebar__group { display: flex; gap: 6px; }
+  .sidebar__link { white-space: nowrap; padding: 8px 12px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .metrics { grid-template-columns: 1fr; }
+  .topbar { flex-wrap: wrap; }
+  .metric__value { font-size: 22px; }
+}
+
+/* --- typography inside the app --------------------------------------------
+   The marketing type scale is display-led. Dense financial tables need the
+   opposite: a smaller, higher-contrast, tabular scale that stays legible at
+   a glance and does not shift as digits change. */
+
+.app .display-1, .app .display-2, .app .display-3 {
+  font-size: 22px; font-weight: 660; letter-spacing: -0.02em; line-height: 1.25;
+  color: var(--app-ink); margin: 0;
+}
+.app .display-4 { font-size: 16px; font-weight: 650; letter-spacing: -0.01em; color: var(--app-ink); }
+.app .eyebrow {
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--app-ink-4); font-weight: 600; margin: 0 0 6px;
+}
+.app .lede { font-size: 14px; line-height: 1.55; color: var(--app-ink-3); margin: 6px 0 0; max-width: 72ch; }
+.app .prose { font-size: 14px; line-height: 1.6; color: var(--app-ink-2); }
+.app .micro { font-size: 12px; color: var(--app-ink-3); letter-spacing: 0; text-transform: none; }
+.app .figure {
+  font-size: 26px; font-weight: 660; letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums; color: var(--app-ink);
+}
+.app .t-muted { color: var(--app-ink-3); }
+
+/* Tables: the first column is a label, the rest are figures. */
+.dtable th:first-child, .dtable td:first-child { padding-left: 4px; }
+.dtable th:not(:first-child):not(:nth-child(2)) { text-align: right; }
+.dtable td.num { font-variant-numeric: tabular-nums; font-size: 13.5px; }
+.dtable tbody th { font-weight: 550; color: var(--app-ink); font-size: 13.5px;
+                   text-transform: none; letter-spacing: 0; }
+
+/* Inline editors inside a data table. */
+.dinput, .dselect {
+  width: 100%; min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--app-line);
+  border-radius: 7px;
+  background: var(--app-surface);
+  font: inherit; font-size: 13px;
+  color: var(--app-ink);
+}
+.dinput:focus, .dselect:focus { outline: 2px solid var(--app-blue); outline-offset: -1px; border-color: transparent; }
+
+/* Cards written for the marketing surface, re-skinned inside the app. */
+.app .card, .app .notice, .app .state {
+  background: var(--app-surface);
+  border: 1px solid var(--app-line);
+  border-radius: var(--r-app);
+  color: var(--app-ink-2);
+}
+.app .card--accent { background: var(--app-blue); border-color: var(--app-blue); color: #fff; }
+.app .card--accent .figure, .app .card--accent .micro, .app .card--accent .prose { color: #fff; }
+.app .card--dark { background: var(--app-ink); border-color: var(--app-ink); color: #fff; }
+.app .btn--primary { background: var(--app-blue); border-color: var(--app-blue); }
+.app .btn--dark { background: var(--app-ink); border-color: var(--app-ink); }
+.app .badge { border-radius: 5px; font-size: 11.5px; font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   Sidebar corrections.
+
+   `.app a { color: blue }` was painting every nav item blue, so nothing read
+   as selected and the whole rail shouted. Navigation should be quiet: muted
+   labels, muted icons, and exactly one emphasised row. Spacing is tightened
+   too — the rail was scaled like body copy rather than like a nav.
+   -------------------------------------------------------------------------- */
+
+.sidebar a { color: inherit; }
+
+.sidebar { gap: 14px; padding: 16px 12px; }
+
+.sidebar__brand { gap: 9px; padding: 2px 6px 0; }
+.sidebar__logo { width: 30px; height: 30px; border-radius: 8px; font-size: 14px; }
+.sidebar__name { color: var(--app-ink); font-size: 15px; }
+.sidebar__tag { font-size: 9px; letter-spacing: 0.12em; color: var(--app-ink-4); margin-top: 1px; }
+
+.sidebar__card { padding: 11px; border-radius: 10px; }
+.sidebar__avatar { width: 32px; height: 32px; font-size: 10.5px; letter-spacing: 0.04em; }
+.sidebar__who { font-size: 13px; color: var(--app-ink); }
+.sidebar__meta { font-size: 11.5px; }
+.sidebar__chip { margin-top: 8px; font-size: 11px; padding: 2px 8px; }
+
+.sidebar__label { font-size: 9.5px; letter-spacing: 0.12em; margin: 0 0 4px; padding: 0 8px; }
+.sidebar__group { gap: 1px; }
+
+.sidebar__link {
+  color: var(--app-ink-2);
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 7px 9px;
+  gap: 10px;
+  border-radius: 8px;
+}
+.sidebar__link svg { color: var(--app-ink-4); transition: color 140ms ease; }
+.sidebar__link:hover { background: var(--app-line-2); color: var(--app-ink); }
+.sidebar__link:hover svg { color: var(--app-ink-3); }
+
+/* Exactly one row is emphasised, and it uses a blue rail rather than a border
+   box, so the eye lands on it without the rail looking boxed-in. */
+.sidebar__link--on {
+  background: var(--app-blue-50);
+  color: var(--app-blue);
+  font-weight: 600;
+  border: 0;
+  box-shadow: none;
+  position: relative;
+}
+.sidebar__link--on svg { color: var(--app-blue); }
+.sidebar__link--on::before {
+  content: '';
+  position: absolute;
+  left: -12px; top: 50%;
+  width: 3px; height: 18px;
+  margin-top: -9px;
+  border-radius: 0 3px 3px 0;
+  background: var(--app-blue);
+}
+
+.sidebar__icon { width: 16px; height: 16px; opacity: 1; }
+.sidebar__foot { padding-top: 10px; }
+
+/* ==========================================================================
+   Dashboard composition — main column plus a right rail.
+   ========================================================================== */
+
+.dash { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+.dash__main, .dash__rail { display: grid; gap: 16px; min-width: 0; }
+
+/* --- greeting -------------------------------------------------------------- */
+.greet { text-align: center; padding: 8px 0 18px; }
+.greet__title {
+  font-size: clamp(22px, 2.4vw, 30px); font-weight: 660;
+  letter-spacing: -0.025em; color: var(--app-ink); margin: 0;
+}
+.greet__sub { margin: 7px 0 0; font-size: 14px; color: var(--app-ink-3); }
+
+/* --- status strip: the one figure that matters, with context --------------- */
+.status {
+  display: grid; grid-template-columns: auto 1fr auto;
+  gap: 20px; align-items: center;
+  background: var(--app-surface);
+  border: 1px solid var(--app-line);
+  border-radius: 16px;
+  padding: 18px 22px;
+}
+.status__badge {
+  width: 54px; height: 54px; border-radius: 15px;
+  display: grid; place-items: center; flex: none;
+  background: var(--app-blue-50); color: var(--app-blue);
+}
+.status__badge--warn { background: var(--app-amber-50); color: var(--app-amber); }
+.status__badge--ok { background: var(--app-green-50); color: var(--app-green); }
+.status__label { font-size: 11.5px; letter-spacing: 0.07em; text-transform: uppercase;
+                 color: var(--app-ink-3); font-weight: 600; }
+.status__value { font-size: 27px; font-weight: 680; letter-spacing: -0.03em;
+                 line-height: 1.15; margin-top: 3px; font-variant-numeric: tabular-nums; }
+.status__note { font-size: 13.5px; line-height: 1.5; color: var(--app-ink-2); max-width: 46ch; }
+.status__spark { width: 150px; height: 46px; flex: none; }
+
+/* --- card with an icon-led head and a trailing action ---------------------- */
+.pcard {
+  background: var(--app-surface);
+  border: 1px solid var(--app-line);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+.pcard__head { display: flex; align-items: center; gap: 9px; margin-bottom: 15px; }
+.pcard__icon { color: var(--app-ink-3); flex: none; display: inline-flex; }
+.pcard__title { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; color: var(--app-ink); }
+.pcard__action {
+  margin-left: auto; font-size: 12.5px; font-weight: 600;
+  color: var(--app-blue); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.pcard__action:hover { text-decoration: underline; }
+
+/* --- next-step tiles -------------------------------------------------------- */
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.tile {
+  background: var(--app-bg);
+  border: 1px solid var(--app-line-2);
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 13px; line-height: 1.5; color: var(--app-ink-2);
+  text-decoration: none; display: block;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+.tile:hover { background: #fff; border-color: var(--app-line); }
+/* Both are spans inside an <a>, so they need to be blocks or the label and the
+   value render on one run ("LEAK RADAR₹3,117.00"). */
+.tile__k { display: block; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+           color: var(--app-ink-4); font-weight: 650; }
+.tile__v { display: block; margin-top: 6px; font-weight: 550; color: var(--app-ink); }
+
+/* --- spending heatmap ------------------------------------------------------- */
+.heat { display: grid; grid-template-columns: repeat(auto-fill, minmax(15px, 1fr)); gap: 4px; }
+.heat__cell { aspect-ratio: 1; border-radius: 5px; background: var(--app-line-2); }
+.heat__cell--1 { background: #dbe1ff; }
+.heat__cell--2 { background: #a5adf5; }
+.heat__cell--3 { background: #4f5fe8; }
+.heat__cell--4 { background: #2438e0; }
+.heat__key { display: flex; align-items: center; gap: 8px; margin-top: 13px;
+             font-size: 11.5px; color: var(--app-ink-3); }
+.heat__swatch { width: 11px; height: 11px; border-radius: 3px; }
+
+/* --- right rail ------------------------------------------------------------- */
+.rail-days { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; text-align: center; }
+.rail-day__mark { display: grid; place-items: center; height: 26px; color: var(--app-amber); }
+.rail-day__mark--off { color: var(--app-line); }
+.rail-day__label { font-size: 11px; color: var(--app-ink-3); margin-top: 3px; }
+
+/* The insight card is the one deliberately coloured surface — it carries a
+   sentence the user should actually read, so it gets the emphasis. */
+.insight {
+  border-radius: 16px; padding: 18px 20px;
+  background: linear-gradient(145deg, #2438e0, #1b2bb8);
+  color: #fff;
+}
+.insight__k { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+              opacity: 0.72; font-weight: 650; }
+.insight__body { margin: 11px 0 0; font-size: 14.5px; line-height: 1.55; font-weight: 500; }
+.insight__tag {
+  display: inline-block; margin-top: 14px; padding: 4px 11px;
+  border-radius: 999px; background: rgba(255,255,255,0.18);
+  font-size: 11.5px; font-weight: 600;
+}
+
+/* --- timeline --------------------------------------------------------------- */
+.tl { display: grid; gap: 0; }
+.tl__row { display: grid; grid-template-columns: 14px minmax(0,1fr); gap: 11px; padding-bottom: 15px; }
+.tl__dotcol { display: grid; justify-items: center; }
+.tl__dot { width: 8px; height: 8px; border-radius: 999px; background: var(--app-blue); margin-top: 5px; }
+.tl__dot--muted { background: var(--app-line); }
+.tl__dot--warn { background: var(--app-amber); }
+.tl__line { width: 1px; flex: 1; background: var(--app-line); margin-top: 4px; min-height: 14px; }
+.tl__row:last-child { padding-bottom: 0; }
+.tl__row:last-child .tl__line { display: none; }
+.tl__when { font-size: 11.5px; color: var(--app-ink-4); }
+.tl__what { font-size: 13.5px; color: var(--app-ink); margin-top: 2px; line-height: 1.45; }
+.tl__amt { font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 1180px) {
+  .dash { grid-template-columns: 1fr; }
+  .tiles { grid-template-columns: 1fr; }
+}
+
+/* --- readability pass, application surface --------------------------------- */
+
+.app .metric__label,
+.app .sidebar__label,
+.app .status__label,
+.app .dtable th,
+.app .tile__k,
+.app .insight__k,
+.app .demo-tag,
+.app .tl__when {
+  font-family: var(--font-body);
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+.app .metric__label { font-size: 13px; font-weight: 600; color: var(--app-ink-3); }
+.app .status__label { font-size: 13px; font-weight: 600; color: var(--app-ink-3); }
+.app .dtable th { font-size: 12.5px; font-weight: 650; color: var(--app-ink-3); }
+.app .dtable td { font-size: 14.5px; color: var(--app-ink-2); }
+.app .dtable td.num, .app .dtable tbody th { font-size: 14.5px; }
+.app .sidebar__label { font-size: 11.5px; font-weight: 650; color: var(--app-ink-4); }
+.app .sidebar__link { font-size: 14.5px; }
+.app .tile__k { font-size: 12.5px; font-weight: 650; }
+.app .tile__v, .app .tile { font-size: 14.5px; }
+.app .insight__k { font-size: 12.5px; font-weight: 650; opacity: 0.85; }
+.app .insight__body { font-size: 15.5px; line-height: 1.6; }
+.app .demo-tag { font-size: 12px; font-weight: 650; }
+.app .tl__when { font-size: 13px; color: var(--app-ink-3); }
+.app .tl__amt, .app .tl__what { font-size: 15px; }
+.app .panel__title, .app .pcard__title { font-size: 16px; }
+.app .panel__sub { font-size: 13.5px; }
+.app .metric__hint { font-size: 13.5px; }
+.app .status__note { font-size: 15px; line-height: 1.55; }
+.app .greet__sub { font-size: 15px; }
+.app .topbar__sub { font-size: 13.5px; }
+.app .heat__key { font-size: 12.5px; }
+.app .pcard__action { font-size: 13.5px; }

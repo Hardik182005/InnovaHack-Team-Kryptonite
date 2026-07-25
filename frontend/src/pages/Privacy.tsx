@@ -5,7 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { api, activeAnalysisId } from '../api/client';
 import { ConfirmDialog, ErrorState, SectionHead } from '../components/common';
+import { Icon } from '../components/Icon';
 import { useMutation } from '../hooks/useResource';
+import { AppShell } from '../components/AppShell';
+import { useI18n } from '../i18n/I18nProvider';
 
 const PROMISES = [
   'Your statement is analysed to calculate figures — it is never sold or shared.',
@@ -17,6 +20,7 @@ const PROMISES = [
 ];
 
 export default function Privacy() {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [confirming, setConfirming] = useState(false);
   const [done, setDone] = useState(false);
@@ -29,13 +33,13 @@ export default function Privacy() {
   });
 
   return (
-    <div className="wrap section">
-      <SectionHead eyebrow="Privacy" title="Your data, your call" />
+    <AppShell title={t('page.privacy')}>
+      <SectionHead eyebrow="Privacy" title={t('page.privacy')} />
 
       <div className="card">
         <ul className="stack stack--sm" style={{ listStyle: 'none', padding: 0 }}>
           {PROMISES.map((line) => (
-            <li key={line} className="checkline"><span aria-hidden="true">✓</span> {line}</li>
+            <li key={line} className="checkline"><Icon.check size={15} className="t-accent" /> {line}</li>
           ))}
         </ul>
       </div>
@@ -70,6 +74,6 @@ export default function Privacy() {
         onCancel={() => setConfirming(false)}
         onConfirm={() => { setConfirming(false); void remove.run(); }}
       />
-    </div>
+    </AppShell>
   );
 }

@@ -39,7 +39,9 @@ logger = get_logger(__name__)
 
 router = APIRouter(prefix="/api/analyses", tags=["analyses"])
 
-#: Where the generated demo statement lives, relative to the repo root.
+#: Where the generated demo statement lives, relative to the repo root. These are
+#: fallbacks for a source checkout only — see `_PACKAGED_DEMO` for the copy that
+#: actually ships in the container image.
 _DEMO_CANDIDATES = (
     "demo_data/demo_statement.csv",
     "backend/tests/fixtures/demo_statement.csv",
@@ -52,12 +54,28 @@ def _repo_root() -> str:
     )
 
 
+def _packaged_demo_path() -> str:
+    """The demo statement shipped *inside* the app package.
+
+    The backend image is built with `backend/` as the Docker build context, so
+    the repo root's `demo_data/` is outside the context and is not in the image.
+    Every `_DEMO_CANDIDATES` entry therefore resolves to a non-existent path in
+    the container and `demo: true` used to 503 with DEMO_UNAVAILABLE. The
+    packaged copy is the one that makes the demo work when deployed.
+    """
+    app_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(app_root, "data", "demo_statement.csv")
+
+
 def _load_demo_statement(settings: Settings):
     """Return (filename, bytes) for the synthetic demo statement (§23)."""
     configured = getattr(settings, "demo_statement_path", "") or ""
-    candidates = ([configured] if configured else []) + [
-        os.path.join(_repo_root(), "..", path) for path in _DEMO_CANDIDATES
-    ] + [os.path.join(_repo_root(), path) for path in _DEMO_CANDIDATES]
+    candidates = (
+        ([configured] if configured else [])
+        + [_packaged_demo_path()]
+        + [os.path.join(_repo_root(), "..", path) for path in _DEMO_CANDIDATES]
+        + [os.path.join(_repo_root(), path) for path in _DEMO_CANDIDATES]
+    )
 
     for path in candidates:
         resolved = os.path.abspath(path)

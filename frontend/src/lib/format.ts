@@ -19,7 +19,14 @@ export function toNumber(value: unknown): number {
   return 0;
 }
 
-const CURRENCY_FALLBACK = 'USD';
+const CURRENCY_FALLBACK = 'INR';
+
+/** Rupees group in the Indian system: ₹1,23,456 — not ₹123,456. `en-IN` is the
+ *  only locale that does this correctly, so it is pinned rather than left to the
+ *  browser's locale, which would render lakhs wrongly for most visitors. */
+function localeFor(currency: string): string {
+  return currency === 'INR' ? 'en-IN' : 'en-US';
+}
 
 /**
  * Format a backend-supplied amount. Returns an em dash when the backend
@@ -35,9 +42,10 @@ export function money(
   const decimals = opts.decimals ?? 2;
   let out: string;
   try {
-    out = new Intl.NumberFormat(undefined, {
+    out = new Intl.NumberFormat(localeFor(currency), {
       style: 'currency',
       currency: currency || CURRENCY_FALLBACK,
+      currencyDisplay: 'narrowSymbol',
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     }).format(Math.abs(n));
@@ -53,6 +61,12 @@ export function moneyShort(value: unknown, currency: string = CURRENCY_FALLBACK)
   const n = toNumber(value);
   const symbol = currencySymbol(currency);
   const abs = Math.abs(n);
+  if (currency === 'INR') {
+    if (abs >= 10_000_000) return `${symbol}${(n / 10_000_000).toFixed(1)}Cr`;
+    if (abs >= 100_000) return `${symbol}${(n / 100_000).toFixed(1)}L`;
+    if (abs >= 1_000) return `${symbol}${(n / 1_000).toFixed(1)}k`;
+    return `${symbol}${n.toFixed(0)}`;
+  }
   if (abs >= 1_000_000) return `${symbol}${(n / 1_000_000).toFixed(1)}M`;
   if (abs >= 1_000) return `${symbol}${(n / 1_000).toFixed(1)}k`;
   return `${symbol}${n.toFixed(0)}`;

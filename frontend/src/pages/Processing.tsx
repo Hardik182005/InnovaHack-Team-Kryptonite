@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { api, activeAnalysisId } from '../api/client';
 import { ErrorState, NeedsAnalysis } from '../components/common';
+import { Icon } from '../components/Icon';
 import { toApiError } from '../api/errors';
 import type { AnalysisStatus } from '../api/types';
 
@@ -88,7 +89,11 @@ export default function Processing() {
       <ol className="stages" style={{ marginTop: 32 }}>
         {(status?.stages ?? []).map((stage) => (
           <li key={stage.key} className={`stage stage--${stage.state}`}>
-            <span className="mono">{stage.state === 'done' ? '✓' : stage.state === 'active' ? '•' : '·'}</span>
+            <span className="stage__mark">
+              {stage.state === 'done' ? <Icon.check size={15} />
+                : stage.state === 'active' ? <Icon.spinner size={15} className="is-spinning" />
+                : <Icon.circle size={9} />}
+            </span>
             <span>{stage.label}</span>
             {stage.detail ? <span className="micro t-muted">{stage.detail}</span> : null}
           </li>

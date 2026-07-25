@@ -50,7 +50,11 @@ COLUMN_ALIASES: Dict[str, Sequence[str]] = {
 DATE_FORMATS = (
     "%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d-%m-%Y", "%m-%d-%Y",
     "%d %b %Y", "%d %B %Y", "%b %d, %Y", "%B %d, %Y",
-    "%Y/%m/%d", "%d.%m.%Y", "%d-%b-%Y", "%d-%b-%y", "%m/%d/%y", "%d/%m/%y",
+    # Day-first before month-first, matching the %d/%m/%Y precedence above. A
+    # statement that writes 07/04/26 for 7 April is the common case here; the
+    # reverse order silently turned 30% of a real HDFC statement into dates
+    # months in the future, which then poisons recurrence and projections.
+    "%Y/%m/%d", "%d.%m.%Y", "%d-%b-%Y", "%d-%b-%y", "%d/%m/%y", "%m/%d/%y",
 )
 
 CURRENCY_SYMBOLS = {"$": "USD", "£": "GBP", "€": "EUR", "₹": "INR", "¥": "JPY"}
@@ -63,7 +67,7 @@ _MULTISPACE = re.compile(r"\s{2,}")
 class ExtractionResult:
     transactions: List[Transaction] = field(default_factory=list)
     parser: str = ""
-    currency: str = "USD"
+    currency: str = "INR"
     warnings: List[str] = field(default_factory=list)
     pages_processed: int = 0
     rows_seen: int = 0
@@ -139,7 +143,12 @@ def parse_amount(raw) -> Optional[Decimal]:
 
 
 def parse_date(raw) -> Optional[date]:
-    """Try each known format. Ambiguous d/m vs m/d is resolved by validation."""
+    """Try each known format, first match wins.
+
+    Ambiguous d/m vs m/d is resolved by DATE_FORMATS order (day-first), not by
+    validation — both readings are valid dates when the day is <= 12, so there
+    is nothing to validate against at the level of a single value.
+    """
     if raw is None:
         return None
     if isinstance(raw, datetime):
@@ -157,7 +166,7 @@ def parse_date(raw) -> Optional[date]:
     return None
 
 
-def detect_currency(text: str, default: str = "USD") -> str:
+def detect_currency(text: str, default: str = "INR") -> str:
     for symbol, code in CURRENCY_SYMBOLS.items():
         if symbol in text:
             return code
@@ -226,7 +235,7 @@ def _repair_unbalanced_quotes(text: str) -> Tuple[str, int]:
     return "\n".join(lines), repaired
 
 
-def extract_csv(data, currency_default: str = "USD") -> ExtractionResult:
+def extract_csv(data, currency_default: str = "INR") -> ExtractionResult:
     """Parse a CSV export with flexible column mapping (§7)."""
     text = _decode(data) if isinstance(data, (bytes, bytearray)) else str(data)
     result = ExtractionResult(parser="csv")
@@ -621,7 +630,7 @@ def extract_sms(text: str, default_date: Optional[date] = None) -> ExtractionRes
                 raw_merchant=merchant,
                 balance=parse_amount(balance.group(1)) if balance else None,
                 reference=ref.group(1) if ref else None,
-                currency=CURRENCY_SYMBOLS.get(symbol, symbol.upper() or "USD"),
+                currency=CURRENCY_SYMBOLS.get(symbol, symbol.upper() or "INR"),
                 source_row=line_no,
                 parser="sms",
                 extraction_confidence=0.75,
@@ -642,10 +651,22 @@ def extract_sms(text: str, default_date: Optional[date] = None) -> ExtractionRes
 def deduplicate(
     transactions: Iterable[Transaction],
 ) -> Tuple[List[Transaction], List[Transaction]]:
-    """Dedupe on (date, amount, merchant, reference) per §7.
+    """Dedupe on (date, amount, merchant, reference, balance) per §7.
 
     Returns (kept, removed). Nothing is discarded silently — the caller shows the
     removed rows in the extraction review screen (§6.3, §8).
+
+    The running balance is part of the key because two *genuine* charges can be
+    identical on every other field. A real HDFC statement had two ₹1501.16
+    Domino's UPI debits on the same day; the only things telling them apart were
+    the UPI reference embedded past the 40-character merchant slice and the
+    running balance (46204.45 -> 44703.29). Keying without the balance collapsed
+    them into one and understated spending by the amount of the dropped debit.
+
+    A row that is the same transaction seen from two sources carries the same
+    balance, so genuine cross-source duplicates still collapse. Where a source
+    has no balance column the field is None on both sides and the key degrades
+    to the previous behaviour.
     """
     seen: Dict[tuple, Transaction] = {}
     kept: List[Transaction] = []
@@ -657,6 +678,7 @@ def deduplicate(
             t.direction,
             (t.normalized_merchant or t.raw_merchant or t.description or "").lower()[:40],
             (t.reference or "").upper(),
+            t.balance,
         )
         if key in seen:
             removed.append(t)

@@ -71,7 +71,7 @@ class Transaction:
     essentiality: Essentiality = Essentiality.UNKNOWN
 
     balance: Optional[Decimal] = None
-    currency: str = "USD"
+    currency: str = "INR"
 
     # Provenance (§8) — never silently drop a transaction, always know where it came from
     source_page: Optional[int] = None

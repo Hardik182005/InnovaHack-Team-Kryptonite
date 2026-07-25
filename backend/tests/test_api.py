@@ -550,3 +550,46 @@ def test_oversized_upload_is_rejected(client, session):
         headers=session,
     )
     assert response.status_code in (400, 413, 422)
+
+
+# --- demo statement packaging (deployment regression) ------------------------
+#
+# The deployed image 503'd on POST /api/analyses {"demo": true} with
+# DEMO_UNAVAILABLE: the backend image is built with `backend/` as the Docker
+# build context, so the repo root's `demo_data/` — the only place the loader
+# looked — was outside the context and never shipped. These tests pin the
+# packaged copy that fixes it, and would fail if it were dropped again.
+
+
+def test_demo_statement_ships_inside_the_app_package():
+    """The demo asset must live under `backend/`, or it cannot reach the image."""
+    from app.api.analyses import _packaged_demo_path
+
+    packaged = _packaged_demo_path()
+    assert os.path.exists(packaged), (
+        "%s is missing — POST /api/analyses {'demo': true} will 503 in any "
+        "deployment. Run scripts/generate_demo_statement.py." % packaged
+    )
+    app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    assert os.path.abspath(packaged).startswith(os.path.join(app_dir, "app") + os.sep)
+
+
+def test_packaged_demo_statement_matches_the_generated_one():
+    """The two copies are written by one generator and must not drift."""
+    from app.api.analyses import _packaged_demo_path
+
+    with open(_packaged_demo_path(), "rb") as fh:
+        packaged = fh.read()
+    with open(DEMO, "rb") as fh:
+        generated = fh.read()
+    assert packaged == generated
+
+
+def test_demo_loads_with_no_configured_path_and_no_repo_root():
+    """Simulates the container: nothing configured, no repo-root demo_data/."""
+    from app.api.analyses import _load_demo_statement
+    from app.config import Settings
+
+    filename, content = _load_demo_statement(Settings(demo_statement_path=""))
+    assert filename == "demo_statement.csv"
+    assert content and b"Transaction Date" in content

@@ -7,8 +7,10 @@ uvicorn[standard]==0.34.0
 pydantic==2.13.4
 python-multipart==0.0.20
 
-# Extraction (§7). pdfplumber pulls in pdfminer.six for the text layer.
+# Extraction (§7). pdfplumber reads ruled tables; PyMuPDF is the fallback when
+# pdfplumber is unavailable or a layout defeats it. Both paths are tested.
 pdfplumber==0.11.8
+pymupdf==1.26.5
 
 # HTTP client for AI provider adapters (§14). No provider SDK is required —
 # the adapters speak plain REST so a missing key degrades to deterministic mode.

@@ -89,3 +89,10 @@ tmp/
 .cache/
 demo_data/
 uploads/
+
+# ...but the packaged demo statement is a RUNTIME asset of the service, not a
+# dev artifact: POST /api/analyses {"demo": true} reads it. The build context is
+# `backend/`, so the repo root's demo_data/ is not available here at all — this
+# copy is the only one that reaches the image. Never exclude it.
+!app/data/
+!app/data/demo_statement.csv

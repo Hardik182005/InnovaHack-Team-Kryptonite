@@ -24,6 +24,12 @@
 # beyond this intentional placeholder.
 ######################################################################
 
+# The AWS-managed key that encrypts SecureString parameters. Looked up (not
+# hardcoded) because the key ID differs per account and region.
+data "aws_kms_alias" "ssm" {
+  name = "alias/aws/ssm"
+}
+
 locals {
   ssm_secret_params = [
     "OPENAI_API_KEY",
@@ -45,6 +51,12 @@ locals {
     ELEVENLABS_VOICE_ID   = "REPLACE_ME"
     ELEVENLABS_MODEL_ID   = "REPLACE_ME"
     LOCAL_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+
+    # The app's own CORS allow-list (FastAPI CORSMiddleware), not the uploads
+    # bucket's. Driven by the same var as the bucket rule so the two cannot
+    # drift apart. Without this the backend falls back to its localhost-only
+    # default and rejects the deployed frontend's origin outright.
+    CORS_ALLOW_ORIGINS = join(",", var.cors_allowed_origins)
   }
 
   ssm_path_prefix = "/${local.name_prefix}"
@@ -53,10 +65,12 @@ locals {
 resource "aws_ssm_parameter" "secret" {
   for_each = toset(local.ssm_secret_params)
 
-  name        = "${local.ssm_path_prefix}/${each.value}"
-  type        = "SecureString"
-  value       = "REPLACE_ME"
-  description = "SafeSpare AI — ${each.value}. Placeholder; set the real value with `aws ssm put-parameter --overwrite`."
+  name  = "${local.ssm_path_prefix}/${each.value}"
+  type  = "SecureString"
+  value = "REPLACE_ME"
+  # SSM rejects anything outside [\p{L}\p{LD}\p{Z}\p{N}_.:/=+\-@] here, which
+  # rules out the em-dash, backticks, commas and semicolons used elsewhere.
+  description = "SafeSpare AI ${each.value} placeholder. Set the real value with aws ssm put-parameter --overwrite."
 
   tags = local.common_tags
 
@@ -71,7 +85,7 @@ resource "aws_ssm_parameter" "config" {
   name        = "${local.ssm_path_prefix}/${each.key}"
   type        = "String"
   value       = each.value
-  description = "SafeSpare AI — ${each.key}."
+  description = "SafeSpare AI ${each.key}."
 
   tags = local.common_tags
 
@@ -161,17 +175,34 @@ data "aws_iam_policy_document" "backend_scoped" {
       "ssm:GetParameters",
       "ssm:GetParametersByPath",
     ]
-    resources = ["arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter${local.ssm_path_prefix}/*"]
+    # Two ARNs, not one. GetParameter/GetParameters authorize against the
+    # individual parameter (".../parameter/safespare-demo/GROQ_API_KEY"), but
+    # GetParametersByPath authorizes against the *path* itself
+    # (".../parameter/safespare-demo", with no trailing slash or wildcard).
+    # Granting only the "/*" form makes refresh.sh's get-parameters-by-path
+    # call fail with AccessDenied and silently produce an empty app.env.
+    resources = [
+      "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter${local.ssm_path_prefix}",
+      "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter${local.ssm_path_prefix}/*",
+    ]
   }
 
   # SecureString parameters are encrypted with the AWS-managed `alias/aws/ssm`
   # key; decrypting them via ssm:GetParameter requires this in addition to
-  # the SSM permission above.
+  # the SSM permission above. IAM resource matching for KMS needs the *key*
+  # ARN - an alias ARN never matches and the grant is silently useless - so
+  # resolve the alias to its target key.
   statement {
     sid       = "SsmSecureStringDecrypt"
     effect    = "Allow"
     actions   = ["kms:Decrypt"]
-    resources = ["arn:aws:kms:${var.aws_region}:${data.aws_caller_identity.current.account_id}:alias/aws/ssm"]
+    resources = [data.aws_kms_alias.ssm.target_key_arn]
+
+    condition {
+      test     = "StringEquals"
+      variable = "kms:ViaService"
+      values   = ["ssm.${var.aws_region}.amazonaws.com"]
+    }
   }
 
   statement {

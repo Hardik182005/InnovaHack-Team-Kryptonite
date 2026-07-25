@@ -79,10 +79,20 @@ class ProviderConfig:
     fallback_model: Optional[str]
     base_url: str
     timeout_seconds: float = 20.0
+    #: Second credential, tried only when the primary is rejected or rate
+    #: limited (401/403/429). Distinct from fallback_model, which switches
+    #: model on the same key.
+    fallback_api_key: Optional[str] = None
 
     @property
     def has_credentials(self) -> bool:
         return bool(self.api_key)
+
+    @property
+    def api_keys(self) -> List[str]:
+        """Credentials to try in order, de-duplicated, blanks dropped."""
+        ordered = [k for k in (self.api_key, self.fallback_api_key) if k]
+        return list(dict.fromkeys(ordered))
 
     @property
     def active_model(self) -> Optional[str]:
@@ -99,6 +109,7 @@ class ProviderConfig:
         return {
             "provider": self.name,
             "credentials_present": self.has_credentials,
+            "fallback_credentials_present": bool(self.fallback_api_key),
             "model": self.model or None,
             "fallback_model": self.fallback_model or None,
             "configured": self.configured,
@@ -189,8 +200,21 @@ class Settings:
 
 
 def _default_demo_path() -> str:
-    """`<repo>/demo_data/demo_statement.csv`, resolved from this file's location."""
+    """Where to find the synthetic demo statement (§23).
+
+    The packaged copy at ``app/data/demo_statement.csv`` is preferred and is the
+    only one that exists in the container image: the backend image is built with
+    ``backend/`` as its build context (see infra/scripts/deploy.sh), so the repo
+    root's ``demo_data/`` is outside the context and never ships. Anything the
+    service needs at *runtime* therefore has to live under ``backend/``.
+
+    The repo-root ``demo_data/`` copy is kept as a fallback so a source checkout
+    that has only run ``scripts/generate_demo_statement.py`` still works.
+    """
     here = os.path.dirname(os.path.abspath(__file__))
+    packaged = os.path.join(here, "data", "demo_statement.csv")
+    if os.path.exists(packaged):
+        return packaged
     repo_root = os.path.dirname(os.path.dirname(here))
     return os.path.join(repo_root, "demo_data", "demo_statement.csv")
 
@@ -233,6 +257,7 @@ def load_settings() -> Settings:
         groq=ProviderConfig(
             name="groq",
             api_key=_env("GROQ_API_KEY"),
+            fallback_api_key=_env("GROQ_FALLBACK_API_KEY"),
             model=_env("GROQ_MODEL"),
             fallback_model=_env("GROQ_FALLBACK_MODEL"),
             base_url=_env("GROQ_BASE_URL", "https://api.groq.com/openai/v1"),

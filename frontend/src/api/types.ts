@@ -235,6 +235,9 @@ export interface AnalysisSummary {
   period_start: string;
   period_end: string;
   months_covered: number;
+  transaction_count: number;
+  /** True when the statement carried no running balance (§6.6). */
+  balance_is_estimated: boolean;
 
   total_income: Money;
   total_spending: Money;

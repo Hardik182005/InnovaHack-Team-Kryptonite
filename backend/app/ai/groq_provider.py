@@ -7,7 +7,7 @@ output is rejected outright if it states a number the backend did not calculate.
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Optional
 
 from ..config import ProviderConfig
 from .base import LLMProvider, ProviderUnavailable
@@ -35,15 +35,33 @@ class GroqProvider(LLMProvider):
             "max_tokens": max_tokens,
             "response_format": {"type": "json_object"},
         }
-        response = httpx.post(
-            "%s/chat/completions" % self.config.base_url.rstrip("/"),
-            headers={
-                "Authorization": "Bearer %s" % self.config.api_key,
-                "Content-Type": "application/json",
-            },
-            json=payload,
-            timeout=self.config.timeout_seconds,
-        )
+        # Try the primary credential, then the spare. Only a credential-shaped
+        # rejection is worth retrying: 401/403 means this key is dead and 429
+        # means it is exhausted, and in both cases the other key may still
+        # work. Any other status is a real error and is raised immediately, so
+        # a malformed prompt is not silently sent twice.
+        keys = self.config.api_keys or [self.config.api_key]
+        last_error: Optional[Exception] = None
+        for index, key in enumerate(keys):
+            response = httpx.post(
+                "%s/chat/completions" % self.config.base_url.rstrip("/"),
+                headers={
+                    "Authorization": "Bearer %s" % key,
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+                timeout=self.config.timeout_seconds,
+            )
+            if response.status_code in (401, 403, 429) and index < len(keys) - 1:
+                last_error = httpx.HTTPStatusError(
+                    "groq credential rejected with %s" % response.status_code,
+                    request=response.request,
+                    response=response,
+                )
+                continue
+            break
+        if last_error is not None and response.status_code in (401, 403, 429):
+            raise ProviderUnavailable(self.name, "all_credentials_rejected")
         response.raise_for_status()
         body = response.json()
         try:

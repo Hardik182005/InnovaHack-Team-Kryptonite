@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { api, activeAnalysisId } from '../api/client';
 import { Badge, ConfirmDialog, ErrorState, Loading, NeedsAnalysis, SectionHead, Stat } from '../components/common';
 import { useMutation, useResource } from '../hooks/useResource';
+import { AppShell } from '../components/AppShell';
+import { useI18n } from '../i18n/I18nProvider';
 import { money, USAGE_LABELS, DECISION_LABELS } from '../lib/format';
 import type { LeakDecision, LeakFinding, UsageStatus } from '../api/types';
 
@@ -19,6 +21,7 @@ const USAGE_OPTIONS: UsageStatus[] = [
 ];
 
 export default function LeakRadar() {
+  const { t } = useI18n();
   const analysisId = activeAnalysisId();
   const [pendingCancel, setPendingCancel] = useState<LeakFinding | null>(null);
   const [draft, setDraft] = useState<{ subject: string; body: string } | null>(null);
@@ -44,17 +47,17 @@ export default function LeakRadar() {
   });
 
   if (!analysisId) return <NeedsAnalysis />;
-  if (res.loading) return <div className="wrap section"><Loading /></div>;
-  if (res.error) return <div className="wrap section"><ErrorState error={res.error} onRetry={res.reload} /></div>;
+  if (res.loading) return <AppShell title={t('page.leakRadar')}><Loading /></AppShell>;
+  if (res.error) return <AppShell title={t('page.leakRadar')}><ErrorState error={res.error} onRetry={res.reload} /></AppShell>;
   const d = res.data;
   if (!d) return null;
   const c = d.currency;
 
   return (
-    <div className="wrap section">
+    <AppShell title={t('page.leakRadar')}>
       <SectionHead
         eyebrow="Leak Radar · supporting intelligence"
-        title="Recurring costs worth a second look"
+        title={t('page.leakRadar')}
         lede="SafeSpare can see what recurs. It cannot see what you use — so it asks."
       />
 
@@ -98,7 +101,7 @@ export default function LeakRadar() {
 
             {!f.protected ? (
               <fieldset className="stack stack--sm" style={{ border: 0, padding: 0, marginTop: 16 }}>
-                <legend className="micro">Have you used this service in the last 30 days?</legend>
+                <legend className="micro">{t('leak.usageQuestion')}</legend>
                 <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
                   {USAGE_OPTIONS.map((status) => (
                     <button key={status} type="button"
@@ -181,6 +184,6 @@ export default function LeakRadar() {
         onCancel={() => setDraft(null)}
         onConfirm={() => setDraft(null)}
       />
-    </div>
+    </AppShell>
   );
 }

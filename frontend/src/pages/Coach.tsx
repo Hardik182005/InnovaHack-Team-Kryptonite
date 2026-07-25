@@ -5,6 +5,8 @@ import { FormEvent, useRef, useState } from 'react';
 import { api, activeAnalysisId } from '../api/client';
 import { ErrorState, NeedsAnalysis, SectionHead } from '../components/common';
 import { useMutation } from '../hooks/useResource';
+import { AppShell } from '../components/AppShell';
+import { useI18n } from '../i18n/I18nProvider';
 
 interface Turn {
   who: 'user' | 'coach';
@@ -20,6 +22,7 @@ const SUGGESTIONS = [
 ];
 
 export default function Coach() {
+  const { t } = useI18n();
   const analysisId = activeAnalysisId();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [question, setQuestion] = useState('');
@@ -52,10 +55,10 @@ export default function Coach() {
   }
 
   return (
-    <div className="wrap section">
+    <AppShell title={t('page.coach')}>
       <SectionHead
         eyebrow="AI Coach"
-        title="Ask about any figure"
+        title={t('page.coach')}
         lede="The Coach explains values SafeSpare already calculated. It cannot change them, and it never invents a transaction."
       />
 
@@ -119,6 +122,6 @@ export default function Coach() {
           </div>
         ) : null}
       </div>
-    </div>
+    </AppShell>
   );
 }

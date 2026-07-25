@@ -78,6 +78,15 @@ table {
   border-radius: 4px;
 }
 
+/* The main landmark is focused programmatically on route change so screen
+   readers land at the top of the new page. That is not a keyboard interaction,
+   so it must not paint a focus ring — it was drawing a blue bar across the top
+   of every page. */
+#main:focus,
+#main:focus-visible {
+  outline: none;
+}
+
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -1799,3 +1808,607 @@ table {
   }
   .mic--on { animation: none; box-shadow: 0 0 0 4px var(--accent-100); }
 }
+
+/* --------------------------------------------------------------------------
+   Fixes found by rendering the pages rather than reading the CSS.
+   -------------------------------------------------------------------------- */
+
+/* `.checkline` is styled for a light card (--ink-72). Inside a dark panel that
+   is dark-on-dark and the text disappears entirely. */
+.card--dark .checkline,
+.hero-panel--dark .checkline {
+  color: var(--paper-78);
+  cursor: default;
+}
+.card--dark .checkline .t-accent,
+.hero-panel--dark .checkline .t-accent {
+  color: var(--accent-300);
+}
+
+/* A non-interactive checklist row — no pointer cursor, no hover affordance. */
+.checkline--static { cursor: default; }
+
+/* Mono micro-labels on a dark surface. */
+.micro--on-dark { color: var(--paper-60, rgba(247, 244, 237, 0.6)); }
+
+/* The hero figure card sits on the dark panel and needs a lighter rule. */
+.hero-panel--dark .card--flush {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--r-card-lg);
+  padding: clamp(20px, 2.4vw, 28px);
+}
+.hero-panel--dark .waterfall li { padding: 7px 0; }
+.hero-panel--dark .waterfall li + li { border-top: 1px solid rgba(255, 255, 255, 0.09); }
+.hero-panel--dark .mono { color: var(--paper); }
+
+/* Tighter vertical rhythm — the previous spacing left a large dead band under
+   the hero on desktop. */
+.section--tight { padding-top: clamp(20px, 3vw, 36px); padding-bottom: clamp(20px, 3vw, 36px); }
+
+/* Ghost and quiet buttons are ink-coloured for a light background. On the dark
+   hero they rendered as invisible dark-on-dark, so the two secondary calls to
+   action simply disappeared. */
+.hero-panel--dark .btn--ghost,
+.card--dark .btn--ghost {
+  color: var(--paper);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+.hero-panel--dark .btn--ghost:hover:not(:disabled),
+.card--dark .btn--ghost:hover:not(:disabled) {
+  border-color: var(--paper);
+  background: rgba(255, 255, 255, 0.06);
+}
+.hero-panel--dark .btn--quiet,
+.card--dark .btn--quiet {
+  color: var(--paper-78);
+}
+.hero-panel--dark .btn--quiet:hover:not(:disabled),
+.card--dark .btn--quiet:hover:not(:disabled) {
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* The headline reads better at a controlled measure than wrapping to five
+   lines against the figure card. */
+.hero-panel--dark .display-1 { max-width: 15ch; }
+
+/* ==========================================================================
+   Hero + orbit — the approved Perch layout (design/Perch Site.dc.html).
+   Cream ground, oversized display headline left, orbit right, stat row below.
+   ========================================================================== */
+
+.hero { padding-top: clamp(28px, 4vw, 56px); padding-bottom: 0; }
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+  min-height: min(72vh, 620px);
+}
+
+.hero__headline { margin: 22px 0 0; max-width: 13ch; }
+.hero__lede { margin-top: 22px; max-width: 44ch; }
+
+.hero__cta {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+.hero__cta .input { flex: 1 1 260px; min-width: 0; max-width: 320px; }
+.hero__note { margin-top: 12px; }
+
+/* --- orbit ----------------------------------------------------------------
+   Three concentric rings rotate at different speeds. Chips are seated on the
+   ring edge and counter-rotate at the identical duration, so each label travels
+   its circle while remaining upright. */
+
+.orbit {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+}
+
+.orbit__grid {
+  position: absolute;
+  inset: 4%;
+  background-image:
+    linear-gradient(var(--ink-07) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ink-07) 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: radial-gradient(circle at 50% 50%, #000 40%, transparent 76%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 40%, transparent 76%);
+}
+
+.orbit__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--ink-12);
+}
+.orbit__ring--outer { inset: 0;   animation: p-spin 48s linear infinite; }
+.orbit__ring--mid   { inset: 19%; animation: p-spin-rev 34s linear infinite; }
+.orbit__ring--inner {
+  inset: 36%;
+  border-style: dashed;
+  border-color: var(--accent-300);
+  animation: p-spin 22s linear infinite;
+}
+
+/* A seat pins a chip to a point on its ring's circumference. */
+.orbit__seat { position: absolute; }
+.orbit__seat--n  { top: 0;    left: 50%; transform: translate(-50%, -50%); }
+.orbit__seat--s  { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+.orbit__seat--w  { top: 50%;  left: 0;   transform: translate(-50%, -50%); }
+.orbit__seat--ne { top: 15%;  right: 8%; }
+.orbit__seat--se { bottom: 18%; right: 2%; }
+.orbit__seat--sw { bottom: 10%; left: 14%; }
+
+/* The counter-rotation: same duration, opposite direction, so text stays level. */
+.orbit__ring--outer .orbit__chip { animation: p-spin-rev 48s linear infinite; }
+.orbit__ring--mid   .orbit__chip { animation: p-spin 34s linear infinite; }
+
+
+.orbit__chip {
+  display: block;
+  padding: 9px 16px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid rgba(20, 18, 15, 0.1);
+  box-shadow: 0 10px 22px -14px rgba(20, 18, 15, 0.6);
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 650;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.orbit__chip--accent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.orbit__glow {
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(36, 56, 224, 0.18), transparent 68%);
+  animation: p-glow 6s ease-in-out infinite;
+}
+
+.orbit__core { text-align: center; z-index: 2; }
+.orbit__value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(44px, 6vw, 76px);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  color: var(--accent);
+}
+.orbit__caption {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+
+.orbit__bars {
+  position: absolute;
+  bottom: -7%;
+  left: 2%;
+  right: 2%;
+  display: grid;
+  gap: 12px;
+  z-index: 2;
+}
+.orbit__bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: center;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+.orbit__track {
+  position: relative;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--ink-09);
+}
+.orbit__track i {
+  display: block; height: 100%;
+  background: var(--accent); border-radius: 999px;
+}
+.orbit__track--warm i { background: var(--warning); }
+
+/* The fill measures itself out once, left to right — the bar is reporting a
+   measurement, not offering a control, so nothing here should look draggable. */
+.orbit__track i { animation: p-measure 1100ms cubic-bezier(0.2, 0.8, 0.2, 1) 300ms both; }
+.orbit__track--warm i { animation-delay: 520ms; }
+
+@keyframes p-measure {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.orbit__track i { transform-origin: left center; }
+
+/* --- stat row ------------------------------------------------------------- */
+
+.statrow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--ink-12);
+  margin-top: clamp(40px, 6vw, 76px);
+}
+.statrow__item { padding: 26px 28px 30px; }
+.statrow__item + .statrow__item { border-left: 1px solid var(--ink-12); }
+.statrow__figure {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.4vw, 46px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--accent);
+}
+.statrow__unit { font-size: 0.5em; color: var(--ink-45); letter-spacing: 0; }
+.statrow__label { margin: 10px 0 0; font-size: 14px; line-height: 1.4; color: var(--ink-55); }
+
+@media (max-width: 900px) {
+  .hero__grid { grid-template-columns: 1fr; min-height: 0; }
+  .orbit { max-width: 420px; margin-top: 24px; }
+  .orbit__bars { position: static; margin-top: 46px; }
+  .statrow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .statrow__item:nth-child(3) { border-left: 0; }
+  .statrow__item:nth-child(n + 3) { border-top: 1px solid var(--ink-12); }
+}
+@media (max-width: 560px) {
+  .statrow { grid-template-columns: 1fr; }
+  .statrow__item + .statrow__item { border-left: 0; border-top: 1px solid var(--ink-12); }
+  .orbit__chip { font-size: 11.5px; padding: 6px 10px; }
+}
+
+/* Indic scripts carry ascenders (मात्रा) and descenders that the Latin display
+   line-height of 0.94 clips into each other. Give every non-Latin script room. */
+:root:not([data-script='latin']) .display-1,
+:root:not([data-script='latin']) .display-2 { line-height: 1.28; letter-spacing: -0.01em; }
+:root:not([data-script='latin']) .display-3,
+:root:not([data-script='latin']) .display-4 { line-height: 1.3; letter-spacing: -0.005em; }
+:root:not([data-script='latin']) .figure,
+:root:not([data-script='latin']) .statrow__figure,
+:root:not([data-script='latin']) .orbit__value { line-height: 1.2; }
+/* Uppercasing and wide tracking are Latin typographic conventions; applied to
+   Devanagari or Tamil they break the glyph clusters apart. */
+:root:not([data-script='latin']) .micro,
+:root:not([data-script='latin']) .eyebrow,
+:root:not([data-script='latin']) .orbit__caption,
+:root:not([data-script='latin']) .orbit__bar { text-transform: none; letter-spacing: 0.02em; }
+
+/* RTL: the orbit is a physical composition, so its chips must be mirrored
+   rather than inheriting the text direction. */
+[dir='rtl'] .orbit__chip--right { right: auto; left: -2%; }
+[dir='rtl'] .orbit__chip--left { left: auto; right: -1%; }
+[dir='rtl'] .orbit__chip--top-right { right: auto; left: 12%; }
+[dir='rtl'] .orbit__chip--bottom-left { left: auto; right: 16%; }
+[dir='rtl'] .orbit__bar { direction: rtl; }
+[dir='rtl'] .statrow__item + .statrow__item { border-left: 0; border-right: 1px solid var(--ink-12); }
+[dir='rtl'] .hero__cta { flex-direction: row-reverse; justify-content: flex-end; }
+
+/* The page body must never scroll horizontally. In RTL the scroll origin is the
+   right edge, so any overflow pushes the entire layout out of view — the Urdu
+   build rendered as a blank cream page for exactly this reason.
+   `clip` rather than `hidden`: `hidden` creates a scroll container and would
+   break the sticky header. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+.shell { max-width: 100vw; overflow-x: clip; }
+
+/* The coverage note sat below the select and forced the header to two rows.
+   As a compact badge beside it, the header stays on one line in every language. */
+.lang--inline { flex-direction: row; align-items: center; gap: 6px; }
+.lang__coverage {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--ink-07);
+  color: var(--ink-45);
+  cursor: help;
+  white-space: nowrap;
+}
+
+/* Indic display text needs a wider measure than the 13ch Latin headline, or
+   long compound words wrap to six lines. */
+:root:not([data-script='latin']) .hero__headline { max-width: 20ch; }
+:root:not([data-script='latin']) .display-1 { font-size: clamp(30px, 3.6vw, 50px); }
+
+/* Translated nav labels are far longer than the English ones and wrapped the
+   header onto a second row. Let the nav shrink and scroll instead of forcing
+   the header to grow. */
+.header__inner { flex-wrap: nowrap; }
+.header__inner > .nav {
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1 1 auto;
+  justify-content: center;
+}
+.header__inner > .nav::-webkit-scrollbar { display: none; }
+.header__inner .nav-link { white-space: nowrap; }
+.header__inner > .row { flex: 0 0 auto; flex-wrap: nowrap; }
+/* The nav itself was still wrapping its own items. */
+.header__inner > .nav { flex-wrap: nowrap; }
+
+/* --- drifting colour fields behind the hero (design: p-blob) -------------- */
+.blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.blob { position: absolute; border-radius: 999px; filter: blur(14px); }
+.blob--a {
+  top: -22vh; right: -12vw; width: 58vw; height: 58vw;
+  background: radial-gradient(circle at 50% 50%, rgba(36,56,224,0.10), transparent 66%);
+  animation: p-blob 30s ease-in-out infinite;
+}
+.blob--b {
+  top: 30vh; left: -18vw; width: 48vw; height: 48vw;
+  background: radial-gradient(circle at 50% 50%, rgba(140,155,255,0.16), transparent 68%);
+  animation: p-blob 38s ease-in-out infinite reverse;
+}
+/* Lift page content above the fixed blobs. The skip-link is excluded: it is
+   absolutely positioned off-screen, and forcing `position: relative` on it put
+   a 50px empty band above the header on every page. */
+.shell > *:not(.skip-link) { position: relative; z-index: 1; }
+
+/* --- blue panel ----------------------------------------------------------- */
+.hero-panel--accent .display-2,
+.hero-panel--accent .lede,
+.hero-panel--accent .mono { color: #fff; }
+
+.handle {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--r-card-lg);
+  padding: 20px 18px;
+  height: 100%;
+  transition: transform 240ms ease, background 240ms ease;
+}
+.handle:hover { transform: translateY(-3px); background: rgba(255,255,255,0.15); }
+.handle__num {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.66); margin: 0;
+}
+.handle__title {
+  margin: 12px 0 0; font-family: var(--font-display);
+  font-size: 18px; font-weight: 650; letter-spacing: -0.02em; color: #fff;
+}
+.handle__body { margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: rgba(255,255,255,0.82); }
+.handle__stat {
+  margin: 14px 0 0; padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.18);
+  font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.66);
+}
+
+.cta-panel {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 28px; flex-wrap: wrap;
+}
+.cta-panel__btn {
+  background: #fff; color: var(--accent); border: none;
+  font-weight: 650; position: relative; overflow: hidden; flex: none;
+}
+.cta-panel__btn:hover { transform: translateY(-1px); }
+
+@media (max-width: 900px) {
+  .hero-panel--accent .grid--4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 560px) {
+  .hero-panel--accent .grid--4 { grid-template-columns: 1fr; }
+}
+
+/* Icons sit inline with button and link text. */
+.btn svg, .nav-link svg, .checkline svg, .sidebar__link svg { flex: none; }
+.btn { display: inline-flex; align-items: center; gap: 8px; }
+.nav-link { display: inline-flex; align-items: center; gap: 6px; }
+.checkline svg { margin-top: 2px; }
+.stage__mark { display: inline-flex; width: 18px; justify-content: center; color: var(--accent); }
+.stage--pending .stage__mark { color: var(--ink-30); }
+.is-spinning { animation: p-spin 1s linear infinite; }
+
+/* Body copy gains a little weight as well as contrast: at 14–15px on a warm
+   ground, 400 reads thin. */
+body { color: var(--ink-90); }
+.prose, .lede, .flow__body { color: var(--ink-72); }
+.micro, .eyebrow { color: var(--ink-55); }
+.t-muted { color: var(--ink-55); }
+.statrow__label { color: var(--ink-72); }
+.orbit__caption { color: var(--ink-55); }
+.orbit__bar { color: var(--ink-55); }
+.handle__body { color: rgba(255, 255, 255, 0.92); }
+.handle__stat, .handle__num { color: rgba(255, 255, 255, 0.78); }
+.hero-panel--dark .lede, .card--dark .prose { color: rgba(247, 244, 237, 0.9); }
+
+/* The rings live on their own square stage so they stay circular, and the bars
+   sit beneath it as an ordinary block. Previously the bars were absolutely
+   positioned inside the orbit, so an orbiting chip could rotate down on top of
+   them — "Rent" landed on the SPARE CHANGE row.  */
+.hero__grid { align-items: start; }
+
+.orbit {
+  position: relative;
+  display: block;
+  aspect-ratio: auto;
+  max-width: 520px;
+  margin-inline: auto;
+}
+.orbit__stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+.orbit__bars {
+  position: static;
+  margin-top: 26px;
+  display: grid;
+  gap: 11px;
+}
+.orbit__bar { font-size: 10px; }
+
+/* ==========================================================================
+   READABILITY PASS — applies to the whole site.
+
+   The Perch design uses IBM Plex Mono, uppercase, with wide letter-spacing for
+   every small label. As a graphic device on a marketing page it works. As the
+   label on a financial figure it does not: at 10–11px, uppercase removes the
+   word-shape cues people read by, and wide tracking breaks words into
+   fragments. This product is explicitly meant to serve people with low literacy
+   and people reading in a second script, so legibility outranks the flourish.
+
+   Rules applied here:
+     · labels become sentence-case sans at 13px
+     · letter-spacing on text drops to near zero
+     · mono is kept only where digits must align in a column
+     · minimum body size is 15px
+   ========================================================================== */
+
+/* --- labels --------------------------------------------------------------- */
+
+.micro {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-66);
+  line-height: 1.5;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--ink-55);
+}
+
+.pill,
+.statrow__label,
+.flow__num,
+.handle__num,
+.handle__stat,
+.orbit__caption,
+.orbit__bar,
+.voice-status,
+.stat .micro,
+.badge,
+.tag {
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+.pill { font-family: var(--font-body); font-size: 13px; font-weight: 600; }
+.flow__num, .handle__num { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
+.handle__stat { font-family: var(--font-body); font-size: 13px; }
+.orbit__caption { font-family: var(--font-body); font-size: 13px; font-weight: 500; letter-spacing: 0.02em; }
+.orbit__bar { font-family: var(--font-body); font-size: 12.5px; font-weight: 500; }
+.voice-status { font-family: var(--font-body); font-size: 14px; font-weight: 600; }
+
+/* --- body copy ------------------------------------------------------------ */
+
+body { font-size: 16px; line-height: 1.6; }
+.prose { font-size: 15.5px; line-height: 1.65; color: var(--ink-72); }
+.lede { font-size: 17px; line-height: 1.6; color: var(--ink-72); }
+.flow__body, .handle__body { font-size: 14.5px; line-height: 1.6; }
+.flow__title { font-size: 17px; font-weight: 650; }
+.nav-link { font-size: 15px; font-weight: 550; color: var(--ink-72); }
+.nav-link--on, .nav-link:hover { color: var(--ink); }
+.btn { font-size: 15px; font-weight: 600; letter-spacing: 0; }
+.btn--sm { font-size: 14px; }
+.btn--lg { font-size: 16px; }
+.input, .select, .textarea { font-size: 15px; }
+.checkline { font-size: 15px; line-height: 1.6; }
+.disclaimer { font-size: 13.5px; line-height: 1.6; }
+.footer .micro { font-size: 13px; }
+
+/* Mono survives only where a column of digits must line up. */
+.num, .mono, .dtable .num, .metric__value, .figure, .statrow__figure {
+  font-variant-numeric: tabular-nums;
+}
+.mono { font-family: var(--font-mono); letter-spacing: 0; text-transform: none; }
+
+/* --- marquee -------------------------------------------------------------- */
+
+.marquee__item { font-size: 15px; font-weight: 600; color: var(--ink-72); }
+/* The ghost row was near-invisible. It is decorative, but decoration that looks
+   like a rendering fault is worse than no decoration. */
+.marquee__item--ghost { color: var(--ink-45); border-color: var(--ink-12); background: transparent; }
+
+/* The bars, rebuilt.
+   `.orbit__track` is a <span>, so it was inline and ignored `height` entirely —
+   the track simply never drew. Labels also wrapped because the first column was
+   too narrow for the translated strings. */
+.orbit__bars { margin-top: 30px; display: grid; gap: 14px; }
+.orbit__bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'label amount' 'track track';
+  gap: 7px 14px;
+  align-items: baseline;
+}
+.orbit__bar > .mono:first-child {
+  grid-area: label;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 550;
+  color: var(--ink-66);
+  white-space: nowrap;
+}
+.orbit__bar > .mono:last-child {
+  grid-area: amount;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.orbit__track {
+  grid-area: track;
+  display: block;              /* the fix: a span is inline and drops height */
+  position: relative;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ink-09);
+  overflow: hidden;
+}
+.orbit__track i { display: block; height: 100%; border-radius: 999px; }
+
+/* Chips ride their own ring's circumference. With the rings spaced 24% apart
+   and each chip about 36px tall, a chip on one ring can no longer drift onto a
+   chip on another as the rings rotate at different speeds. */
+.orbit__seat--n  { top: 0;    left: 50%; transform: translate(-50%, -50%); }
+.orbit__seat--s  { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+.orbit__seat--w  { top: 50%;  left: 0;   transform: translate(-50%, -50%); }
+.orbit__seat--e  { top: 50%;  right: 0;  transform: translate(50%, -50%); }
+.orbit__seat--ne { top: 14.6%; right: 14.6%; transform: translate(50%, -50%); }
+.orbit__seat--se { bottom: 14.6%; right: 14.6%; transform: translate(50%, 50%); }
+.orbit__seat--sw { bottom: 14.6%; left: 14.6%; transform: translate(-50%, 50%); }
+.orbit__chip { font-size: 13px; padding: 8px 14px; }

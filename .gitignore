@@ -35,6 +35,31 @@ dist-ssr/
 *.pem
 *.key
 
+# Credentials pasted as documents. This repo is public.
+*key*.pdf
+*secret*.pdf
+
+# Terraform. State records every resource attribute, including the plaintext
+# value of any SecureString parameter it manages, so it must never be pushed;
+# use a private encrypted S3 backend instead. .terraform/ is ~700MB of
+# provider binaries and is reproducible with `terraform init`.
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+# Saved plans embed the same resolved values as state, secrets included.
+tfplan
+tfplan.*
+*.tfplan
+*.tfvars
+
+# Real bank statements. These contain live account numbers and transaction
+# history for named individuals; only synthetic fixtures belong in Git.
+Acct Statement*.pdf
+*_unlocked.pdf
+hardik*.pdf
+avinash*.pdf
+
 # OS metadata
 .DS_Store
 Thumbs.db

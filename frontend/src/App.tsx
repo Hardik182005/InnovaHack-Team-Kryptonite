@@ -11,8 +11,8 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
-import { dataSource } from './api/config';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
+import { Icon } from './components/Icon';
 import { useI18n } from './i18n/I18nProvider';
 import { activeAnalysisId } from './api/client';
 
@@ -32,76 +32,45 @@ const Speak = lazy(() => import('./pages/Speak'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
-/** Routes that only make sense once an analysis exists. */
-const ANALYSIS_NAV = [
-  { to: '/dashboard', key: 'nav.dashboard' },
-  { to: '/spending', key: 'nav.spending' },
-  { to: '/safe-spare', key: 'nav.safeSpare' },
-  { to: '/round-ups', key: 'nav.roundUps' },
-  { to: '/leak-radar', key: 'nav.leakRadar' },
-  { to: '/goals', key: 'nav.goals' },
-  { to: '/coach', key: 'nav.coach' },
-] as const;
-
 function Header({ hasAnalysis }: { hasAnalysis: boolean }) {
   const { t } = useI18n();
   return (
     <header className="header">
-      <div className="wrap row row--between">
+      <div className="header__inner">
         <NavLink to="/" className="brand" aria-label="SafeSpare AI home">
-          <span className="brand-mark" aria-hidden="true" />
-          <span>SafeSpare</span>
+          <span className="brand__mark" aria-hidden="true" />
+          <span className="brand__name">SafeSpare</span>
         </NavLink>
 
-        {hasAnalysis ? (
-          <nav className="nav" aria-label="Analysis sections">
-            {ANALYSIS_NAV.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) => (isActive ? 'nav-link nav-link--on' : 'nav-link')}
-              >
-                {t(item.key)}
-              </NavLink>
-            ))}
-          </nav>
-        ) : (
-          <nav className="nav" aria-label="Main">
-            <NavLink to="/speak" className="nav-link">
-              🎤 {t('cta.speak')}
-            </NavLink>
-            <a className="nav-link" href="/#how-it-works">
-              How it works
-            </a>
-            <a className="nav-link" href="/#trust">
-              Safety
-            </a>
-          </nav>
-        )}
+        <nav className="nav" aria-label="Main">
+          <NavLink to="/speak" className="nav-link">
+            <Icon.mic size={15} /> {t('cta.speak')}
+          </NavLink>
+          <a className="nav-link" href="/#how-it-works">
+            {t('section.howItWorks')}
+          </a>
+          <a className="nav-link" href="/#trust">
+            {t('nav.safety')}
+          </a>
+        </nav>
 
         <div className="row row--sm">
           <LanguageSwitcher compact />
           <NavLink to="/privacy" className="nav-link">
             {t('nav.privacy')}
           </NavLink>
-          <NavLink to="/upload" className="btn btn--dark btn--sm">
-            {hasAnalysis ? 'New analysis' : t('cta.analyze')}
-          </NavLink>
+          {hasAnalysis ? (
+            <NavLink to="/dashboard" className="btn btn--dark btn--sm">
+              {t('nav.dashboard')}
+            </NavLink>
+          ) : (
+            <NavLink to="/upload" className="btn btn--dark btn--sm">
+              {t('cta.analyze')}
+            </NavLink>
+          )}
         </div>
       </div>
     </header>
-  );
-}
-
-function ModeBanner() {
-  // §41: synthetic data must be visibly labelled, and it must be obvious which
-  // backend the numbers came from.
-  if (dataSource.mode === 'live') return null;
-  return (
-    <div className="mode-banner" role="status">
-      <span className="mono">DEMO DATA</span> — synthetic statement, no real account is
-      connected. No money is invested or moved.
-    </div>
   );
 }
 
@@ -121,7 +90,7 @@ function PageFallback() {
 function Footer() {
   return (
     <footer className="footer">
-      <div className="wrap">
+      <div className="footer__inner">
         <p className="micro">
           SafeSpare AI — FinTech, Problem Statement 2: Smart Expense &amp; Micro-Investment
           Assistant. Recurring-payment and price-leak detection is supporting intelligence.
@@ -135,8 +104,16 @@ function Footer() {
   );
 }
 
+/** Routes that render inside the application shell and supply their own
+ *  chrome. The marketing header and footer must not double up on them. */
+const APP_ROUTES = [
+  '/dashboard', '/spending', '/safe-spare', '/confidence', '/round-ups',
+  '/leak-radar', '/goals', '/coach', '/review', '/privacy',
+];
+
 export default function App() {
   const location = useLocation();
+  const inApp = APP_ROUTES.some((r) => location.pathname.startsWith(r));
   const [hasAnalysis, setHasAnalysis] = useState<boolean>(() => Boolean(activeAnalysisId()));
 
   // Re-check on navigation so the nav appears as soon as an analysis exists and
@@ -158,8 +135,7 @@ export default function App() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <ModeBanner />
-      <Header hasAnalysis={hasAnalysis} />
+      {inApp ? null : <Header hasAnalysis={hasAnalysis} />}
 
       <main id="main" tabIndex={-1}>
         <Suspense fallback={<PageFallback />}>
@@ -184,7 +160,7 @@ export default function App() {
         </Suspense>
       </main>
 
-      <Footer />
+      {inApp ? null : <Footer />}
     </div>
   );
 }

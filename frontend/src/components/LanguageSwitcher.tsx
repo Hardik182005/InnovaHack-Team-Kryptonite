@@ -18,7 +18,7 @@ export function LanguageSwitcher({ compact }: { compact?: boolean }) {
   const english = LANGUAGES.find((l) => l.code === 'en');
 
   return (
-    <div className="lang">
+    <div className="lang lang--inline">
       <label className="sr-only" htmlFor="lang-select">
         Choose your language
       </label>
@@ -50,16 +50,17 @@ export function LanguageSwitcher({ compact }: { compact?: boolean }) {
       </select>
 
       {lang.code !== 'en' && coverage < 1 ? (
-        <p className="micro t-muted">
-          {Math.round(coverage * 100)}% translated — the rest is shown in English while
-          native review is pending.
-        </p>
+        <span className="lang__coverage" title={`${Math.round(coverage * 100)}% of the interface is translated. The rest is shown in English until a native speaker reviews it.`}>
+          {Math.round(coverage * 100)}%
+        </span>
       ) : null}
     </div>
   );
 }
 
-/** 🎤 marks languages where the user can dictate rather than type. */
+/** A dot marks languages where the user can dictate rather than type.
+ *  A <select> can only hold text, so this is a typographic mark rather than an
+ *  icon — an emoji here would render inconsistently across platforms. */
 function dictationMark(speechLocale: string | null): string {
-  return speechLocale ? '🎤' : '';
+  return speechLocale ? ' ·' : '';
 }

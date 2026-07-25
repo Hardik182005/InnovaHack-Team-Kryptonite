@@ -98,7 +98,7 @@ resource "aws_security_group" "backend" {
   }
 
   egress {
-    description = "All outbound (no NAT needed — instance is in a public subnet)"
+    description = "All outbound (no NAT needed - instance is in a public subnet)"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -282,7 +282,10 @@ resource "aws_instance" "backend" {
           options:
             awslogs-region: "$${AWS_REGION}"
             awslogs-group: "$${LOG_GROUP}"
-            awslogs-stream-prefix: backend
+            # awslogs-stream, not awslogs-stream-prefix: the prefix form is an
+            # ECS task-definition option and the plain Docker awslogs driver
+            # rejects it outright, which fails container creation.
+            awslogs-stream: backend
             awslogs-create-group: "false"
         healthcheck:
           test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/health',timeout=3).status==200 else sys.exit(1)"]

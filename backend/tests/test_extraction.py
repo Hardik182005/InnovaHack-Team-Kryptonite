@@ -188,6 +188,36 @@ def test_deduplicate_across_sources():
     assert len(removed) == 1  # returned, not silently discarded
 
 
+def test_deduplicate_keeps_genuine_same_day_repeat_charges():
+    """Two real charges can match on date, amount and merchant (§7, §8).
+
+    From a real HDFC statement: two 1501.16 Domino's UPI debits on 2026-05-31.
+    They differ only by the UPI reference (which sits past the 40-character
+    merchant slice used in the key) and by the running balance, which chains
+    46204.45 -> 44703.29 and proves both hit the ledger. Collapsing them
+    understates spending, so both must survive.
+    """
+    desc = "UPI-DOMINOSPIZZA-JUBILANTFOODWORKSLIMI.P %s 31/05/26"
+    first = txn(
+        date(2026, 5, 31), desc % "0000615118427961", "1501.16", balance="46204.45"
+    )
+    second = txn(
+        date(2026, 5, 31), desc % "0000123991344627", "1501.16", balance="44703.29"
+    )
+    kept, removed = extraction.deduplicate([first, second])
+    assert len(kept) == 2, "a genuine repeat charge was dropped as a duplicate"
+    assert removed == []
+
+
+def test_deduplicate_still_collapses_the_same_row_from_two_sources():
+    """The cross-source case must keep working: same row, same balance."""
+    a = txn(date(2026, 5, 31), "DOMINOS", "1501.16", merchant="Dominos", balance="44703.29")
+    b = txn(date(2026, 5, 31), "DOMINOS", "1501.16", merchant="Dominos", balance="44703.29")
+    kept, removed = extraction.deduplicate([a, b])
+    assert len(kept) == 1
+    assert len(removed) == 1
+
+
 # --- validation (§8) ---------------------------------------------------------
 
 
@@ -301,3 +331,45 @@ def test_demo_csv_and_pdf_agree():
     csv_total = sum(t.amount for t in csv_result.transactions)
     pdf_total = sum(t.amount for t in pdf_result.transactions)
     assert csv_total == pdf_total
+
+
+# --- the §7 parser ladder ---------------------------------------------------
+
+
+@demo_pdf
+def test_pymupdf_fallback_produces_the_same_result_as_pdfplumber():
+    """§7 names PyMuPDF *and* pdfplumber. Both must actually work.
+
+    The fallback is exercised by making `import pdfplumber` fail, which is the
+    only way to prove the second rung of the ladder is real rather than
+    decorative — a branch that never executes is not a fallback.
+    """
+    import builtins
+
+    pytest.importorskip("fitz")
+    pytest.importorskip("pdfplumber")
+
+    with open(os.path.join(DEMO_DIR, "demo_statement.pdf"), "rb") as fh:
+        data = fh.read()
+
+    primary = extraction.extract(data, "demo_statement.pdf")
+    assert primary.parser == "pdf:pdfplumber"
+
+    real_import = builtins.__import__
+
+    def without_pdfplumber(name, *args, **kwargs):
+        if name == "pdfplumber":
+            raise ImportError("simulated")
+        return real_import(name, *args, **kwargs)
+
+    builtins.__import__ = without_pdfplumber
+    try:
+        fallback = extraction.extract(data, "demo_statement.pdf")
+    finally:
+        builtins.__import__ = real_import
+
+    assert fallback.parser == "pdf:pymupdf"
+    assert len(fallback.transactions) == len(primary.transactions)
+    assert sum(t.amount for t in fallback.transactions) == sum(
+        t.amount for t in primary.transactions
+    )

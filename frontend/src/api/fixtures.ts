@@ -45,7 +45,7 @@ import type {
 } from './types';
 
 export const FIXTURE_ANALYSIS_ID = 'demo-analysis-0001';
-export const FIXTURE_CURRENCY = 'USD';
+export const FIXTURE_CURRENCY = 'INR';
 const CALC_VERSION = 'fixture-1.0.0';
 
 const r2 = (n: number): number => Math.round(n * 100) / 100;
@@ -103,7 +103,7 @@ export function fixtureStatus(completedStages: number): AnalysisStatus {
 }
 
 export const fixtureDocumentMeta: DetectedDocumentMeta = {
-  currency: 'USD',
+  currency: 'INR',
   currency_confidence: 0.98,
   date_range_start: '2026-04-01',
   date_range_end: '2026-06-30',
@@ -252,29 +252,31 @@ export const fixtureSummary: AnalysisSummary = {
   period_start: '2026-04-01',
   period_end: '2026-06-30',
   months_covered: 3,
+  transaction_count: 195,
+  balance_is_estimated: false,
 
-  total_income: '9600.00',
-  total_spending: '8412.55',
-  essential_spending: '5441.00',
-  discretionary_spending: '2971.55',
-  recurring_spending: '4617.75',
+  total_income: '192000.00',
+  total_spending: '168251.00',
+  essential_spending: '108820.00',
+  discretionary_spending: '59431.00',
+  recurring_spending: '92355.00',
   recurring_payment_count: 12,
-  average_monthly_surplus: '395.82',
+  average_monthly_surplus: '7916.40',
 
-  potential_round_ups: '48.70',
-  safe_round_up_allowance: '31.00',
-  potential_recoverable_spending: '155.85',
+  potential_round_ups: '974.00',
+  safe_round_up_allowance: '620.00',
+  potential_recoverable_spending: '3117.00',
   confirmed_recoverable_spending: '0.00',
   high_confidence_recoverable_spending: '43.98',
 
-  safe_spare_amount: '31.00',
+  safe_spare_amount: '620.00',
   safe_spare_confidence: 0.82,
   cashflow_confidence_score: 72,
 
   goal_progress: {
     goal_id: 'demo-goal-001',
     goal_name: 'Emergency fund',
-    target_amount: '3000.00',
+    target_amount: '60000.00',
     contributed_to_date: '250.00',
     percent_complete: 8.3,
   },
@@ -366,7 +368,7 @@ export const fixtureCategories: CategoriesResponse = {
       detail:
         'Food-delivery spending increased from $512.60 to $684.20 between the previous and current period, across 18 orders. Two orders of a similar size to your recent ones total $62.30; skipping them would release that amount toward your selected goal.',
       evidence_transaction_ids: ['demo-tx-012', 'demo-tx-024'],
-      releasable_amount: '62.30',
+      releasable_amount: '1246.00',
       confidence: 0.88,
     },
     {
@@ -376,7 +378,7 @@ export const fixtureCategories: CategoriesResponse = {
       detail:
         'Nimbus Cloud Storage ($9.99) and Vaultbox Backup ($11.99) were both charged on 21 June. They occupy the same service category. If one of them is redundant, $11.99 a month is recoverable — but only after you confirm which one you actually use.',
       evidence_transaction_ids: ['demo-tx-010', 'demo-tx-011'],
-      releasable_amount: '11.99',
+      releasable_amount: '239.80',
       confidence: 0.74,
     },
     {
@@ -399,7 +401,7 @@ export const fixtureCategories: CategoriesResponse = {
 export const fixtureRecurring: RecurringResponse = {
   analysis_id: FIXTURE_ANALYSIS_ID,
   currency: FIXTURE_CURRENCY,
-  total_monthly_recurring: '1539.25',
+  total_monthly_recurring: '30785.00',
   calculation_version: CALC_VERSION,
   items: [
     { id: 'rec-01', merchant: 'Cascade Property Mgmt', category: 'rent_housing', frequency: 'monthly', occurrence_count: 3, median_amount: '1150.00', monthly_cost: '1150.00', annual_cost: '13800.00', amount_varies: false, first_seen: '2026-04-03', last_seen: '2026-06-03', next_expected_date: '2026-07-03', confidence: 0.97, review_status: 'confirmed', essentiality: 'essential', interval_regularity: 0.99, merchant_similarity: 1.0, amount_stability: 1.0, occurrence_strength: 0.85, price_change: null, evidence_transaction_ids: ['demo-tx-030', 'demo-tx-038', 'demo-tx-041'] },
@@ -562,7 +564,7 @@ export function fixtureLeaks(state: Map<string, Partial<LeakFinding>>): LeaksRes
     analysis_id: FIXTURE_ANALYSIS_ID,
     currency: FIXTURE_CURRENCY,
     items,
-    potential_recoverable_monthly: '155.85',
+    potential_recoverable_monthly: '3117.00',
     high_confidence_recoverable_monthly: '43.98',
     user_confirmed_recoverable_monthly: r2(confirmed).toFixed(2),
     calculation_version: CALC_VERSION,
@@ -654,21 +656,21 @@ export function fixtureDraft(finding: LeakFinding, action: string): DraftActionR
    ---------------------------------------------------------------------- */
 
 export const DEFAULT_SAFE_SPARE_SETTINGS: SafeSpareSettings = {
-  user_minimum_buffer: '200.00',
+  user_minimum_buffer: '100000.00',
   buffer_percentage: 0.25,
   volatility_multiplier: 0.5,
-  user_monthly_cap: '250.00',
+  user_monthly_cap: '100000.00',
 };
 
 /** Fixed inputs — these come from the statement, not from the settings. */
 const SS_INPUTS = {
-  latest_verified_balance: 2410.88,
+  latest_verified_balance: 58400.0,
   expected_income: 0.0,
-  upcoming_essential_outflows: 1385.0,
-  average_monthly_essential_spending: 1813.67,
-  outflow_stdev: 1082.92,
-  calculated_monthly_surplus: 395.82,
-  next_income_date: '2026-07-01',
+  upcoming_essential_outflows: 31240.0,
+  average_monthly_essential_spending: 32480.0,
+  outflow_stdev: 8940.0,
+  calculated_monthly_surplus: 6921.8,
+  next_income_date: '2026-07-28',
 };
 
 /**
@@ -759,16 +761,16 @@ export const fixtureConfidence: CashflowConfidenceResponse = {
    ---------------------------------------------------------------------- */
 
 export const DEFAULT_ROUNDUP_RULES: RoundUpRules = {
-  increment: '1.00',
-  monthly_cap: '40.00',
-  per_transaction_cap: '2.00',
+  increment: '200.00',
+  monthly_cap: '16000.00',
+  per_transaction_cap: '800.00',
   excluded_categories: [
     'rent_housing', 'loan_emi', 'insurance', 'medical', 'tax', 'education', 'childcare',
     'internal_transfer', 'cash_withdrawal', 'savings', 'investment', 'refund_reimbursement',
     'bank_charge', 'salary_income', 'other_income',
   ],
   excluded_merchants: [],
-  large_transaction_threshold: '2000.00',
+  large_transaction_threshold: '800000.00',
   paused: false,
 };
 
@@ -865,9 +867,9 @@ export const fixtureGoal: Goal = {
   analysis_id: FIXTURE_ANALYSIS_ID,
   kind: 'emergency_fund',
   name: 'Emergency fund',
-  target_amount: '3000.00',
+  target_amount: '60000.00',
   target_date: '2027-06-30',
-  starting_principal: '250.00',
+  starting_principal: '5000.00',
   include_round_ups: true,
   include_confirmed_recovered: true,
   annual_return_rate: 0.07,
@@ -997,9 +999,9 @@ const COACH_ANSWERS: { match: RegExp; answer: string; citations: ChatResponse['c
     answer:
       'Your Safe Spare amount this month is $31.00.\n\nIt starts from your latest verified balance of $2,410.88. Rent ($1,150.00), insurance ($145.00) and electricity ($90.00) are all due before your next salary on 1 July, which leaves a projected $1,025.88. A safety buffer of $453.42 and a volatility reserve of $541.46 are then held back, because your monthly outflows have varied by about $1,082.92.\n\nWhat is left — $31.00 — is what the engine considers safely redirectable.',
     citations: [
-      { label: 'Latest verified balance', value: '2410.88', source: 'safe_spare.latest_verified_balance' },
-      { label: 'Upcoming essential outflows', value: '1385.00', source: 'safe_spare.upcoming_essential_outflows' },
-      { label: 'Safe Spare amount', value: '31.00', source: 'safe_spare.safe_monthly_contribution' },
+      { label: 'Latest verified balance', value: '48217.60', source: 'safe_spare.latest_verified_balance' },
+      { label: 'Upcoming essential outflows', value: '27700.00', source: 'safe_spare.upcoming_essential_outflows' },
+      { label: 'Safe Spare amount', value: '620.00', source: 'safe_spare.safe_monthly_contribution' },
     ],
   },
   {
@@ -1007,8 +1009,8 @@ const COACH_ANSWERS: { match: RegExp; answer: string; citations: ChatResponse['c
     answer:
       'Your transactions created $48.70 in potential round-ups, but only $31.00 is considered safely redirectable this month.\n\nThe cap is not arbitrary: $31.00 is your safe monthly contribution, which is itself limited by the cash expected to remain before your next income once rent and insurance are paid. Round-ups can never exceed that figure — that is the difference between SafeSpare and an ordinary round-up app.',
     citations: [
-      { label: 'Potential round-ups', value: '48.70', source: 'roundups.historical_round_up_total' },
-      { label: 'Allowed round-ups', value: '31.00', source: 'roundups.allowed_round_up_total' },
+      { label: 'Potential round-ups', value: '974.00', source: 'roundups.historical_round_up_total' },
+      { label: 'Allowed round-ups', value: '620.00', source: 'roundups.allowed_round_up_total' },
     ],
   },
   {
@@ -1017,7 +1019,7 @@ const COACH_ANSWERS: { match: RegExp; answer: string; citations: ChatResponse['c
       'I found 12 recurring payments totalling $1,539.25 a month. Nine are optional and carry a leak score; three — rent, insurance and electricity — are protected and are never put forward for cancellation.\n\nTwo things stand out. Streamly rose from $15.49 to $17.99 on 25 May, a 16.14% increase. And two cloud-storage services, Nimbus ($9.99) and Vaultbox ($11.99), are billed on the same day.\n\nI cannot tell from bank data whether you use any of these. If you confirm usage on the Leak Radar page, the scores update and any recovered amount can be included in your goal simulation.',
     citations: [
       { label: 'Recurring payments', value: '12', source: 'recurring.count' },
-      { label: 'Monthly recurring total', value: '1539.25', source: 'recurring.total_monthly_recurring' },
+      { label: 'Monthly recurring total', value: '30785.00', source: 'recurring.total_monthly_recurring' },
       { label: 'Streamly increase', value: '16.14%', source: 'leaks.leak-02.price_change' },
     ],
   },
@@ -1026,9 +1028,9 @@ const COACH_ANSWERS: { match: RegExp; answer: string; citations: ChatResponse['c
     answer:
       'At $31.00 a month against a $3,000.00 emergency fund, the simulation reaches about $652.24 after 12 months — $622.00 of that is money you put in, and about $30.24 is illustrative growth at a 7% annual assumption.\n\nTo hit $3,000.00 within 12 months you would need roughly $220.45 a month, which is $189.45 more than is currently safe. Extending the date, or confirming some of the recoverable subscriptions, closes that gap without putting your bills at risk.\n\nIllustrative simulation only. Actual returns may be higher, lower or negative.',
     citations: [
-      { label: 'Projected value', value: '652.24', source: 'simulation.projected_value' },
-      { label: 'Your contributions', value: '622.00', source: 'simulation.user_contributions' },
-      { label: 'Illustrative growth', value: '30.24', source: 'simulation.illustrative_growth' },
+      { label: 'Projected value', value: '13044.80', source: 'simulation.projected_value' },
+      { label: 'Your contributions', value: '12440.00', source: 'simulation.user_contributions' },
+      { label: 'Illustrative growth', value: '604.80', source: 'simulation.illustrative_growth' },
     ],
   },
   {
@@ -1036,8 +1038,8 @@ const COACH_ANSWERS: { match: RegExp; answer: string; citations: ChatResponse['c
     answer:
       'Food-delivery spending increased from $512.60 to $684.20 between the previous and current period, across 18 orders. Two orders of a size similar to your recent ones total $62.30. Skipping those would release that amount toward your goal.\n\nThis is a suggestion based on your own transactions, not a judgement about your spending.',
     citations: [
-      { label: 'Dining / food delivery', value: '684.20', source: 'categories.dining_delivery.total' },
-      { label: 'Previous period', value: '512.60', source: 'categories.dining_delivery.previous_period_total' },
+      { label: 'Dining / food delivery', value: '13684.00', source: 'categories.dining_delivery.total' },
+      { label: 'Previous period', value: '10252.00', source: 'categories.dining_delivery.previous_period_total' },
     ],
   },
 ];
