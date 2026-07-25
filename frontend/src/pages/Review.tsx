@@ -11,11 +11,14 @@ import {
   SectionHead,
   Badge,
 } from '../components/common';
+import { AppShell } from '../components/AppShell';
+import { useI18n } from '../i18n/I18nProvider';
 import { useMutation, useResource } from '../hooks/useResource';
 import { ALL_CATEGORIES, categoryLabel, money, formatDateShort, confidencePercent } from '../lib/format';
 import type { Category, Transaction } from '../api/types';
 
 export default function Review() {
+  const { t } = useI18n();
   const analysisId = activeAnalysisId();
   const navigate = useNavigate();
   const page = useResource(
@@ -36,14 +39,14 @@ export default function Review() {
   });
 
   if (!analysisId) return <NeedsAnalysis />;
-  if (page.loading) return <div className="wrap section"><Loading label="Loading transactions" /></div>;
-  if (page.error) return <div className="wrap section"><ErrorState error={page.error} onRetry={page.reload} /></div>;
+  if (page.loading) return <AppShell title={t('nav.transactions')}><Loading /></AppShell>;
+  if (page.error) return <AppShell title={t('nav.transactions')}><ErrorState error={page.error} onRetry={page.reload} /></AppShell>;
 
   const data = page.data;
   if (!data) return null;
 
   return (
-    <div className="wrap section">
+    <AppShell title={t('nav.transactions')}>
       <SectionHead
         eyebrow="Step 3 of 3"
         title="Check the extraction"
@@ -71,8 +74,8 @@ export default function Review() {
 
       {patch.error ? <ErrorState error={patch.error} /> : null}
 
-      <div className="table-scroll">
-        <table className="table">
+      <div className="panel" style={{ overflowX: "auto" }}>
+        <table className="dtable">
           <caption className="sr-only">Extracted transactions, editable</caption>
           <thead>
             <tr>
@@ -97,7 +100,7 @@ export default function Review() {
                 <td>{t.description}</td>
                 <td>
                   <input
-                    className="input input--sm"
+                    className="dinput"
                     defaultValue={t.normalized_merchant ?? ''}
                     aria-label={`Merchant for ${t.description}`}
                     onBlur={(e) => {
@@ -112,7 +115,7 @@ export default function Review() {
                 <td className="mono t-muted">{t.balance ? money(t.balance, t.currency) : '—'}</td>
                 <td>
                   <select
-                    className="select select--sm"
+                    className="dselect"
                     value={t.category}
                     aria-label={`Category for ${t.description}`}
                     onChange={(e) => void patch.run(t.id, 'category', e.target.value as Category)}
@@ -124,7 +127,7 @@ export default function Review() {
                 </td>
                 <td>
                   <select
-                    className="select select--sm"
+                    className="dselect"
                     value={t.essentiality}
                     aria-label={`Essential or discretionary for ${t.description}`}
                     onChange={(e) => void patch.run(t.id, 'essentiality', e.target.value)}
@@ -157,6 +160,6 @@ export default function Review() {
           </tbody>
         </table>
       </div>
-    </div>
+    </AppShell>
   );
 }

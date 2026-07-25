@@ -3,6 +3,8 @@
 import { api, activeAnalysisId } from '../api/client';
 import { ErrorState, Loading, NeedsAnalysis, SectionHead, Stat } from '../components/common';
 import { useMutation, useResource } from '../hooks/useResource';
+import { AppShell } from '../components/AppShell';
+import { useI18n } from '../i18n/I18nProvider';
 import { money, limitingFactorLabel } from '../lib/format';
 
 const INCREMENTS = ['1.00', '2.00', '5.00'];
@@ -18,6 +20,7 @@ function exclusionReasons(lines: { eligible: boolean; reason?: string | null }[]
 }
 
 export default function RoundUps() {
+  const { t } = useI18n();
   const analysisId = activeAnalysisId();
   const res = useResource(() => api.getRoundUps(analysisId as string), [analysisId]);
   const save = useMutation(async (patch: Record<string, unknown>) => {
@@ -27,17 +30,17 @@ export default function RoundUps() {
   });
 
   if (!analysisId) return <NeedsAnalysis />;
-  if (res.loading) return <div className="wrap section"><Loading /></div>;
-  if (res.error) return <div className="wrap section"><ErrorState error={res.error} onRetry={res.reload} /></div>;
+  if (res.loading) return <AppShell title={t('page.roundups')}><Loading /></AppShell>;
+  if (res.error) return <AppShell title={t('page.roundups')}><ErrorState error={res.error} onRetry={res.reload} /></AppShell>;
   const d = res.data;
   if (!d) return null;
   const c = d.currency;
 
   return (
-    <div className="wrap section">
+    <AppShell title={t('page.roundups')}>
       <SectionHead
         eyebrow="Smart Round-Up Engine"
-        title="Spare change, capped by what is safe"
+        title={t('page.roundups')}
         lede="Round-ups never exceed your Safe Spare amount, so they cannot take money your bills need."
       />
 
@@ -89,6 +92,6 @@ export default function RoundUps() {
           Rent, loans, insurance, medical, tax, transfers and withdrawals are excluded by default.
         </p>
       </div>
-    </div>
+    </AppShell>
   );
 }

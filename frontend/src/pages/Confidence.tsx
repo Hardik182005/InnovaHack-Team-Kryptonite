@@ -2,20 +2,23 @@
 
 import { api, activeAnalysisId } from '../api/client';
 import { ErrorState, Loading, NeedsAnalysis, SectionHead } from '../components/common';
+import { AppShell } from '../components/AppShell';
+import { useI18n } from '../i18n/I18nProvider';
 import { useResource } from '../hooks/useResource';
 
 export default function Confidence() {
+  const { t } = useI18n();
   const analysisId = activeAnalysisId();
   const res = useResource(() => api.getCashflowConfidence(analysisId as string), [analysisId]);
 
   if (!analysisId) return <NeedsAnalysis />;
-  if (res.loading) return <div className="wrap section"><Loading /></div>;
-  if (res.error) return <div className="wrap section"><ErrorState error={res.error} onRetry={res.reload} /></div>;
+  if (res.loading) return <AppShell title={t('nav.safeSpare')}><Loading /></AppShell>;
+  if (res.error) return <AppShell title={t('nav.safeSpare')}><ErrorState error={res.error} onRetry={res.reload} /></AppShell>;
   const d = res.data;
   if (!d) return null;
 
   return (
-    <div className="wrap section">
+    <AppShell title={t('nav.safeSpare')}>
       <SectionHead
         eyebrow="Cashflow Confidence"
         title={`${d.score} out of 100`}
@@ -50,6 +53,6 @@ export default function Confidence() {
           </ul>
         </div>
       ) : null}
-    </div>
+    </AppShell>
   );
 }

@@ -6,6 +6,8 @@ import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, X
 import { api, activeAnalysisId, storedGoal } from '../api/client';
 import { Disclaimer, ErrorState, NeedsAnalysis, SectionHead, Stat } from '../components/common';
 import { useMutation } from '../hooks/useResource';
+import { AppShell } from '../components/AppShell';
+import { useI18n } from '../i18n/I18nProvider';
 import { money, moneyShort, toNumber, chartColor } from '../lib/format';
 import type { Goal, SimulationResponse } from '../api/types';
 
@@ -17,6 +19,7 @@ const SCENARIOS = [
 ];
 
 export default function Goals() {
+  const { t } = useI18n();
   const analysisId = activeAnalysisId();
   const [goal, setGoal] = useState<Goal | null>(() => storedGoal());
   const [sim, setSim] = useState<SimulationResponse | null>(null);
@@ -50,10 +53,10 @@ export default function Goals() {
   if (!analysisId) return <NeedsAnalysis />;
 
   return (
-    <div className="wrap section">
+    <AppShell title={t('page.goals')}>
       <SectionHead
         eyebrow="Goal simulation"
-        title="What controlled round-ups could become"
+        title={t('page.goals')}
         lede="An illustration built from your own safe contribution — not a forecast, and not an investment."
       />
 
@@ -155,6 +158,6 @@ export default function Goals() {
       ) : (
         <div style={{ marginTop: 24 }}><Disclaimer /></div>
       )}
-    </div>
+    </AppShell>
   );
 }

@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><title>probe</title>
+<script>
+localStorage.setItem('safespare.dataMode','fixtures');
+localStorage.setItem('safespare.activeAnalysis','demo-analysis-0001');
+localStorage.setItem('safespare.fixtureStore.v1', JSON.stringify({analysisId:'demo-analysis-0001',startedAt:Date.now()-9e5,demo:true,fileName:'d.csv',deleteAfterProcessing:true,declaredCurrency:'INR',confirmed:true,deleted:false,txPatches:{},leakState:{}}));
+addEventListener('load',()=>setTimeout(()=>{
+  const rows=[];
+  document.querySelectorAll('.shell, .shell > *, .app, .sidebar, .topbar').forEach(el=>{
+    const r=el.getBoundingClientRect();
+    rows.push(el.className.slice(0,28)+' top='+Math.round(r.top)+' h='+Math.round(r.height));
+  });
+  document.title='PROBE::'+rows.join(' | ');
+},3000));
+location.href='/dashboard';
+</script>

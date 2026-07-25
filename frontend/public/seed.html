@@ -1,0 +1,16 @@
+<!doctype html>
+<meta charset="utf-8"><title>seeding</title>
+<script>
+// Dev helper: seeds a completed fixture analysis so screens can be reviewed
+// without clicking through the upload flow. `null` settings let the client
+// fall back to its own defaults rather than a hand-written shape.
+localStorage.setItem('safespare.dataMode','fixtures');
+localStorage.setItem('safespare.activeAnalysis','demo-analysis-0001');
+localStorage.removeItem('safespare.fixtureStore.v1');
+localStorage.setItem('safespare.fixtureStore.v1', JSON.stringify({
+  analysisId:'demo-analysis-0001', startedAt: Date.now()-900000, demo:true,
+  fileName:'demo_statement.csv', deleteAfterProcessing:true, declaredCurrency:'INR',
+  confirmed:true, deleted:false, txPatches:{}, leakState:{}
+}));
+location.replace(new URLSearchParams(location.search).get('to') || '/dashboard');
+</script>

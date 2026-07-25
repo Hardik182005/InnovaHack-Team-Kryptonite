@@ -3,9 +3,12 @@
 import { api, activeAnalysisId } from '../api/client';
 import { ErrorState, Loading, NeedsAnalysis, SectionHead } from '../components/common';
 import { useMutation, useResource } from '../hooks/useResource';
+import { AppShell } from '../components/AppShell';
+import { useI18n } from '../i18n/I18nProvider';
 import { money, confidencePercent, limitingFactorLabel } from '../lib/format';
 
 export default function SafeSpare() {
+  const { t } = useI18n();
   const analysisId = activeAnalysisId();
   const res = useResource(() => api.getSafeSpare(analysisId as string), [analysisId]);
   const save = useMutation(async (field: string, value: string) => {
@@ -15,8 +18,8 @@ export default function SafeSpare() {
   });
 
   if (!analysisId) return <NeedsAnalysis />;
-  if (res.loading) return <div className="wrap section"><Loading /></div>;
-  if (res.error) return <div className="wrap section"><ErrorState error={res.error} onRetry={res.reload} /></div>;
+  if (res.loading) return <AppShell title={t('page.safeSpare')}><Loading /></AppShell>;
+  if (res.error) return <AppShell title={t('page.safeSpare')}><ErrorState error={res.error} onRetry={res.reload} /></AppShell>;
   const d = res.data;
   if (!d) return null;
   const c = d.currency;
@@ -31,7 +34,7 @@ export default function SafeSpare() {
   ];
 
   return (
-    <div className="wrap section">
+    <AppShell title={t('page.safeSpare')}>
       <SectionHead
         eyebrow="Safe Spare Engine"
         title="What your life can actually spare"
@@ -47,7 +50,7 @@ export default function SafeSpare() {
 
       <div className="grid grid--2">
         <div className="card card--accent">
-          <p className="micro">Safe Spare right now</p>
+          <p className="micro">{t('safeSpare.now')}</p>
           <p className="display-2">{money(d.safe_spare_now, c)}</p>
           <p className="micro">
             Safe monthly contribution <strong>{money(d.safe_monthly_contribution, c)}</strong>
@@ -114,6 +117,6 @@ export default function SafeSpare() {
         {save.pending ? <p className="micro" aria-live="polite">Recalculating…</p> : null}
         {save.error ? <ErrorState error={save.error} /> : null}
       </div>
-    </div>
+    </AppShell>
   );
 }
