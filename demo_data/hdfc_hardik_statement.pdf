@@ -1,0 +1,126 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 2 /Kids [4 0 R 6 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 4304 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(HDFC BANK OF INDIA \(fictional\)) Tj T*
+(Account: Savings A/c  ****5678   Currency: INR) Tj T*
+(Statement period: 2026-01-03 to 2026-03-28) Tj T*
+(Opening balance: -58886.68) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-01-03   PG ACCOMMODATION MONTHLY RENT                  12000.00                 -70886.68) Tj T*
+(2026-01-04   DMART GROCERY STORE                             1284.10                 -72170.78) Tj T*
+(2026-01-05   STARBUCKS COFFEE                                 280.40                 -72451.18) Tj T*
+(2026-01-07   ZOMATO RESTAURANT INC                            420.30                 -72871.48) Tj T*
+(2026-01-09   BOOKMYSHOW ENTERTAINMENT                         350.20                 -73221.68) Tj T*
+(2026-01-10   ACT FIBERNET INTERNET BILL                      1500.00                 -74721.68) Tj T*
+(2026-01-11   DMART GROCERY STORE                             1163.99                 -75885.67) Tj T*
+(2026-01-12   NETFLIX ENTERTAINMENT                            649.00                 -76534.67) Tj T*
+(2026-01-14   NETFLIX MOBILE APP                               199.00                 -76733.67) Tj T*
+(2026-01-15   SPOTIFY PREMIUM SERVICES                         119.00                 -76852.67) Tj T*
+(2026-01-17   UBER DRIVER RIDE                                 180.70                 -77033.37) Tj T*
+(2026-01-18   DMART GROCERY STORE                             1432.53                 -78465.90) Tj T*
+(2026-01-20   SWIGGY DELIVERY FOOD                             380.90                 -78846.80) Tj T*
+(2026-01-21   YOUTUBE PREMIUM SUBSCRIPTION                     129.00                 -78975.80) Tj T*
+(2026-01-22   AMAZON SELLER INDIA                              890.60                 -79866.40) Tj T*
+(2026-01-24   LOCAL TAPROOM BREWERY                           1250.00                 -81116.40) Tj T*
+(2026-01-25   DMART GROCERY STORE                             1284.29                 -82400.69) Tj T*
+(2026-01-26   ZOMATO RESTAURANT INC                            290.10                 -82690.79) Tj T*
+(2026-01-28   RELIANCE INDUSTRIES PAYROLL                                 55000.00    -27690.79) Tj T*
+(2026-02-03   PG ACCOMMODATION MONTHLY RENT                  12000.00                 -39690.79) Tj T*
+(2026-02-04   DMART GROCERY STORE                             1220.53                 -40911.32) Tj T*
+(2026-02-05   STARBUCKS COFFEE                                 280.40                 -41191.72) Tj T*
+(2026-02-07   ZOMATO RESTAURANT INC                            420.30                 -41612.02) Tj T*
+(2026-02-09   BOOKMYSHOW ENTERTAINMENT                         350.20                 -41962.22) Tj T*
+(2026-02-10   ACT FIBERNET INTERNET BILL                      1500.00                 -43462.22) Tj T*
+(2026-02-11   DMART GROCERY STORE                             1104.21                 -44566.43) Tj T*
+(2026-02-12   NETFLIX ENTERTAINMENT                            649.00                 -45215.43) Tj T*
+(2026-02-14   NETFLIX MOBILE APP                               199.00                 -45414.43) Tj T*
+(2026-02-15   SPOTIFY PREMIUM SERVICES                         119.00                 -45533.43) Tj T*
+(2026-02-17   UBER DRIVER RIDE                                 180.70                 -45714.13) Tj T*
+(2026-02-18   DMART GROCERY STORE                             1389.22                 -47103.35) Tj T*
+(2026-02-20   SWIGGY DELIVERY FOOD                             380.90                 -47484.25) Tj T*
+(2026-02-21   YOUTUBE PREMIUM SUBSCRIPTION                     129.00                 -47613.25) Tj T*
+(2026-02-22   AMAZON SELLER INDIA                              890.60                 -48503.85) Tj T*
+(2026-02-24   LOCAL TAPROOM BREWERY                           1250.00                 -49753.85) Tj T*
+(2026-02-25   DMART GROCERY STORE                             1367.54                 -51121.39) Tj T*
+(2026-02-26   ZOMATO RESTAURANT INC                            290.10                 -51411.49) Tj T*
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 2553 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(HDFC BANK OF INDIA \(fictional\)) Tj T*
+(Account: Savings A/c  ****5678   Currency: INR) Tj T*
+(Statement period: 2026-01-03 to 2026-03-28) Tj T*
+(Opening balance: -58886.68) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-02-28   RELIANCE INDUSTRIES PAYROLL                                 55000.00      3588.51) Tj T*
+(2026-03-03   PG ACCOMMODATION MONTHLY RENT                  12000.00                  -8411.49) Tj T*
+(2026-03-04   DMART GROCERY STORE                             1270.15                  -9681.64) Tj T*
+(2026-03-05   STARBUCKS COFFEE                                 280.40                  -9962.04) Tj T*
+(2026-03-07   ZOMATO RESTAURANT INC                            420.30                 -10382.34) Tj T*
+(2026-03-09   BOOKMYSHOW ENTERTAINMENT                         350.20                 -10732.54) Tj T*
+(2026-03-10   ACT FIBERNET INTERNET BILL                      1500.00                 -12232.54) Tj T*
+(2026-03-11   DMART GROCERY STORE                             1470.78                 -13703.32) Tj T*
+(2026-03-12   NETFLIX ENTERTAINMENT                            649.00                 -14352.32) Tj T*
+(2026-03-14   NETFLIX MOBILE APP                               199.00                 -14551.32) Tj T*
+(2026-03-15   SPOTIFY PREMIUM SERVICES                         119.00                 -14670.32) Tj T*
+(2026-03-17   UBER DRIVER RIDE                                 180.70                 -14851.02) Tj T*
+(2026-03-18   DMART GROCERY STORE                             1127.58                 -15978.60) Tj T*
+(2026-03-20   SWIGGY DELIVERY FOOD                             380.90                 -16359.50) Tj T*
+(2026-03-21   YOUTUBE PREMIUM SUBSCRIPTION                     129.00                 -16488.50) Tj T*
+(2026-03-22   AMAZON SELLER INDIA                              890.60                 -17379.10) Tj T*
+(2026-03-24   LOCAL TAPROOM BREWERY                           1250.00                 -18629.10) Tj T*
+(2026-03-25   DMART GROCERY STORE                             1080.80                 -19709.90) Tj T*
+(2026-03-26   ZOMATO RESTAURANT INC                            290.10                 -20000.00) Tj T*
+(2026-03-28   RELIANCE INDUSTRIES PAYROLL                                 55000.00     35000.00) Tj T*
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000121 00000 n 
+0000000189 00000 n 
+0000000315 00000 n 
+0000004671 00000 n 
+0000004797 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+7402
+%%EOF

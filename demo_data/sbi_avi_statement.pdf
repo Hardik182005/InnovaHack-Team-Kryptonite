@@ -1,0 +1,117 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 2 /Kids [4 0 R 6 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 4305 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(STATE BANK OF INDIA \(fictional\)) Tj T*
+(Account: Savings A/c  ****1234   Currency: INR) Tj T*
+(Statement period: 2026-01-03 to 2026-03-28) Tj T*
+(Opening balance: -17134.60) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-01-03   HOUSING SOCIETY MONTHLY RENT TRANSFER          22000.00                 -39134.60) Tj T*
+(2026-01-04   STAR BAZAR SUPERMARKET                          2228.13                 -41362.73) Tj T*
+(2026-01-05   HDFC BANK EDUCATION LOAN EMI                   11500.00                 -52862.73) Tj T*
+(2026-01-07   LIC OF INDIA PREMIUM AUTOPAY                    3500.00                 -56362.73) Tj T*
+(2026-01-09   MSEDCL ELECTRICITY BILL PAYMENT                 3254.00                 -59616.73) Tj T*
+(2026-01-10   BLUE TOKAI COFFEE ROASTERS                       185.50                 -59802.23) Tj T*
+(2026-01-11   STAR BAZAR SUPERMARKET                          2563.41                 -62365.64) Tj T*
+(2026-01-12   UBER INDIA RIDE                                  320.20                 -62685.84) Tj T*
+(2026-01-15   NETFLIX ENTERTAINMENT                            649.00                 -63334.84) Tj T*
+(2026-01-16   INDEPENDENT BOOKSTORE                            420.40                 -63755.24) Tj T*
+(2026-01-18   STAR BAZAR SUPERMARKET                          2457.27                 -66212.51) Tj T*
+(2026-01-20   PHARMACY MEDICAL PURCHASE                        380.10                 -66592.61) Tj T*
+(2026-01-22   SWIGGY DELIVERY FOOD                             510.80                 -67103.41) Tj T*
+(2026-01-25   STAR BAZAR SUPERMARKET                          2209.96                 -69313.37) Tj T*
+(2026-01-27   JIO INFOCOMM RECHARGE                            299.00                 -69612.37) Tj T*
+(2026-01-28   TATA CONSULTANCY SERVICES PAYROLL                           75000.00      5387.63) Tj T*
+(2026-02-03   HOUSING SOCIETY MONTHLY RENT TRANSFER          22000.00                 -16612.37) Tj T*
+(2026-02-04   STAR BAZAR SUPERMARKET                          2178.85                 -18791.22) Tj T*
+(2026-02-05   HDFC BANK EDUCATION LOAN EMI                   11500.00                 -30291.22) Tj T*
+(2026-02-07   LIC OF INDIA PREMIUM AUTOPAY                    3500.00                 -33791.22) Tj T*
+(2026-02-09   MSEDCL ELECTRICITY BILL PAYMENT                 3158.00                 -36949.22) Tj T*
+(2026-02-10   BLUE TOKAI COFFEE ROASTERS                       185.50                 -37134.72) Tj T*
+(2026-02-11   STAR BAZAR SUPERMARKET                          2864.14                 -39998.86) Tj T*
+(2026-02-12   UBER INDIA RIDE                                  320.20                 -40319.06) Tj T*
+(2026-02-15   NETFLIX ENTERTAINMENT                            649.00                 -40968.06) Tj T*
+(2026-02-16   INDEPENDENT BOOKSTORE                            420.40                 -41388.46) Tj T*
+(2026-02-18   STAR BAZAR SUPERMARKET                          2061.21                 -43449.67) Tj T*
+(2026-02-20   PHARMACY MEDICAL PURCHASE                        380.10                 -43829.77) Tj T*
+(2026-02-22   SWIGGY DELIVERY FOOD                             510.80                 -44340.57) Tj T*
+(2026-02-25   STAR BAZAR SUPERMARKET                          2447.39                 -46787.96) Tj T*
+(2026-02-27   JIO INFOCOMM RECHARGE                            299.00                 -47086.96) Tj T*
+(2026-02-28   TATA CONSULTANCY SERVICES PAYROLL                           75000.00     27913.04) Tj T*
+(2026-03-03   HOUSING SOCIETY MONTHLY RENT TRANSFER          22000.00                   5913.04) Tj T*
+(2026-03-04   STAR BAZAR SUPERMARKET                          2054.81                   3858.23) Tj T*
+(2026-03-05   HDFC BANK EDUCATION LOAN EMI                   11500.00                  -7641.77) Tj T*
+(2026-03-07   LIC OF INDIA PREMIUM AUTOPAY                    3500.00                 -11141.77) Tj T*
+(2026-03-09   MSEDCL ELECTRICITY BILL PAYMENT                 3117.00                 -14258.77) Tj T*
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 1627 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(STATE BANK OF INDIA \(fictional\)) Tj T*
+(Account: Savings A/c  ****1234   Currency: INR) Tj T*
+(Statement period: 2026-01-03 to 2026-03-28) Tj T*
+(Opening balance: -17134.60) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-03-10   BLUE TOKAI COFFEE ROASTERS                       185.50                 -14444.27) Tj T*
+(2026-03-11   STAR BAZAR SUPERMARKET                          2407.93                 -16852.20) Tj T*
+(2026-03-12   UBER INDIA RIDE                                  320.20                 -17172.40) Tj T*
+(2026-03-15   NETFLIX ENTERTAINMENT                            649.00                 -17821.40) Tj T*
+(2026-03-16   INDEPENDENT BOOKSTORE                            420.40                 -18241.80) Tj T*
+(2026-03-18   STAR BAZAR SUPERMARKET                          3116.63                 -21358.43) Tj T*
+(2026-03-20   PHARMACY MEDICAL PURCHASE                        380.10                 -21738.53) Tj T*
+(2026-03-22   SWIGGY DELIVERY FOOD                             510.80                 -22249.33) Tj T*
+(2026-03-25   STAR BAZAR SUPERMARKET                          2451.67                 -24701.00) Tj T*
+(2026-03-27   JIO INFOCOMM RECHARGE                            299.00                 -25000.00) Tj T*
+(2026-03-28   TATA CONSULTANCY SERVICES PAYROLL                           75000.00     50000.00) Tj T*
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000121 00000 n 
+0000000189 00000 n 
+0000000315 00000 n 
+0000004672 00000 n 
+0000004798 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+6477
+%%EOF
