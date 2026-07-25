@@ -301,3 +301,45 @@ def test_demo_csv_and_pdf_agree():
     csv_total = sum(t.amount for t in csv_result.transactions)
     pdf_total = sum(t.amount for t in pdf_result.transactions)
     assert csv_total == pdf_total
+
+
+# --- the §7 parser ladder ---------------------------------------------------
+
+
+@demo_pdf
+def test_pymupdf_fallback_produces_the_same_result_as_pdfplumber():
+    """§7 names PyMuPDF *and* pdfplumber. Both must actually work.
+
+    The fallback is exercised by making `import pdfplumber` fail, which is the
+    only way to prove the second rung of the ladder is real rather than
+    decorative — a branch that never executes is not a fallback.
+    """
+    import builtins
+
+    pytest.importorskip("fitz")
+    pytest.importorskip("pdfplumber")
+
+    with open(os.path.join(DEMO_DIR, "demo_statement.pdf"), "rb") as fh:
+        data = fh.read()
+
+    primary = extraction.extract(data, "demo_statement.pdf")
+    assert primary.parser == "pdf:pdfplumber"
+
+    real_import = builtins.__import__
+
+    def without_pdfplumber(name, *args, **kwargs):
+        if name == "pdfplumber":
+            raise ImportError("simulated")
+        return real_import(name, *args, **kwargs)
+
+    builtins.__import__ = without_pdfplumber
+    try:
+        fallback = extraction.extract(data, "demo_statement.pdf")
+    finally:
+        builtins.__import__ = real_import
+
+    assert fallback.parser == "pdf:pymupdf"
+    assert len(fallback.transactions) == len(primary.transactions)
+    assert sum(t.amount for t in fallback.transactions) == sum(
+        t.amount for t in primary.transactions
+    )

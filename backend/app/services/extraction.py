@@ -63,7 +63,7 @@ _MULTISPACE = re.compile(r"\s{2,}")
 class ExtractionResult:
     transactions: List[Transaction] = field(default_factory=list)
     parser: str = ""
-    currency: str = "USD"
+    currency: str = "INR"
     warnings: List[str] = field(default_factory=list)
     pages_processed: int = 0
     rows_seen: int = 0
@@ -157,7 +157,7 @@ def parse_date(raw) -> Optional[date]:
     return None
 
 
-def detect_currency(text: str, default: str = "USD") -> str:
+def detect_currency(text: str, default: str = "INR") -> str:
     for symbol, code in CURRENCY_SYMBOLS.items():
         if symbol in text:
             return code
@@ -226,7 +226,7 @@ def _repair_unbalanced_quotes(text: str) -> Tuple[str, int]:
     return "\n".join(lines), repaired
 
 
-def extract_csv(data, currency_default: str = "USD") -> ExtractionResult:
+def extract_csv(data, currency_default: str = "INR") -> ExtractionResult:
     """Parse a CSV export with flexible column mapping (§7)."""
     text = _decode(data) if isinstance(data, (bytes, bytearray)) else str(data)
     result = ExtractionResult(parser="csv")
@@ -621,7 +621,7 @@ def extract_sms(text: str, default_date: Optional[date] = None) -> ExtractionRes
                 raw_merchant=merchant,
                 balance=parse_amount(balance.group(1)) if balance else None,
                 reference=ref.group(1) if ref else None,
-                currency=CURRENCY_SYMBOLS.get(symbol, symbol.upper() or "USD"),
+                currency=CURRENCY_SYMBOLS.get(symbol, symbol.upper() or "INR"),
                 source_row=line_no,
                 parser="sms",
                 extraction_confidence=0.75,
