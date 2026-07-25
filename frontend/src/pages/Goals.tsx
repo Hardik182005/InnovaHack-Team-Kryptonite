@@ -182,9 +182,12 @@ export default function Goals() {
         <div className="state" style={{ marginTop: 16 }}>
           <p className="eyebrow">Simulation paused for safety</p>
           <p className="prose t-muted">
-            Your current Safe Spare Amount is {money(sim?.safe_monthly_contribution ?? '0', sim?.currency)}, so
-            SafeSpare will not simulate a monthly contribution from this statement. Review unknown
-            transactions or use the synthetic demo statement to see a complete example.
+            This statement gives a safe monthly contribution of {money(sim?.monthly_contribution ?? '0', sim?.currency)},
+            so SafeSpare will not simulate a SIP from it. That is usually because outflows over the period
+            matched or exceeded income — the monthly contribution is capped by your average monthly surplus,
+            not by today&rsquo;s balance, so a healthy balance can still yield zero. Check the Safe Spare page for
+            the limiting factor, review unknown transactions, or use the synthetic demo statement to see a
+            complete example.
           </p>
         </div>
       ) : null}
