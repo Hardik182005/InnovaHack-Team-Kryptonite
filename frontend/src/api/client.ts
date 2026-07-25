@@ -70,6 +70,7 @@ import type {
   PresignResponse,
   RecurringResponse,
   RoundUpRules,
+  RoundUpRulesPatch,
   RoundUpsResponse,
   SafeSpareResponse,
   SafeSpareSettings,
@@ -914,11 +915,19 @@ export const api = {
     );
   },
 
-  updateRoundUpRules(analysisId: string, rules: RoundUpRules): Promise<RoundUpsResponse> {
+  // Takes a *partial* patch, and only of the fields the server will accept.
+  // `RoundUpRules` also carries `large_transaction_threshold`, which the server
+  // computes and `RoundUpRulesPatch` does not declare; since that schema sets
+  // `extra="forbid"`, sending the whole rules object back would be rejected
+  // outright — the same trap that stopped goals from being created at all.
+  updateRoundUpRules(analysisId: string, patch: RoundUpRulesPatch): Promise<RoundUpsResponse> {
     return call(
-      () => request<RoundUpsResponse>('PATCH', `/api/analyses/${analysisId}/roundup-rules`, rules),
+      () => request<RoundUpsResponse>('PATCH', `/api/analyses/${analysisId}/roundup-rules`, patch),
       () => {
         const store = need(analysisId);
+        // The fixture store holds whole rules, so merge the patch onto what is
+        // already there rather than replacing it with a partial object.
+        const rules: RoundUpRules = { ...store.roundUpRules, ...patch };
         writeStore({ ...store, roundUpRules: rules });
         return roundUpsOf(readStore() as FixtureStore);
       },

@@ -30,7 +30,7 @@
 [![Gemini](https://img.shields.io/badge/Gemini-2.0_Flash-8E75B2?style=flat-square&logo=googlegemini&logoColor=white)](https://ai.google.dev)
 [![ElevenLabs](https://img.shields.io/badge/ElevenLabs-TTS-000000?style=flat-square)](https://elevenlabs.io)
 
-[![Tests](https://img.shields.io/badge/tests-277_passing-success?style=flat-square&logo=pytest&logoColor=white)](#-testing)
+[![Tests](https://img.shields.io/badge/tests-292_passing-success?style=flat-square&logo=pytest&logoColor=white)](#-testing)
 [![Typecheck](https://img.shields.io/badge/tsc-0_errors-success?style=flat-square&logo=typescript&logoColor=white)](#-testing)
 [![Languages](https://img.shields.io/badge/languages-28-blueviolet?style=flat-square&logo=googletranslate&logoColor=white)](#-28-languages-curated-first-machine-second)
 [![Offline Mode](https://img.shields.io/badge/works_with_zero_AI_keys-yes-success?style=flat-square)](#-the-deterministic-core)
@@ -95,26 +95,38 @@ between what is available and what is safe — is the entire product.
 
 ### It survives contact with a real statement
 
-A genuine HDFC statement in testing carried a **₹25,00,000 pass-through** on a ₹23,000 account:
-an RTGS credit in, and a transfer of the identical amount straight back out the same day. Neither
-leg matched any transfer keyword — they are worded nothing alike. Left uncaught, it counted as a
-month of *spending*, which put that month 100× above its neighbours, which inflated the volatility
-reserve to ₹7,12,200, which drove Safe Spare to zero and told a solvent user they had nothing.
+A genuine HDFC statement broke three separate things, and each fix is in the repository.
 
-Two engine rules now handle it, and both are in the repository:
+**A ₹25,00,000 month, on a ₹23,000 account.** One month carried an outflow 100× its neighbours.
+Standard deviation is dominated by exactly the observations that are least representative, so that
+single month set a **₹7,12,200 volatility reserve** — more than the account had ever held — and
+Safe Spare reported ₹0.00 to a solvent user. `safe_spare._without_outlier_months` trims months
+above 4× the median *before* taking stdev. The spend itself is untouched and still counts in every
+total: it is real money the user really spent. It just says nothing about how much next month
+might vary, and only recurring uncertainty belongs in a reserve.
+
+**Narrations with no spaces in them.** Every category rule was anchored `\b(rent|grocer|…)\b`,
+which assumes the bank separates words. HDFC does not: `UPI-MODERNMILKSUPPLIER-Q561721305@YBL`,
+`PGACCOMMODATIONMONTHLYRENT`, `UPI-GOOGLECLOUDINDIA`. All 103 debits classified as `unknown`,
+essential spending read **₹0.00**, and the whole statement was presented as discretionary.
+`categorization.GLUED_RULES` matches against the narration with separators stripped, at a lower
+confidence than a word-boundary match, because a substring match is a weaker claim and should not
+be sold as a strong one.
+
+**A redemption is not a salary.** A ₹25,00,000 mutual-fund payout fell through to the
+credit heuristic and was booked `other_income`. Safe Spare's expected-income term then projected
+**₹6,45,890 a month** of income the user could count on before their next paycheck. Fund
+redemptions now classify as `investment` — still real income in the totals, never projected forward.
 
 | | before | after |
 |---|---:|---:|
-| Volatility reserve | ₹7,12,200 | ₹14,794 |
-| Safe Spare now | **₹0.00** | **₹26,712.06** |
-| Reported total spending | ₹26,20,098 | ₹1,10,822 |
+| Volatility reserve | ₹7,12,200 | ₹16,129 |
+| Essential spending | **₹0.00** | **₹27,750.72** |
+| Expected income | ₹6,45,890.51 | ₹20,636.01 |
+| Safe Spare now | **₹0.00** | **₹25,451.73** |
 
-1. `categorization.mark_pass_through` — a credit and a debit of *identical* amount on the *same date*
-   is money passing through, not income and not spending. Deliberately strict, so ordinary same-day
-   activity is never swallowed.
-2. `safe_spare._without_outlier_months` — the volatility reserve trims months more than 4× the
-   median before taking standard deviation. Stdev on its own is dominated by exactly the
-   observations that are least representative; a one-off event must not be priced as recurring risk.
+The one number that did *not* move is reported total spending: **₹26,20,098**, before and after.
+Making an inconvenient figure smaller is not a fix.
 
 ---
 
@@ -322,7 +334,7 @@ alone.
 | `extraction.py` | CSV / PDF (pdfplumber → PyMuPDF fallback) / XLSX / SMS parsing, currency detection |
 | `validation.py` | Balance continuity, duplicate detection, date sanity |
 | `merchant_normalization.py` | `UPI/AMZ*MKTPLACE/...` → `Amazon`, fuzzy-matched |
-| `categorization.py` | 26 categories, rules first, plus same-day pass-through detection |
+| `categorization.py` | 26 categories, merchant dictionary -> word-boundary rules -> glued-narration rules |
 | `recurrence.py` | Interval clustering → recurring patterns and real due dates |
 | `price_changes.py` | Silent price increases on existing subscriptions |
 | `leak_score.py` | Ranks recoverable spend; refuses to touch protected categories |
@@ -522,7 +534,7 @@ cookie · interactive docs at `/docs`.
 <tr><td><b>Charts</b></td><td>Recharts 2.12</td><td>—</td></tr>
 <tr><td><b>Styling</b></td><td>Hand-written CSS + design tokens</td><td>No framework; tokens in <code>styles/tokens.css</code></td></tr>
 <tr><td><b>Speech</b></td><td>Web Speech API</td><td>Keyless, no network, no per-use cost</td></tr>
-<tr><td><b>Testing</b></td><td>pytest 8.4</td><td>185 test functions, 277 cases</td></tr>
+<tr><td><b>Testing</b></td><td>pytest 8.4</td><td>190 test functions, 292 cases</td></tr>
 <tr><td><b>Container</b></td><td>Docker + Compose</td><td>Non-root uid 10001</td></tr>
 <tr><td><b>TLS</b></td><td>Caddy</td><td>Automatic Let's Encrypt via sslip.io</td></tr>
 <tr><td><b>CDN</b></td><td>CloudFront + OAC</td><td>S3 bucket stays private</td></tr>
@@ -665,7 +677,7 @@ Helper scripts in `infra/scripts/`: `deploy.sh`, `update.sh`, `rollback.sh`, `sm
 ## 🧪 Testing
 
 ```bash
-cd backend && pytest -q      # 277 passed
+cd backend && pytest -q      # 292 passed
 cd frontend && npm run typecheck
 ```
 

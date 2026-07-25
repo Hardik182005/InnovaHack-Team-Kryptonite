@@ -6,6 +6,7 @@ import { useMutation, useResource } from '../hooks/useResource';
 import { AppShell } from '../components/AppShell';
 import { useI18n } from '../i18n/I18nProvider';
 import { money, limitingFactorLabel } from '../lib/format';
+import type { RoundUpRulesPatch } from '../api/types';
 
 const INCREMENTS = ['1.00', '2.00', '5.00'];
 
@@ -23,8 +24,8 @@ export default function RoundUps() {
   const { t } = useI18n();
   const analysisId = activeAnalysisId();
   const res = useResource(() => api.getRoundUps(analysisId as string), [analysisId]);
-  const save = useMutation(async (patch: Record<string, unknown>) => {
-    const out = await api.updateRoundUpRules(analysisId as string, patch as never);
+  const save = useMutation(async (patch: RoundUpRulesPatch) => {
+    const out = await api.updateRoundUpRules(analysisId as string, patch);
     res.reload();
     return out;
   });

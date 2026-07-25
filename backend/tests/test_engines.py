@@ -142,6 +142,62 @@ def classify_cat(description, direction=Direction.DEBIT):
     return categorization.classify(description, direction=direction).category
 
 
+@pytest.mark.parametrize(
+    "description,expected",
+    [
+        # Real HDFC narrations. None of these contain a single space between the
+        # keyword and its neighbours, so every `\b`-anchored rule misses them.
+        ("UPI-MODERNMILKSUPPLIER-Q561721305@YBL", Category.GROCERIES),
+        ("UPI-DANISHGENERALSTORE-GPAY-1126684266", Category.GROCERIES),
+        ("PGACCOMMODATIONMONTHLYRENT", Category.RENT_HOUSING),
+        ("UPI-PHARMEASY-CF.PHARMEASY12@CASHFREENSD", Category.MEDICAL),
+        ("UPI-SPOTIFYINDIAPVTLT-SPOTIFY.BDSI@HD", Category.SUBSCRIPTION),
+        ("UPI-GOOGLECLOUDINDIA", Category.SOFTWARE),
+        ("MEDCSI435584XXXXXX4863CLAUDE.AISUBS", Category.SOFTWARE),
+        ("UPI-SWIGGY-UPISWIGGY@ICICI-ICIC0DC0099-6", Category.DINING_DELIVERY),
+        ("UPI-INDIANRAILWAYSUTS-BDPG2.IRUTS@SBI-", Category.TRANSPORTATION),
+        ("OCTDEC25INSTAALERTCHG71SMS-EPR2711357", Category.BANK_CHARGE),
+        ("IBBILLPAYDR-HDFC9D-652915XXXXXX5210", Category.LOAN_EMI),
+        ("NEFTCR-IBKL0000998-LICMDOPH-LICMDO1VI", Category.INSURANCE),
+    ],
+)
+def test_glued_narrations_classify(description, expected):
+    """Indian bank narrations weld the merchant to its neighbours.
+
+    Before these rules existed, all 103 debits on a real HDFC statement came back
+    `unknown`: essential spending reported ₹0.00 and the entire statement was
+    presented as discretionary.
+    """
+    assert classify_cat(description) is expected
+
+
+def test_glued_match_is_lower_confidence_than_word_boundary_match():
+    """A substring match is a weaker claim and must not be sold as a strong one."""
+    glued = categorization.classify("UPI-GOOGLECLOUDINDIA")
+    spaced = categorization.classify("CITY POWER ELECTRIC BILL")
+    assert glued.method == "glued_keyword_rule"
+    assert spaced.method == "keyword_rule"
+    assert glued.confidence < spaced.confidence
+
+
+def test_person_to_person_upi_stays_unknown():
+    """A name is not a category. Guessing one would be worse than admitting we cannot."""
+    assert classify_cat("UPI-SNEHARAJESH 0000646894218149") is Category.UNKNOWN
+
+
+def test_fund_redemption_credit_is_investment_not_income():
+    """A redemption is real money but not recurring income.
+
+    Booked as `other_income` it fed Safe Spare's expected-income term and made a
+    single ₹25,00,000 payout look like ₹6.45 lakh a month of income the user
+    could count on before their next paycheck.
+    """
+    result = categorization.classify(
+        "RTGSCR-CITI0100000-FRANKLINTEMPLETONM", direction=Direction.CREDIT
+    )
+    assert result.category is Category.INVESTMENT
+
+
 def test_essential_categories_marked_essential():
     result = categorization.classify("GREENFIELD PROPERTIES RENT")
     assert result.essentiality is Essentiality.ESSENTIAL

@@ -513,6 +513,14 @@ export interface RoundUpRules {
   paused: boolean;
 }
 
+/** The subset of the rules a client may change, all of it optional.
+ *
+ * `large_transaction_threshold` is absent on purpose: the server derives it and
+ * its patch schema forbids unknown fields, so offering it here would only let
+ * callers build a request the API rejects.
+ */
+export type RoundUpRulesPatch = Partial<Omit<RoundUpRules, 'large_transaction_threshold'>>;
+
 export interface RoundUpLine {
   transaction_id: string;
   date: string;

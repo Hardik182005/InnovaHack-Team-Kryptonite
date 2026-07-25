@@ -76,6 +76,75 @@ KEYWORD_RULES = [
 
 _COMPILED = [(cat, re.compile(pattern, re.I)) for cat, pattern in KEYWORD_RULES]
 
+#: Rules for narrations that have no word boundaries left to match on.
+#:
+#: Every rule above is anchored with `\b`, which assumes the bank separates words.
+#: Indian bank narrations frequently do not. HDFC writes UPI payments as one glued
+#: token — `UPI-MODERNMILKSUPPLIER-Q561721305@YBL`, `PGACCOMMODATIONMONTHLYRENT`,
+#: `UPI-SPOTIFYINDIAPVTLT-SPOTIFY.BDSI@HD` — so `\brent\b` and `\bsupermarket\b`
+#: never fire and the whole statement classifies as `unknown`. On one real
+#: statement that meant 103 of 103 debits landed in `unknown`, essential spending
+#: read ₹0.00, and every rupee was reported as discretionary.
+#:
+#: These patterns are matched against the narration with *all* separators removed,
+#: so they can find a keyword welded to its neighbours. That is a weaker signal
+#: than a word-boundary match — `\bmart\b` is a supermarket, but `mart` inside a
+#: longer run of letters might be someone's name — so it sits at lower confidence
+#: and only distinctive strings are listed. Short or common fragments ("rd", "fd",
+#: "bp", "co", "tax", "gas") are deliberately absent: glued to other letters they
+#: match far more often than they are right.
+GLUED_RULES = [
+    (Category.SALARY_INCOME, r"payroll|salarycr|salcredit|stipend"),
+    (Category.RENT_HOUSING, r"monthlyrent|houserent|rentpayment|accommodation|landlord|pgrent"),
+    (Category.LOAN_EMI, r"emipayment|loanemi|homeloan|carloan|creditcardpay|ibbillpay"),
+    (Category.INSURANCE, r"insurance|lifeinsur|licmdo|healthinsur|policypremium"),
+    (Category.MEDICAL, r"pharmeasy|apollopharm|medplus|netmeds|hospital|diagnostic|pathlab|clinic|medicos|chemist"),
+    (Category.UTILITIES, r"electricity|mahavitaran|adanielectric|torrentpower|bescom|broadband|jiofiber|airtel|actfibernet|tatapower|gasbill|watersupply|rechargeprepaid"),
+    (Category.EDUCATION, r"university|college|tuitionfee|coursera|udemy|byjus|unacademy|examfee|admissionfee"),
+    (Category.GROCERIES, r"generalstore|kiranastore|supermarket|bigbasket|blinkit|zeptonow|dmart|reliancefresh|milksupplier|dairy|vegetable|grocer"),
+    (Category.DINING_DELIVERY, r"swiggy|zomato|dominos|mcdonald|starbucks|restaurant|cafe|bakery|eatery|dunzo"),
+    (Category.FUEL, r"petrolpump|fuelstation|hppetrol|bharatpetro|indianoil|iocl|hpcl|bpcl"),
+    (Category.TRANSPORTATION, r"indianrailways|irctc|uberindia|olacabs|rapido|metrorail|bmtc|bestundertaking|parkingfee|tollplaza|fastag"),
+    (Category.TRAVEL, r"makemytrip|goibibo|cleartrip|airindia|indigo|vistara|redbus|airbnb|oyorooms|booking"),
+    (Category.FITNESS, r"cultfit|goldsgym|fitnessfirst|yogastudio"),
+    (Category.SUBSCRIPTION, r"netflix|spotify|primevideo|hotstar|sonyliv|zee5|youtubeprem|audible|subscription|autopay"),
+    (Category.SOFTWARE, r"googlecloud|awsamazon|amazonwebser|microsoftazure|digitalocean|elevenlabs|claude|openai|anthropic|github|notion|slack|figma|adobe|jetbrains|vercel|netlify|hostinger|godaddy|namecheap"),
+    (Category.ENTERTAINMENT, r"bookmyshow|pvrcinemas|inoxleisure|steampowered|playstation|xboxlive"),
+    (Category.SHOPPING, r"amazon|flipkart|myntra|ajio|meesho|nykaa|urbancompany|decathlon|croma|relianceretail"),
+    (Category.CASH_WITHDRAWAL, r"atmwdl|cashwdl|atmcash|nfsatm"),
+    (Category.BANK_CHARGE, r"alertchg|instaalert|smscharge|amcchg|servicecharge|postxnmarkup|markupfee|latepaymentfee|penaltycharge|minbalcharge"),
+    (Category.INVESTMENT, r"franklintempleton|hdfcamc|iciciprumf|sbimutualfund|nipponindia|kotakmahindramf|axismutual|mutualfund|zerodha|groww|upstox|brokerage|sipdebit"),
+]
+
+_COMPILED_GLUED = [(cat, re.compile(pattern, re.I)) for cat, pattern in GLUED_RULES]
+
+#: Everything that is not a letter or a digit. Applied to build the "glued" form
+#: of a narration so the rules above can match across the bank's missing spaces.
+_SEPARATORS = re.compile(r"[^a-z0-9]+")
+
+
+#: Categories a *credit* is allowed to take. Most rules describe money going out,
+#: so a credit that matches one is usually a refund of that spend rather than the
+#: spend itself, and is skipped. These are the exceptions — things that genuinely
+#: arrive as credits.
+#:
+#: `INVESTMENT` is here because a redemption lands as a credit and matters: on a
+#: real statement a ₹25,00,000 mutual-fund payout fell through to the credit
+#: heuristic, was booked as `other_income`, and Safe Spare then treated ₹6.45 lakh
+#: a month as income the user could expect before their next paycheck. It is real
+#: money and still counts toward total income — but it is a one-off sale of an
+#: asset, not recurring income, so it must not be projected forward.
+_CREDIT_SAFE_CATEGORIES = frozenset(
+    {
+        Category.SALARY_INCOME,
+        Category.OTHER_INCOME,
+        Category.REFUND_REIMBURSEMENT,
+        Category.INTERNAL_TRANSFER,
+        Category.INVESTMENT,
+        Category.SAVINGS,
+    }
+)
+
 
 @dataclass
 class Classification:
@@ -110,18 +179,24 @@ def classify(
         match = pattern.search(haystack)
         if match:
             # A credit matching a debit-shaped rule is usually a refund or income.
-            if direction is Direction.CREDIT and cat not in (
-                Category.SALARY_INCOME,
-                Category.OTHER_INCOME,
-                Category.REFUND_REIMBURSEMENT,
-                Category.INTERNAL_TRANSFER,
-            ):
+            if direction is Direction.CREDIT and cat not in _CREDIT_SAFE_CATEGORIES:
                 continue
             return Classification(
                 cat, 0.82, "keyword_rule", pattern.pattern, default_essentiality(cat)
             )
 
-    # 3. direction-based statistical fallback
+    # 3. glued-token rules, for narrations with no word boundaries to match on
+    glued = _SEPARATORS.sub("", haystack)
+    for cat, pattern in _COMPILED_GLUED:
+        if not pattern.search(glued):
+            continue
+        if direction is Direction.CREDIT and cat not in _CREDIT_SAFE_CATEGORIES:
+            continue
+        return Classification(
+            cat, 0.68, "glued_keyword_rule", pattern.pattern, default_essentiality(cat)
+        )
+
+    # 4. direction-based statistical fallback
     if direction is Direction.CREDIT:
         return Classification(
             Category.OTHER_INCOME, 0.5, "direction_heuristic", "credit_without_match",
@@ -156,52 +231,7 @@ def classify_transactions(transactions: Iterable[Transaction]) -> List[Transacti
         if t.category is Category.REFUND_REIMBURSEMENT:
             t.is_reimbursement = True
         out.append(t)
-    mark_pass_through(out)
     return out
-
-
-def mark_pass_through(transactions: List[Transaction]) -> List[Transaction]:
-    """Flag money that arrived and left again on the same day as a transfer.
-
-    A credit and a debit of the *identical* amount on the *same date* is money
-    passing through the account — a redemption routed onward, a payment received
-    and forwarded, a parked deposit — not income and not spending. The
-    description rules cannot catch these: the two legs are worded nothing alike
-    ("RTGSCR-...FRANKLINTEMPLETON" in, "TPT-..." out), so neither matches the
-    transfer pattern.
-
-    Leaving them in is not a cosmetic error. One real statement carried a
-    ₹25,00,000 pass-through on a ₹23,000 account; it counted as a month of
-    spending, which put that month's outflow 100x above its neighbours, which
-    made the volatility reserve ₹7,12,200, which drove Safe Spare to zero and
-    told the user they had nothing to spare. It also reported their total
-    spending as ₹26 lakh.
-
-    Deliberately strict — exact amount, exact date, each leg consumed once — so
-    that ordinary same-day activity is never swallowed. Rows the user has
-    already corrected are left alone.
-    """
-    by_key: Dict[tuple, List[Transaction]] = {}
-    for t in transactions:
-        if t.user_overridden or t.excluded or not t.is_credit:
-            continue
-        by_key.setdefault((t.date, t.amount), []).append(t)
-
-    for t in transactions:
-        if t.user_overridden or t.excluded or not t.is_debit:
-            continue
-        matches = by_key.get((t.date, t.amount))
-        if not matches:
-            continue
-        credit = matches.pop()          # consumed, so one credit pairs one debit
-        for leg in (credit, t):
-            leg.category = Category.INTERNAL_TRANSFER
-            leg.is_internal_transfer = True
-            leg.category_method = "pass_through_pair"
-            leg.category_rule = "same_day_matched_credit_and_debit"
-            leg.category_confidence = 0.9
-            leg.essentiality = Essentiality.UNKNOWN
-    return transactions
 
 
 def category_breakdown(transactions: Iterable[Transaction]) -> Dict[Category, Dict]:

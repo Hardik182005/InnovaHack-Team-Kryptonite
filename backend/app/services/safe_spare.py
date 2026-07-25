@@ -94,11 +94,16 @@ def _without_outlier_months(values: Sequence[Decimal]) -> List[Decimal]:
     """Drop months so far above the median that they describe an event, not a habit.
 
     Standard deviation is the wrong tool on its own here, because it is dominated
-    by exactly the observations that are least representative. A single ₹25 lakh
-    pass-through in one month of a ₹28,000-a-month account produced a ₹7,12,200
-    volatility reserve — larger than the account had ever held — and Safe Spare
-    came out as zero with the reason "no safe capacity". The user's actual
+    by exactly the observations that are least representative. A real statement
+    carried a single ₹25,00,000 outflow in one month of an account that otherwise
+    moved ₹28,000 a month. That one month produced a ₹7,12,200 volatility reserve
+    — larger than the account had ever held — and Safe Spare came out as zero
+    with the reason "no safe capacity", even though the user's ordinary
     month-to-month variation was a few thousand rupees.
+
+    The reserve exists to price *recurring* uncertainty. A large one-off is real
+    spending and belongs in the totals, but it says nothing about how much next
+    month might vary, so it must not set the reserve.
 
     Trimming rather than winsorising, and only from above: an unusually *cheap*
     month is real information about how low outflows can go, while an unusually
