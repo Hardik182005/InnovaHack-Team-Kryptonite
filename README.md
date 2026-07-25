@@ -9,6 +9,7 @@
 <br>
 
 [![Demo Video](https://img.shields.io/badge/▶_watch_the_demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=wDqa_rXf8d4)
+[![Pitch Deck](https://img.shields.io/badge/📑_pitch_deck-PDF-b91c1c?style=for-the-badge)](SafeSpare_AI_Team_Kryptonite_Final.pdf)
 [![Live Demo](https://img.shields.io/badge/demo-live-22c55e?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://da2u5q8s30wam.cloudfront.net)
 [![API](https://img.shields.io/badge/API-online-22c55e?style=for-the-badge&logo=fastapi&logoColor=white)](https://100-48-40-252.sslip.io/health)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](#-license)
@@ -46,7 +47,7 @@
 - [The one-sentence pitch](#-the-one-sentence-pitch)
 - [The problem](#-the-problem)
 - [What makes SafeSpare different](#-what-makes-safespare-different)
-- [Live demo &amp; demo video](#-live-demo)
+- [Live demo, video &amp; pitch deck](#-live-demo)
 - [Feature tour](#-feature-tour)
 - [The Safe Spare engine](#-the-safe-spare-engine)
 - [Architecture](#-architecture)
@@ -196,6 +197,11 @@ and *Safe Spare* are masked out of translation entirely.
 **▶ [youtube.com/watch?v=wDqa_rXf8d4](https://www.youtube.com/watch?v=wDqa_rXf8d4)**
 
 *A full walkthrough: statement upload → categorization → Safe Spare → Leak Radar → round-ups → SIP simulation.*
+
+<br>
+
+📑 **[Pitch deck — SafeSpare_AI_Team_Kryptonite_Final.pdf](SafeSpare_AI_Team_Kryptonite_Final.pdf)**
+&nbsp;·&nbsp; 7 slides: problem, solution, stack, architecture, conclusion.
 
 </div>
 
