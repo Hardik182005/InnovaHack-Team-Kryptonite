@@ -1,0 +1,360 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 6 /Kids [4 0 R 6 0 R 8 0 R 10 0 R 12 0 R 14 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 4314 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(NORTHWIND COMMUNITY BANK \(fictional\)) Tj T*
+(Account: Everyday Checking  ****4417   Currency: USD) Tj T*
+(Statement period: 2026-01-02 to 2026-06-28) Tj T*
+(Opening balance: 2575.69) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-01-02   THE DAILY GRIND CAFE                              26.10                   2549.59) Tj T*
+(2026-01-03   GREENFIELD PROPERTIES RENT                      1450.00                   1099.59) Tj T*
+(2026-01-04   CORNER SUPERMARKET                                81.17                   1018.42) Tj T*
+(2026-01-04   UBER TRIP                                         21.99                    996.43) Tj T*
+(2026-01-05   PIZZA PLACE #221                                  54.90                    941.53) Tj T*
+(2026-01-06   SECURELIFE INSURANCE PREMIUM                     128.00                    813.53) Tj T*
+(2026-01-07   PIZZA PLACE #221                                  42.25                    771.28) Tj T*
+(2026-01-08   FIRSTBANK AUTO LOAN EMI 55212                    312.40                    458.88) Tj T*
+(2026-01-09   PEAK FITNESS GYM MEMBERSHIP                       49.00                    409.88) Tj T*
+(2026-01-10   UBER TRIP                                         55.60                    354.28) Tj T*
+(2026-01-11   CITY POWER + WATER UTILITY BILL                   90.00                    264.28) Tj T*
+(2026-01-12   CORNER SUPERMARKET                                42.69                    221.59) Tj T*
+(2026-01-12   AMZN MKTP US*2K4LP                                38.10                    183.49) Tj T*
+(2026-01-13   AMZN MKTP US*2K4LP                                77.30                    106.19) Tj T*
+(2026-01-14   NETFLIX.COM SUBSCRIPTION                          15.99                     90.20) Tj T*
+(2026-01-15   UBER TRIP                                         18.85                     71.35) Tj T*
+(2026-01-16   AMZN MKTP US*2K4LP                                77.99                     -6.64) Tj T*
+(2026-01-17   CLOUDVAULT STORAGE PLUS                            9.99                    -16.63) Tj T*
+(2026-01-18   UBER TRIP                                         26.25                    -42.88) Tj T*
+(2026-01-19   CORNER SUPERMARKET                                60.59                   -103.47) Tj T*
+(2026-01-19   THE DAILY GRIND CAFE                              46.10                   -149.57) Tj T*
+(2026-01-20   QX7 TRADING 99231                                 18.75                   -168.32) Tj T*
+(2026-01-21   DROPBOX PLUS ANNUALBILL MONTHLY                   11.99                   -180.31) Tj T*
+(2026-01-22   THE DAILY GRIND CAFE                              33.60                   -213.91) Tj T*
+(2026-01-23   ADOBE CREATIVE CLOUD                              22.99                   -236.90) Tj T*
+(2026-01-24   THE DAILY GRIND CAFE                              57.99                   -294.89) Tj T*
+(2026-01-25   TRANSFER TO OWN SAVINGS ACCOUNT                  200.00                   -494.89) Tj T*
+(2026-01-25   TRANSFER FROM CURRENT ACCOUNT                                 200.00      -294.89) Tj T*
+(2026-01-26   CORNER SUPERMARKET                                94.32                   -389.21) Tj T*
+(2026-01-26   THE DAILY GRIND CAFE                              20.85                   -410.06) Tj T*
+(2026-01-27   NORTHGATE RETAIL PARK                             51.25                   -461.31) Tj T*
+(2026-01-28   ACME ANALYTICS PAYROLL DIRECT DEPOSIT                        3200.00      2738.69) Tj T*
+(2026-02-02   SHELL FUEL                                        77.99                   2660.70) Tj T*
+(2026-02-03   GREENFIELD PROPERTIES RENT                      1450.00                   1210.70) Tj T*
+(2026-02-04   CORNER SUPERMARKET                                43.80                   1166.90) Tj T*
+(2026-02-04   UBER TRIP                                         30.60                   1136.30) Tj T*
+(2026-02-05   STARBUCKS COFFEE                                  45.25                   1091.05) Tj T*
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 4314 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(NORTHWIND COMMUNITY BANK \(fictional\)) Tj T*
+(Account: Everyday Checking  ****4417   Currency: USD) Tj T*
+(Statement period: 2026-01-02 to 2026-06-28) Tj T*
+(Opening balance: 2575.69) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-02-06   SECURELIFE INSURANCE PREMIUM                     128.00                    963.05) Tj T*
+(2026-02-07   NORTHGATE RETAIL PARK                             38.30                    924.75) Tj T*
+(2026-02-08   FIRSTBANK AUTO LOAN EMI 55212                    312.40                    612.35) Tj T*
+(2026-02-09   PEAK FITNESS GYM MEMBERSHIP                       49.00                    563.35) Tj T*
+(2026-02-10   SHELL FUEL                                        67.25                    496.10) Tj T*
+(2026-02-11   CITY POWER + WATER UTILITY BILL                   88.00                    408.10) Tj T*
+(2026-02-12   CORNER SUPERMARKET                                75.19                    332.91) Tj T*
+(2026-02-12   UBER TRIP                                         73.60                    259.31) Tj T*
+(2026-02-13   AMZN MKTP US*2K4LP                                71.99                    187.32) Tj T*
+(2026-02-14   NETFLIX.COM SUBSCRIPTION                          15.99                    171.33) Tj T*
+(2026-02-15   UBER TRIP                                         48.90                    122.43) Tj T*
+(2026-02-15   ATM CASH WITHDRAWAL                              100.00                     22.43) Tj T*
+(2026-02-16   UBER EATS DELIVERY                                46.25                    -23.82) Tj T*
+(2026-02-17   CLOUDVAULT STORAGE PLUS                            9.99                    -33.81) Tj T*
+(2026-02-18   NORTHGATE RETAIL PARK                             38.85                    -72.66) Tj T*
+(2026-02-19   CORNER SUPERMARKET                                70.60                   -143.26) Tj T*
+(2026-02-19   AMZN MKTP US*2K4LP                                72.90                   -216.16) Tj T*
+(2026-02-20   QX7 TRADING 99231                                 18.75                   -234.91) Tj T*
+(2026-02-21   DROPBOX PLUS ANNUALBILL MONTHLY                   11.99                   -246.90) Tj T*
+(2026-02-22   NORTHGATE RETAIL PARK                             48.10                   -295.00) Tj T*
+(2026-02-23   ADOBE CREATIVE CLOUD                              22.99                   -317.99) Tj T*
+(2026-02-24   STARBUCKS COFFEE                                  64.99                   -382.98) Tj T*
+(2026-02-25   TRANSFER TO OWN SAVINGS ACCOUNT                  200.00                   -582.98) Tj T*
+(2026-02-25   TRANSFER FROM CURRENT ACCOUNT                                 200.00      -382.98) Tj T*
+(2026-02-26   CORNER SUPERMARKET                                52.18                   -435.16) Tj T*
+(2026-02-26   STARBUCKS COFFEE                                  78.25                   -513.41) Tj T*
+(2026-02-27   SHELL FUEL                                        52.25                   -565.66) Tj T*
+(2026-02-28   ACME ANALYTICS PAYROLL DIRECT DEPOSIT                        3200.00      2634.34) Tj T*
+(2026-03-02   UBER EATS DELIVERY                                23.45                   2610.89) Tj T*
+(2026-03-03   GREENFIELD PROPERTIES RENT                      1450.00                   1160.89) Tj T*
+(2026-03-04   CORNER SUPERMARKET                                53.27                   1107.62) Tj T*
+(2026-03-04   UBER TRIP                                         45.60                   1062.02) Tj T*
+(2026-03-05   NORTHGATE RETAIL PARK                             53.60                   1008.42) Tj T*
+(2026-03-06   SECURELIFE INSURANCE PREMIUM                     128.00                    880.42) Tj T*
+(2026-03-07   UBER TRIP                                         34.30                    846.12) Tj T*
+(2026-03-08   FIRSTBANK AUTO LOAN EMI 55212                    312.40                    533.72) Tj T*
+(2026-03-09   PEAK FITNESS GYM MEMBERSHIP                       49.00                    484.72) Tj T*
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 9 0 R >>
+endobj
+9 0 obj
+<< /Length 4314 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(NORTHWIND COMMUNITY BANK \(fictional\)) Tj T*
+(Account: Everyday Checking  ****4417   Currency: USD) Tj T*
+(Statement period: 2026-01-02 to 2026-06-28) Tj T*
+(Opening balance: 2575.69) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-03-10   STARBUCKS COFFEE                                  48.90                    435.82) Tj T*
+(2026-03-11   CITY POWER + WATER UTILITY BILL                  102.00                    333.82) Tj T*
+(2026-03-12   CORNER SUPERMARKET                                74.81                    259.01) Tj T*
+(2026-03-12   NORTHGATE RETAIL PARK                             19.25                    239.76) Tj T*
+(2026-03-13   SHELL FUEL                                        49.99                    189.77) Tj T*
+(2026-03-14   NETFLIX.COM SUBSCRIPTION                          15.99                    173.78) Tj T*
+(2026-03-15   UBER TRIP                                         32.99                    140.79) Tj T*
+(2026-03-16   THE DAILY GRIND CAFE                              63.75                     77.04) Tj T*
+(2026-03-16   REFUND AMZN MKTP US ORDER 114-22                               34.60       111.64) Tj T*
+(2026-03-17   CLOUDVAULT STORAGE PLUS                            9.99                    101.65) Tj T*
+(2026-03-18   PIZZA PLACE #221                                  66.99                     34.66) Tj T*
+(2026-03-19   CORNER SUPERMARKET                                70.77                    -36.11) Tj T*
+(2026-03-19   UBER TRIP                                         55.85                    -91.96) Tj T*
+(2026-03-20   QX7 TRADING 99231                                 18.75                   -110.71) Tj T*
+(2026-03-21   DROPBOX PLUS ANNUALBILL MONTHLY                   11.99                   -122.70) Tj T*
+(2026-03-22   PIZZA PLACE #221                                  62.10                   -184.80) Tj T*
+(2026-03-23   ADOBE CREATIVE CLOUD                              22.99                   -207.79) Tj T*
+(2026-03-24   STARBUCKS COFFEE                                  58.99                   -266.78) Tj T*
+(2026-03-25   TRANSFER TO OWN SAVINGS ACCOUNT                  200.00                   -466.78) Tj T*
+(2026-03-25   TRANSFER FROM CURRENT ACCOUNT                                 200.00      -266.78) Tj T*
+(2026-03-26   CORNER SUPERMARKET                                72.39                   -339.17) Tj T*
+(2026-03-26   UBER TRIP                                         58.30                   -397.47) Tj T*
+(2026-03-27   STARBUCKS COFFEE                                  44.60                   -442.07) Tj T*
+(2026-03-28   ACME ANALYTICS PAYROLL DIRECT DEPOSIT                        3200.00      2757.93) Tj T*
+(2026-04-02   SHELL FUEL                                        59.30                   2698.63) Tj T*
+(2026-04-03   GREENFIELD PROPERTIES RENT                      1450.00                   1248.63) Tj T*
+(2026-04-04   CORNER SUPERMARKET                                64.65                   1183.98) Tj T*
+(2026-04-04   THE DAILY GRIND CAFE                              74.10                   1109.88) Tj T*
+(2026-04-05   AMZN MKTP US*2K4LP                                29.10                   1080.78) Tj T*
+(2026-04-06   SECURELIFE INSURANCE PREMIUM                     128.00                    952.78) Tj T*
+(2026-04-07   PIZZA PLACE #221                                  33.85                    918.93) Tj T*
+(2026-04-08   FIRSTBANK AUTO LOAN EMI 55212                    312.40                    606.53) Tj T*
+(2026-04-09   PEAK FITNESS GYM MEMBERSHIP                       49.00                    557.53) Tj T*
+(2026-04-10   STARBUCKS COFFEE                                  66.90                    490.63) Tj T*
+(2026-04-11   CITY POWER + WATER UTILITY BILL                  104.00                    386.63) Tj T*
+(2026-04-12   CORNER SUPERMARKET                                45.32                    341.31) Tj T*
+(2026-04-12   SHELL FUEL                                        31.60                    309.71) Tj T*
+ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
+endobj
+11 0 obj
+<< /Length 4314 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(NORTHWIND COMMUNITY BANK \(fictional\)) Tj T*
+(Account: Everyday Checking  ****4417   Currency: USD) Tj T*
+(Statement period: 2026-01-02 to 2026-06-28) Tj T*
+(Opening balance: 2575.69) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-04-13   THE DAILY GRIND CAFE                              27.45                    282.26) Tj T*
+(2026-04-14   NETFLIX.COM SUBSCRIPTION                          15.99                    266.27) Tj T*
+(2026-04-15   AMZN MKTP US*2K4LP                                45.85                    220.42) Tj T*
+(2026-04-16   AMZN MKTP US*2K4LP                                78.30                    142.12) Tj T*
+(2026-04-17   CLOUDVAULT STORAGE PLUS                           13.99                    128.13) Tj T*
+(2026-04-18   UBER TRIP                                         65.99                     62.14) Tj T*
+(2026-04-19   CORNER SUPERMARKET                                43.10                     19.04) Tj T*
+(2026-04-19   THE DAILY GRIND CAFE                              63.25                    -44.21) Tj T*
+(2026-04-20   QX7 TRADING 99231                                 18.75                    -62.96) Tj T*
+(2026-04-21   DROPBOX PLUS ANNUALBILL MONTHLY                   11.99                    -74.95) Tj T*
+(2026-04-22   SHELL FUEL                                        24.85                    -99.80) Tj T*
+(2026-04-23   ADOBE CREATIVE CLOUD                              22.99                   -122.79) Tj T*
+(2026-04-24   NORTHGATE RETAIL PARK                             69.99                   -192.78) Tj T*
+(2026-04-25   TRANSFER TO OWN SAVINGS ACCOUNT                  200.00                   -392.78) Tj T*
+(2026-04-25   TRANSFER FROM CURRENT ACCOUNT                                 200.00      -192.78) Tj T*
+(2026-04-26   CORNER SUPERMARKET                                76.96                   -269.74) Tj T*
+(2026-04-26   UBER EATS DELIVERY                                77.85                   -347.59) Tj T*
+(2026-04-27   AMZN MKTP US*2K4LP                                78.10                   -425.69) Tj T*
+(2026-04-28   ACME ANALYTICS PAYROLL DIRECT DEPOSIT                        3200.00      2774.31) Tj T*
+(2026-05-02   NORTHGATE RETAIL PARK                             65.25                   2709.06) Tj T*
+(2026-05-03   GREENFIELD PROPERTIES RENT                      1450.00                   1259.06) Tj T*
+(2026-05-04   CORNER SUPERMARKET                                95.68                   1163.38) Tj T*
+(2026-05-04   PIZZA PLACE #221                                  65.85                   1097.53) Tj T*
+(2026-05-05   UBER TRIP                                         52.10                   1045.43) Tj T*
+(2026-05-06   SECURELIFE INSURANCE PREMIUM                     128.00                    917.43) Tj T*
+(2026-05-07   STARBUCKS COFFEE                                  47.45                    869.98) Tj T*
+(2026-05-08   FIRSTBANK AUTO LOAN EMI 55212                    312.40                    557.58) Tj T*
+(2026-05-09   PEAK FITNESS GYM MEMBERSHIP                       49.00                    508.58) Tj T*
+(2026-05-10   STARBUCKS COFFEE                                  68.90                    439.68) Tj T*
+(2026-05-11   CITY POWER + WATER UTILITY BILL                   80.00                    359.68) Tj T*
+(2026-05-12   CORNER SUPERMARKET                                67.26                    292.42) Tj T*
+(2026-05-12   AMZN MKTP US*2K4LP                                53.10                    239.32) Tj T*
+(2026-05-13   UBER TRIP                                         64.99                    174.33) Tj T*
+(2026-05-14   NETFLIX.COM SUBSCRIPTION                          15.99                    158.34) Tj T*
+(2026-05-15   AMZN MKTP US*2K4LP                                34.30                    124.04) Tj T*
+(2026-05-16   NORTHGATE RETAIL PARK                             66.10                     57.94) Tj T*
+(2026-05-17   CLOUDVAULT STORAGE PLUS                           13.99                     43.95) Tj T*
+ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 13 0 R >>
+endobj
+13 0 obj
+<< /Length 4314 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(NORTHWIND COMMUNITY BANK \(fictional\)) Tj T*
+(Account: Everyday Checking  ****4417   Currency: USD) Tj T*
+(Statement period: 2026-01-02 to 2026-06-28) Tj T*
+(Opening balance: 2575.69) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-05-18   SHELL FUEL                                        24.99                     18.96) Tj T*
+(2026-05-19   CORNER SUPERMARKET                                79.31                    -60.35) Tj T*
+(2026-05-19   AMZN MKTP US*2K4LP                                57.85                   -118.20) Tj T*
+(2026-05-20   QX7 TRADING 99231                                 18.75                   -136.95) Tj T*
+(2026-05-21   DROPBOX PLUS ANNUALBILL MONTHLY                   11.99                   -148.94) Tj T*
+(2026-05-22   PIZZA PLACE #221                                  39.60                   -188.54) Tj T*
+(2026-05-23   ADOBE CREATIVE CLOUD                              22.99                   -211.53) Tj T*
+(2026-05-24   UBER TRIP                                         41.60                   -253.13) Tj T*
+(2026-05-25   TRANSFER TO OWN SAVINGS ACCOUNT                  200.00                   -453.13) Tj T*
+(2026-05-25   TRANSFER FROM CURRENT ACCOUNT                                 200.00      -253.13) Tj T*
+(2026-05-26   CORNER SUPERMARKET                                90.24                   -343.37) Tj T*
+(2026-05-26   UBER EATS DELIVERY                                19.85                   -363.22) Tj T*
+(2026-05-27   THE DAILY GRIND CAFE                              72.90                   -436.12) Tj T*
+(2026-05-28   ACME ANALYTICS PAYROLL DIRECT DEPOSIT                        3200.00      2763.88) Tj T*
+(2026-05-28   MONTHLY ACCOUNT SERVICE CHARGE                     4.50                   2759.38) Tj T*
+(2026-06-02   UBER TRIP                                         22.99                   2736.39) Tj T*
+(2026-06-03   GREENFIELD PROPERTIES RENT                      1450.00                   1286.39) Tj T*
+(2026-06-04   CORNER SUPERMARKET                                59.87                   1226.52) Tj T*
+(2026-06-04   SHELL FUEL                                        28.10                   1198.42) Tj T*
+(2026-06-05   THE DAILY GRIND CAFE                              33.25                   1165.17) Tj T*
+(2026-06-06   SECURELIFE INSURANCE PREMIUM                     128.00                   1037.17) Tj T*
+(2026-06-07   SHELL FUEL                                        73.25                    963.92) Tj T*
+(2026-06-08   FIRSTBANK AUTO LOAN EMI 55212                    312.40                    651.52) Tj T*
+(2026-06-09   PEAK FITNESS GYM MEMBERSHIP                       49.00                    602.52) Tj T*
+(2026-06-10   AMZN MKTP US*2K4LP                                35.60                    566.92) Tj T*
+(2026-06-11   CITY POWER + WATER UTILITY BILL                  114.00                    452.92) Tj T*
+(2026-06-12   CORNER SUPERMARKET                                94.13                    358.79) Tj T*
+(2026-06-12   STARBUCKS COFFEE                                  71.90                    286.89) Tj T*
+(2026-06-13   UBER TRIP                                         49.90                    236.99) Tj T*
+(2026-06-14   NETFLIX.COM SUBSCRIPTION                          15.99                    221.00) Tj T*
+(2026-06-15   THE DAILY GRIND CAFE                              61.90                    159.10) Tj T*
+(2026-06-16   STARBUCKS COFFEE                                  45.25                    113.85) Tj T*
+(2026-06-17   CLOUDVAULT STORAGE PLUS                           13.99                     99.86) Tj T*
+(2026-06-18   SHELL FUEL                                        41.99                     57.87) Tj T*
+(2026-06-19   CORNER SUPERMARKET                                82.75                    -24.88) Tj T*
+(2026-06-19   AMZN MKTP US*2K4LP                                19.10                    -43.98) Tj T*
+(2026-06-20   QX7 TRADING 99231                                 18.75                    -62.73) Tj T*
+ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] /Resources << /Font << /F1 3 0 R >> >> /Contents 15 0 R >>
+endobj
+15 0 obj
+<< /Length 1533 >>
+stream
+BT
+/F1 8 Tf
+10 580 Td
+9.6 TL
+(SYNTHETIC DEMO DATA - NOT A REAL BANK STATEMENT) Tj T*
+() Tj T*
+(NORTHWIND COMMUNITY BANK \(fictional\)) Tj T*
+(Account: Everyday Checking  ****4417   Currency: USD) Tj T*
+(Statement period: 2026-01-02 to 2026-06-28) Tj T*
+(Opening balance: 2575.69) Tj T*
+() Tj T*
+(DATE         DESCRIPTION                                       DEBIT       CREDIT      BALANCE) Tj T*
+(----------------------------------------------------------------------------------------------) Tj T*
+(2026-06-21   DROPBOX PLUS ANNUALBILL MONTHLY                   11.99                    -74.72) Tj T*
+(2026-06-22   SHELL FUEL                                        62.99                   -137.71) Tj T*
+(2026-06-23   ADOBE CREATIVE CLOUD                              22.99                   -160.70) Tj T*
+(2026-06-24   PIZZA PLACE #221                                  23.30                   -184.00) Tj T*
+(2026-06-25   TRANSFER TO OWN SAVINGS ACCOUNT                  200.00                   -384.00) Tj T*
+(2026-06-25   TRANSFER FROM CURRENT ACCOUNT                                 200.00      -184.00) Tj T*
+(2026-06-26   CORNER SUPERMARKET                                42.71                   -226.71) Tj T*
+(2026-06-26   UBER EATS DELIVERY                                33.30                   -260.01) Tj T*
+(2026-06-27   AMZN MKTP US*2K4LP                                59.99                   -320.00) Tj T*
+(2026-06-28   ACME ANALYTICS PAYROLL DIRECT DEPOSIT                        3200.00      2880.00) Tj T*
+ET
+endstream
+endobj
+xref
+0 16
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000148 00000 n 
+0000000216 00000 n 
+0000000342 00000 n 
+0000004708 00000 n 
+0000004834 00000 n 
+0000009200 00000 n 
+0000009326 00000 n 
+0000013692 00000 n 
+0000013820 00000 n 
+0000018187 00000 n 
+0000018315 00000 n 
+0000022682 00000 n 
+0000022810 00000 n 
+trailer
+<< /Size 16 /Root 1 0 R >>
+startxref
+24396
+%%EOF

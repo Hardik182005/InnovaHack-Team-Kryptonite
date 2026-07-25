@@ -1,0 +1,208 @@
+/* ============================================================================
+   SafeSpare AI — design tokens.
+
+   Measured directly out of design/Perch Site.dc.html and recorded in
+   IMPLEMENTATION_STATUS.md §2.1. These values are the visual contract:
+   change them only if the approved design changes.
+   ========================================================================= */
+
+:root {
+  /* --- surfaces ---------------------------------------------------------- */
+  --paper: #f7f4ed; /* page background, warm cream */
+  --panel: #efebe2; /* raised surface */
+  --card: #ffffff; /* bordered card on cream */
+  --ink: #14120f; /* primary text and dark panels */
+
+  /* --- brand ------------------------------------------------------------- */
+  --accent: #2438e0; /* electric blue — THE brand colour */
+  --accent-700: #1b2bb8;
+  --accent-300: #8c9bff;
+  --accent-200: #a8b4ff;
+  --accent-100: #c8ceff;
+
+  /* --- semantics --------------------------------------------------------- */
+  --positive: #1e8a5f;
+  --positive-soft: #8ce0b0;
+  --warning: #d2432a;
+  --warning-soft: #ffb08f;
+
+  /* --- ink washes (the design uses rgba(20,18,15,x) everywhere) ---------- */
+  --ink-90: rgba(20, 18, 15, 0.9);
+  --ink-72: rgba(20, 18, 15, 0.72);
+  --ink-66: rgba(20, 18, 15, 0.66);
+  --ink-55: rgba(20, 18, 15, 0.55);
+  --ink-45: rgba(20, 18, 15, 0.45);
+  --ink-30: rgba(20, 18, 15, 0.3);
+  --ink-17: rgba(20, 18, 15, 0.17);
+  --ink-12: rgba(20, 18, 15, 0.12);
+  --ink-09: rgba(20, 18, 15, 0.09);
+  --ink-07: rgba(20, 18, 15, 0.07);
+  --ink-04: rgba(20, 18, 15, 0.04);
+
+  /* --- paper washes (for text on the dark panel) ------------------------- */
+  --paper-78: rgba(247, 244, 237, 0.78);
+  --paper-60: rgba(247, 244, 237, 0.6);
+  --paper-50: rgba(247, 244, 237, 0.5);
+  --paper-18: rgba(247, 244, 237, 0.18);
+
+  /* --- accent washes ----------------------------------------------------- */
+  --accent-wash: rgba(36, 56, 224, 0.09);
+  --accent-wash-strong: rgba(36, 56, 224, 0.14);
+  --accent-line: rgba(36, 56, 224, 0.32);
+
+  /* --- type -------------------------------------------------------------- */
+  --font-display: 'Space Grotesk', 'Helvetica Neue', Helvetica, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-body: Figtree, 'Helvetica Neue', Helvetica, sans-serif;
+
+  /* --- radii ------------------------------------------------------------- */
+  --r-pill: 999px;
+  --r-control: 11px;
+  --r-control-sm: 8px;
+  --r-card: 16px;
+  --r-card-lg: 18px;
+  --r-hero: 24px;
+  --r-hero-lg: 28px;
+
+  /* --- elevation --------------------------------------------------------- */
+  --shadow-accent: 0 14px 30px -14px rgba(36, 56, 224, 0.95);
+  --shadow-accent-sm: 0 10px 24px -12px rgba(36, 56, 224, 0.9);
+  --shadow-card: 0 10px 22px -14px rgba(20, 18, 15, 0.6);
+
+  /* --- motion ------------------------------------------------------------ */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 180ms;
+  --dur-mid: 320ms;
+  --dur-slow: 620ms;
+
+  /* --- layout ------------------------------------------------------------ */
+  --max-w: 1320px;
+  --gutter: clamp(20px, 5vw, 64px);
+}
+
+/* ============================================================================
+   Motion — same keyframe names and easings as the approved design.
+   ========================================================================= */
+
+@keyframes p-pulse {
+  0%,
+  100% {
+    opacity: 0.28;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes p-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes p-marquee-rev {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes p-sheen {
+  0% {
+    transform: translateX(-140%);
+  }
+  100% {
+    transform: translateX(360%);
+  }
+}
+@keyframes p-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes p-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes p-blob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3vw, 4vh, 0) scale(1.1);
+  }
+}
+@keyframes p-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes p-spin-rev {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes p-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+}
+@keyframes p-run {
+  0% {
+    left: -3%;
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+@keyframes p-shimmer {
+  0% {
+    background-position: -420px 0;
+  }
+  100% {
+    background-position: 420px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

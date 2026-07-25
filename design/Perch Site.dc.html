@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #F7F4ED; color: #14120F; font-family: Figtree, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; text-wrap: pretty; }
+  a { color: #14120F; text-decoration: none; }
+  a:hover { color: #2438E0; }
+  input, button { font-family: inherit; }
+  ::selection { background: #C8CEFF; }
+  @keyframes p-pulse { 0%, 100% { opacity: 0.28; } 50% { opacity: 1; } }
+  @keyframes p-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes p-marquee-rev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  @keyframes p-sheen { 0% { transform: translateX(-140%); } 100% { transform: translateX(360%); } }
+  @keyframes p-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes p-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes p-blob { 0%, 100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(3vw, 4vh, 0) scale(1.1); } }
+  @keyframes p-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes p-spin-rev { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+  @keyframes p-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.07); } }
+  @keyframes p-run { 0% { left: -3%; opacity: 0; } 14% { opacity: 1; } 86% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+</style>
+</helmet>
+
+<sc-if value="{{ isSite }}" hint-placeholder-val="{{ true }}">
+<div style="position: relative; min-height: 100vh; background: #F7F4ED; color: #14120F; overflow-x: hidden;">
+
+  <div aria-hidden="true" style="position: fixed; top: -20vh; right: -12vw; width: 54vw; height: 54vw; z-index: 0; pointer-events: none; border-radius: 999px; background: radial-gradient(circle, rgba(36,56,224,0.12), transparent 66%); filter: blur(18px); animation: p-blob 30s ease-in-out infinite;"></div>
+
+  <header style="position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 14px clamp(20px, 5vw, 64px); background: rgba(247,244,237,0.85); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(20,18,15,0.09);">
+    <div style="display: flex; align-items: center; gap: 34px;">
+      <div style="display: flex; align-items: center; gap: 9px;">
+        <div style="width: 20px; height: 20px; border-radius: 6px 6px 6px 2px; background: #2438E0;"></div>
+        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 700; letter-spacing: -0.04em;">Perch</span>
+      </div>
+      <nav style="display: flex; align-items: center; gap: 26px; font-size: 14.5px; font-weight: 500; color: rgba(20,18,15,0.62);">
+        <a href="#product" style="color: inherit;" style-hover="color: #14120F;">Product</a>
+        <a href="#handles" style="color: inherit;" style-hover="color: #14120F;">What it handles</a>
+        <a href="#stack" style="color: inherit;" style-hover="color: #14120F;">Integrations</a>
+        <a href="#pricing" style="color: inherit;" style-hover="color: #14120F;">Pricing</a>
+      </nav>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <button onClick="{{ openApp }}" style="border: none; background: none; padding: 10px 2px; font-size: 14.5px; font-weight: 500; color: rgba(20,18,15,0.65); cursor: pointer;" style-hover="color: #14120F;">Sign in</button>
+      <button onClick="{{ openApp }}" style="position: relative; overflow: hidden; border: none; border-radius: 10px; padding: 11px 20px; font-size: 14.5px; font-weight: 600; color: #FFFFFF; background: #2438E0; cursor: pointer; box-shadow: 0 10px 24px -12px rgba(36,56,224,0.9); transition: transform 180ms ease, box-shadow 180ms ease;" style-hover="transform: translateY(-1px); box-shadow: 0 16px 30px -12px rgba(36,56,224,0.95);">Get started</button>
+    </div>
+  </header>
+
+  <section id="product" style="position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: clamp(40px, 6vw, 84px) clamp(20px, 5vw, 64px) clamp(32px, 4vw, 56px);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: clamp(32px, 4vw, 64px); align-items: center;">
+      <div>
+        <div data-reveal="1" style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 10px; border-radius: 8px; background: rgba(36,56,224,0.09); font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: #2438E0;">
+          <span style="width: 6px; height: 6px; border-radius: 999px; background: #2438E0; animation: p-pulse 1.9s ease-in-out infinite;"></span>
+          v4.2 · autosend is confidence-gated
+        </div>
+        <h1 data-reveal="2" style="margin: 22px 0 0; font-family: 'Space Grotesk', sans-serif; font-size: clamp(44px, 5.6vw, 78px); line-height: 0.92; letter-spacing: -0.055em; font-weight: 700; max-width: 15ch;">Close 71% of tickets before anyone opens one.</h1>
+        <p data-reveal="3" style="margin: 24px 0 0; max-width: 46ch; font-size: clamp(16.5px, 1.4vw, 19px); line-height: 1.6; color: rgba(20,18,15,0.66);">Perch reads your docs and reply history, answers what it's certain about in your team's voice, and hands a human the rest — summarised, with sentiment flagged.</p>
+        <div data-reveal="4" style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 32px 0 0;">
+          <input value="{{ email }}" onChange="{{ setEmail }}" placeholder="you@company.com" style="flex: 1 1 240px; min-width: 0; max-width: 290px; padding: 15px 17px; border-radius: 11px; border: 1px solid rgba(20,18,15,0.16); background: #FFFFFF; font-size: 15.5px; color: #14120F; outline: none; transition: border-color 160ms ease, box-shadow 160ms ease;" style-focus="border-color: #2438E0; box-shadow: 0 0 0 4px rgba(36,56,224,0.14);" />
+          <button onClick="{{ openApp }}" style="position: relative; overflow: hidden; padding: 15px 28px; border: none; border-radius: 11px; background: #2438E0; color: #FFFFFF; font-size: 15.5px; font-weight: 600; cursor: pointer; box-shadow: 0 14px 30px -14px rgba(36,56,224,0.95); transition: transform 180ms ease;" style-hover="transform: translateY(-1px);">
+            Start free
+            <span aria-hidden="true" style="position: absolute; top: 0; bottom: 0; width: 38%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.34), transparent); animation: p-sheen 4s ease-in-out infinite;"></span>
+          </button>
+        </div>
+        <div data-reveal="5" style="margin-top: 13px; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: rgba(20,18,15,0.45);">14 days free · no card · live in 9 minutes</div>
+      </div>
+
+      <div data-reveal="2" style="position: relative; height: clamp(420px, 44vw, 580px); animation: p-rise 700ms cubic-bezier(0.2,0.8,0.2,1) both;">
+        <div aria-hidden="true" style="position: absolute; inset: 0; background-image: linear-gradient(rgba(20,18,15,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(20,18,15,0.07) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(circle at 52% 50%, #000 18%, transparent 72%); -webkit-mask-image: radial-gradient(circle at 52% 50%, #000 18%, transparent 72%);"></div>
+
+        <div style="position: absolute; top: 44%; left: 52%; width: clamp(300px, 33vw, 430px); height: clamp(300px, 33vw, 430px); transform: translate(-50%, -50%);">
+          <div style="position: absolute; inset: 0; border-radius: 999px; border: 1px solid rgba(20,18,15,0.13); animation: p-spin 48s linear infinite;">
+            <div style="position: absolute; top: -19px; left: 50%; margin-left: -34px; padding: 8px 14px; border-radius: 10px; background: #FFFFFF; border: 1px solid rgba(20,18,15,0.1); box-shadow: 0 10px 22px -14px rgba(20,18,15,0.6); font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: -0.02em; animation: p-spin-rev 48s linear infinite;">Slack</div>
+            <div style="position: absolute; bottom: -19px; left: 18%; padding: 8px 14px; border-radius: 10px; background: #FFFFFF; border: 1px solid rgba(20,18,15,0.1); box-shadow: 0 10px 22px -14px rgba(20,18,15,0.6); font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: -0.02em; animation: p-spin-rev 48s linear infinite;">Jira</div>
+            <div style="position: absolute; top: 42%; right: -32px; padding: 8px 14px; border-radius: 10px; background: #FFFFFF; border: 1px solid rgba(20,18,15,0.1); box-shadow: 0 10px 22px -14px rgba(20,18,15,0.6); font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: -0.02em; animation: p-spin-rev 48s linear infinite;">Gmail</div>
+          </div>
+        </div>
+
+        <div style="position: absolute; top: 44%; left: 52%; width: clamp(210px, 23vw, 300px); height: clamp(210px, 23vw, 300px); transform: translate(-50%, -50%);">
+          <div style="position: absolute; inset: 0; border-radius: 999px; border: 1px solid rgba(20,18,15,0.17); animation: p-spin-rev 34s linear infinite;">
+            <div style="position: absolute; top: -18px; left: 56%; padding: 7px 13px; border-radius: 9px; background: #FFFFFF; border: 1px solid rgba(20,18,15,0.1); box-shadow: 0 10px 20px -14px rgba(20,18,15,0.6); font-family: 'Space Grotesk', sans-serif; font-size: 12.5px; font-weight: 600; letter-spacing: -0.02em; animation: p-spin 34s linear infinite;">Zendesk</div>
+            <div style="position: absolute; bottom: 4%; left: -34px; padding: 7px 13px; border-radius: 9px; background: #FFFFFF; border: 1px solid rgba(20,18,15,0.1); box-shadow: 0 10px 20px -14px rgba(20,18,15,0.6); font-family: 'Space Grotesk', sans-serif; font-size: 12.5px; font-weight: 600; letter-spacing: -0.02em; animation: p-spin 34s linear infinite;">HubSpot</div>
+          </div>
+        </div>
+
+        <div style="position: absolute; top: 44%; left: 52%; width: clamp(140px, 15vw, 190px); height: clamp(140px, 15vw, 190px); transform: translate(-50%, -50%);">
+          <div style="position: absolute; inset: 0; border-radius: 999px; border: 1px dashed rgba(36,56,224,0.32); animation: p-spin 22s linear infinite;">
+            <div style="position: absolute; top: -15px; left: 24%; padding: 6px 11px; border-radius: 8px; background: #2438E0; color: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 10px 20px -12px rgba(36,56,224,0.9); animation: p-spin-rev 22s linear infinite;">api</div>
+          </div>
+        </div>
+
+        <div aria-hidden="true" style="position: absolute; top: 44%; left: 52%; width: clamp(140px, 15vw, 190px); height: clamp(140px, 15vw, 190px); transform: translate(-50%, -50%);">
+          <div style="position: absolute; inset: 0; border-radius: 999px; background: radial-gradient(circle, rgba(36,56,224,0.3), rgba(36,56,224,0) 70%); animation: p-glow 7s ease-in-out infinite;"></div>
+        </div>
+
+        <div style="position: absolute; top: 44%; left: 52%; transform: translate(-50%, -50%); text-align: center;">
+          <div style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(40px, 4.4vw, 58px); font-weight: 700; letter-spacing: -0.055em; color: #2438E0;">71%</div>
+          <div style="margin-top: 2px; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.11em; text-transform: uppercase; color: rgba(20,18,15,0.55);">answered</div>
+        </div>
+
+        <div style="position: absolute; left: 0; right: 0; bottom: 0; display: grid; gap: 12px; background: linear-gradient(180deg, rgba(247,244,237,0) 0%, rgba(247,244,237,0.92) 34%); padding-top: 26px;">
+          <div style="display: flex; align-items: center; gap: 11px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(20,18,15,0.5); white-space: nowrap;">auto-sent</span>
+            <div style="position: relative; flex: 1; height: 2px; background: linear-gradient(90deg, rgba(20,18,15,0.1), rgba(36,56,224,0.4));">
+              <span style="position: absolute; top: -3px; width: 8px; height: 8px; border-radius: 999px; background: #2438E0; animation: p-run 2.6s linear infinite;"></span>
+              <span style="position: absolute; top: -3px; width: 8px; height: 8px; border-radius: 999px; background: #2438E0; animation: p-run 2.6s linear infinite 0.9s;"></span>
+              <span style="position: absolute; top: -3px; width: 8px; height: 8px; border-radius: 999px; background: #2438E0; animation: p-run 2.6s linear infinite 1.8s;"></span>
+            </div>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: rgba(20,18,15,0.45);">40s</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 11px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(20,18,15,0.5); white-space: nowrap;">to a human</span>
+            <div style="position: relative; flex: 1; height: 1px; background: rgba(20,18,15,0.13);">
+              <span style="position: absolute; top: -3px; width: 7px; height: 7px; border-radius: 999px; background: rgba(20,18,15,0.4); animation: p-run 6.5s linear infinite 2.2s;"></span>
+            </div>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: rgba(20,18,15,0.45);">29%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal="6" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; margin-top: clamp(44px, 6vw, 80px); background: rgba(20,18,15,0.12); border-radius: 16px; overflow: hidden;">
+      <div style="background: #F7F4ED; padding: 22px 24px;">
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(30px, 3.4vw, 42px); font-weight: 700; letter-spacing: -0.05em; color: #2438E0;">{{ n1 }}</div>
+        <div style="margin-top: 4px; font-size: 13.5px; line-height: 1.45; color: rgba(20,18,15,0.55);">closed with no human reply</div>
+      </div>
+      <div style="background: #F7F4ED; padding: 22px 24px;">
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(30px, 3.4vw, 42px); font-weight: 700; letter-spacing: -0.05em;">{{ n2 }}</div>
+        <div style="margin-top: 4px; font-size: 13.5px; line-height: 1.45; color: rgba(20,18,15,0.55);">median first response</div>
+      </div>
+      <div style="background: #F7F4ED; padding: 22px 24px;">
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(30px, 3.4vw, 42px); font-weight: 700; letter-spacing: -0.05em;">{{ n3 }}</div>
+        <div style="margin-top: 4px; font-size: 13.5px; line-height: 1.45; color: rgba(20,18,15,0.55);">CSAT over 2.1M replies</div>
+      </div>
+      <div style="background: #F7F4ED; padding: 22px 24px;">
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(30px, 3.4vw, 42px); font-weight: 700; letter-spacing: -0.05em;">{{ n4 }}</div>
+        <div style="margin-top: 4px; font-size: 13.5px; line-height: 1.45; color: rgba(20,18,15,0.55);">teams answering with Perch</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stack" style="position: relative; z-index: 1; padding: clamp(28px, 4vw, 48px) 0;">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 64px); font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(20,18,15,0.4);">Plugs into 42 tools · REST + webhooks</div>
+    <div style="margin-top: 20px; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);">
+      <div style="display: flex; width: max-content; gap: 10px; animation: p-marquee 36s linear infinite;">
+        <sc-for list="{{ marqueeA }}" as="tool" hint-placeholder-count="12">
+          <div style="padding: 13px 26px; border-radius: 11px; border: 1px solid rgba(20,18,15,0.12); background: #FFFFFF; font-family: 'Space Grotesk', sans-serif; font-size: 15.5px; font-weight: 600; letter-spacing: -0.02em; color: rgba(20,18,15,0.72); white-space: nowrap;">{{ tool }}</div>
+        </sc-for>
+      </div>
+      <div style="display: flex; width: max-content; gap: 10px; margin-top: 10px; animation: p-marquee-rev 42s linear infinite;">
+        <sc-for list="{{ marqueeB }}" as="tool" hint-placeholder-count="12">
+          <div style="padding: 13px 26px; border-radius: 11px; border: 1px solid rgba(20,18,15,0.12); background: transparent; font-family: 'Space Grotesk', sans-serif; font-size: 15.5px; font-weight: 600; letter-spacing: -0.02em; color: rgba(20,18,15,0.45); white-space: nowrap;">{{ tool }}</div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="handles" style="position: relative; z-index: 1; margin: clamp(32px, 5vw, 72px) clamp(12px, 3vw, 32px); border-radius: 28px; background: #2438E0; color: #FFFFFF; overflow: hidden;">
+    <div aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px); background-size: 28px 28px; opacity: 0.6;"></div>
+    <div style="position: relative; max-width: 1280px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) clamp(24px, 4vw, 56px);">
+      <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 18px;">
+        <h2 data-reveal="1" style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: clamp(28px, 3.6vw, 48px); line-height: 1.02; letter-spacing: -0.05em; font-weight: 700; max-width: 20ch;">It handles the four things that eat your week.</h2>
+        <span data-reveal="2" style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: rgba(255,255,255,0.6);">you set the confidence threshold</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-top: clamp(28px, 4vw, 48px);">
+        <sc-for list="{{ handles }}" as="h" hint-placeholder-count="4">
+          <div data-reveal="1" style="padding: 26px; border-radius: 18px; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.16); backdrop-filter: blur(6px); transition: transform 220ms ease, background 220ms ease;" style-hover="transform: translateY(-5px); background: rgba(255,255,255,0.15);">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.7);">{{ h.num }}</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,0.16);">{{ h.share }}</span>
+            </div>
+            <h3 style="margin: 16px 0 0; font-family: 'Space Grotesk', sans-serif; font-size: 21px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15;">{{ h.title }}</h3>
+            <p style="margin: 10px 0 0; font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.78);">{{ h.body }}</p>
+            <div style="margin-top: 16px; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.2); overflow: hidden;">
+              <div style="{{ h.barStyle }}"></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: clamp(40px, 6vw, 84px) clamp(20px, 5vw, 64px);">
+    <div data-reveal="1" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(28px, 4vw, 60px); align-items: center; padding: clamp(32px, 5vw, 64px); border-radius: 24px; background: #14120F; color: #F7F4ED;">
+      <p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 3vw, 40px); line-height: 1.14; letter-spacing: -0.04em; font-weight: 600;">“Three people used to live in the inbox. Now one person checks it after lunch.”</p>
+      <div>
+        <div style="font-size: 16px; font-weight: 600;">Dana Whitfield</div>
+        <div style="margin-top: 3px; font-size: 14.5px; color: rgba(247,244,237,0.6);">Head of Support, Fathom Logistics</div>
+        <div style="display: flex; gap: 30px; margin-top: 24px; padding-top: 22px; border-top: 1px solid rgba(247,244,237,0.18);">
+          <div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.04em; color: #8C9BFF;">−64%</div>
+            <div style="margin-top: 2px; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(247,244,237,0.5);">handle time</div>
+          </div>
+          <div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.04em; color: #8C9BFF;">3 → 1</div>
+            <div style="margin-top: 2px; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(247,244,237,0.5);">agents on queue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" style="position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(20px, 5vw, 64px) clamp(36px, 5vw, 64px);">
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 22px;">
+      <div>
+        <div data-reveal="1" style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(20,18,15,0.42);">Pricing</div>
+        <h2 data-reveal="2" style="margin: 12px 0 0; font-family: 'Space Grotesk', sans-serif; font-size: clamp(28px, 3.8vw, 50px); line-height: 1.0; letter-spacing: -0.055em; font-weight: 700;">Per seat, never per ticket.</h2>
+      </div>
+      <div data-reveal="3" style="display: inline-flex; padding: 4px; border-radius: 10px; background: rgba(20,18,15,0.07);">
+        <button onClick="{{ setMonthly }}" style="{{ monthlyBtnStyle }}">Monthly</button>
+        <button onClick="{{ setAnnual }}" style="{{ annualBtnStyle }}">Annual −20%</button>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); gap: 14px; margin-top: clamp(28px, 4vw, 48px);">
+      <sc-for list="{{ plans }}" as="plan" hint-placeholder-count="3">
+        <div style="{{ plan.cardStyle }}">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <span style="font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; letter-spacing: -0.02em;">{{ plan.name }}</span>
+            <span style="{{ plan.tagStyle }}">{{ plan.tag }}</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 22px;">
+            <span style="{{ plan.priceStyle }}">{{ plan.price }}</span>
+            <span style="{{ plan.perStyle }}">{{ plan.per }}</span>
+          </div>
+          <p style="{{ plan.blurbStyle }}">{{ plan.blurb }}</p>
+          <button onClick="{{ openApp }}" style="{{ plan.ctaStyle }}">{{ plan.cta }}</button>
+          <div style="{{ plan.listStyle }}">
+            <sc-for list="{{ plan.features }}" as="feat" hint-placeholder-count="4">
+              <div style="{{ plan.featStyle }}">
+                <span style="{{ plan.dotStyle }}"></span>
+                <span>{{ feat }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: clamp(24px, 4vw, 48px) clamp(20px, 5vw, 64px) clamp(56px, 7vw, 104px);">
+    <div data-reveal="1" style="position: relative; overflow: hidden; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 26px; padding: clamp(32px, 5vw, 60px); border-radius: 24px; background: #2438E0; color: #FFFFFF;">
+      <div aria-hidden="true" style="position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.16) 1px, transparent 1px); background-size: 26px 26px; opacity: 0.5;"></div>
+      <div style="position: relative;">
+        <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.4vw, 44px); line-height: 1.02; letter-spacing: -0.05em; font-weight: 700; max-width: 20ch;">Point it at your backlog and watch.</h2>
+        <p style="margin: 12px 0 0; max-width: 44ch; font-size: 15.5px; line-height: 1.6; color: rgba(255,255,255,0.78);">Connect a read-only inbox — Perch drafts against real tickets before you commit to anything.</p>
+      </div>
+      <button onClick="{{ openApp }}" style="position: relative; padding: 16px 30px; border: none; border-radius: 12px; background: #FFFFFF; color: #2438E0; font-size: 15.5px; font-weight: 700; cursor: pointer; transition: transform 180ms ease;" style-hover="transform: translateY(-2px);">Get started</button>
+    </div>
+  </section>
+
+  <footer style="position: relative; z-index: 1; padding: 28px clamp(20px, 5vw, 64px) 42px; border-top: 1px solid rgba(20,18,15,0.1);">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; max-width: 1320px; margin: 0 auto; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: rgba(20,18,15,0.42);">
+      <span>Perch — support that answers first</span>
+      <span>Privacy · Terms · Status · hello@perch.support</span>
+    </div>
+  </footer>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+<div style="min-height: 100vh; background: #EFEBE2; color: #14120F;">
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 13px clamp(16px, 3vw, 26px); background: #F7F4ED; border-bottom: 1px solid rgba(20,18,15,0.1);">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="width: 19px; height: 19px; border-radius: 6px 6px 6px 2px; background: #2438E0;"></div>
+      <span style="font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: -0.03em;">Perch</span>
+      <span style="margin-left: 8px; padding: 4px 9px; border-radius: 7px; background: rgba(36,56,224,0.1); font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #2438E0;">Trial · day 2</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: rgba(20,18,15,0.45);">demo workspace</span>
+      <button onClick="{{ closeApp }}" style="padding: 9px 15px; border: 1px solid rgba(20,18,15,0.18); border-radius: 9px; background: none; font-size: 13.5px; font-weight: 500; cursor: pointer;" style-hover="border-color: rgba(20,18,15,0.45);">Back to site</button>
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; align-items: start; padding: 14px clamp(16px, 3vw, 26px) 36px;">
+    <div style="max-width: 400px; border-radius: 16px; background: #F7F4ED; border: 1px solid rgba(20,18,15,0.1); overflow: hidden;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px 17px; border-bottom: 1px solid rgba(20,18,15,0.09);">
+        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.02em;">Inbox</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(20,18,15,0.45);">{{ openCount }} open</span>
+      </div>
+      <sc-for list="{{ tickets }}" as="t" hint-placeholder-count="4">
+        <div onClick="{{ t.select }}" style="{{ t.rowStyle }}">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+            <span style="font-size: 14px; font-weight: 600;">{{ t.who }}</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(20,18,15,0.4);">{{ t.ago }}</span>
+          </div>
+          <div style="margin-top: 5px; font-size: 13.5px; line-height: 1.4; color: rgba(20,18,15,0.6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ t.subject }}</div>
+          <div style="margin-top: 9px;"><span style="{{ t.badgeStyle }}">{{ t.state }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="border-radius: 16px; background: #F7F4ED; border: 1px solid rgba(20,18,15,0.1); padding: clamp(20px, 3vw, 32px);">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(20,18,15,0.42);">{{ activeMeta }}</div>
+      <h1 style="margin: 11px 0 0; font-family: 'Space Grotesk', sans-serif; font-size: clamp(21px, 2.4vw, 29px); line-height: 1.12; letter-spacing: -0.04em; font-weight: 700;">{{ activeSubject }}</h1>
+
+      <div style="margin-top: 20px; padding: 18px 20px; border-radius: 13px; background: #EFEBE2; font-size: 15.5px; line-height: 1.6; color: rgba(20,18,15,0.76);">{{ activeBody }}</div>
+
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 20px;">
+        <button onClick="{{ runDraft }}" style="{{ draftBtnStyle }}">{{ draftBtnLabel }}</button>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: rgba(20,18,15,0.45);">{{ confidenceLabel }}</span>
+      </div>
+
+      <div style="{{ draftPanelStyle }}">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+          <span style="font-size: 12.5px; font-weight: 600; color: rgba(20,18,15,0.7);">Suggested reply</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #2438E0;">{{ draftStatus }}</span>
+        </div>
+        <div style="margin-top: 13px; font-size: 15.5px; line-height: 1.65; white-space: pre-wrap; min-height: 5.2em;">{{ draftText }}<span style="{{ appCaretStyle }}"></span></div>
+        <div style="display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(20,18,15,0.1);">
+          <button onClick="{{ sendDraft }}" style="padding: 11px 19px; border: none; border-radius: 10px; background: #2438E0; color: #FFFFFF; font-size: 13.5px; font-weight: 600; cursor: pointer;" style-hover="background: #1B2BB8;">Send reply</button>
+          <button onClick="{{ runDraft }}" style="padding: 11px 19px; border: 1px solid rgba(20,18,15,0.18); border-radius: 10px; background: none; font-size: 13.5px; cursor: pointer;" style-hover="border-color: rgba(20,18,15,0.45);">Rewrite</button>
+          <button onClick="{{ escalate }}" style="padding: 11px 19px; border: 1px solid rgba(20,18,15,0.18); border-radius: 10px; background: none; font-size: 13.5px; cursor: pointer;" style-hover="border-color: rgba(20,18,15,0.45);">Escalate to human</button>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 11px; margin-top: 24px;">
+        <div style="padding: 15px 17px; border-radius: 12px; border: 1px solid rgba(20,18,15,0.1);">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; color: rgba(20,18,15,0.45);">RESOLVED TODAY</div>
+          <div style="margin-top: 7px; font-family: 'Space Grotesk', sans-serif; font-size: 25px; font-weight: 700; letter-spacing: -0.04em;">{{ resolvedToday }}</div>
+        </div>
+        <div style="padding: 15px 17px; border-radius: 12px; border: 1px solid rgba(20,18,15,0.1);">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; color: rgba(20,18,15,0.45);">AUTOMATION RATE</div>
+          <div style="margin-top: 7px; font-family: 'Space Grotesk', sans-serif; font-size: 25px; font-weight: 700; letter-spacing: -0.04em;">68%</div>
+          <div style="margin-top: 9px; height: 4px; border-radius: 999px; background: rgba(20,18,15,0.1); overflow: hidden;"><div style="width: 68%; height: 100%; background: #2438E0; transform-origin: left; animation: p-bar 900ms cubic-bezier(0.2,0.8,0.2,1) both;"></div></div>
+        </div>
+        <div style="padding: 15px 17px; border-radius: 12px; border: 1px solid rgba(20,18,15,0.1);">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; color: rgba(20,18,15,0.45);">MEDIAN FIRST REPLY</div>
+          <div style="margin-top: 7px; font-family: 'Space Grotesk', sans-serif; font-size: 25px; font-weight: 700; letter-spacing: -0.04em;">38s</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#2438E0&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#2438E0&quot;,&quot;#0F7A5A&quot;,&quot;#D2432A&quot;,&quot;#1B1B1B&quot;],&quot;section&quot;:&quot;Look&quot;},&quot;defaultBilling&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;monthly&quot;,&quot;options&quot;:[&quot;monthly&quot;,&quot;annual&quot;],&quot;tsType&quot;:&quot;\&quot;monthly\&quot; | \&quot;annual\&quot;&quot;,&quot;section&quot;:&quot;Pricing&quot;},&quot;revealAnimations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Look&quot;}}">
+const TICKETS = [
+  { who: "Marisol Reyes", ago: "2m", subject: "Charged twice for the June invoice", state: "New", body: "Hi — I see two charges of $148 on June 3rd for the same invoice (INV-20418). Can one be refunded? We're a small team and it threw off our books.", meta: "TICKET 4182 · BILLING · MARISOL REYES", conf: "confidence 0.94 · policy match: duplicate charge", reply: "Hi Marisol — you're right, INV-20418 was captured twice on June 3rd. I've refunded the duplicate $148 charge; it should clear back to your card in 3–5 business days.\n\nThe cause was a retry on our side, and I've flagged the account so it can't happen again. Nothing else needed from you.\n\n— Perch, on behalf of the Support team" },
+  { who: "Dev @ Northwind", ago: "11m", subject: "Webhook retries firing 4x on 200", state: "Waiting", body: "Our endpoint returns 200 but we keep receiving the same event.created payload four times within a minute. Idempotency key is present. Node SDK 4.2.1.", meta: "TICKET 4179 · API · NORTHWIND", conf: "confidence 0.81 · known issue: SDK 4.2.1", reply: "Thanks for the detail — this is a known bug in Node SDK 4.2.1 where the ack is sent before the response body flushes, so our dispatcher treats it as a timeout.\n\nUpgrading to 4.2.3 fixes it. If you can't upgrade today, set `ackMode: \"early\"` in the client options as a stopgap.\n\n— Perch, on behalf of the Support team" },
+  { who: "Priya Nadar", ago: "34m", subject: "Can we export conversations to CSV?", state: "Auto-answered", body: "Before we roll this out wider — is there a way to get all conversations out as CSV, including tags and resolution time?", meta: "TICKET 4171 · PRODUCT · PRIYA NADAR", conf: "confidence 0.97 · docs match: exports", reply: "Yes — Settings → Data → Export gives you a CSV of every conversation with tags, assignee, and resolution time. Range is up to 24 months.\n\nIf you'd rather have it pushed on a schedule, the same page can drop a nightly file into S3 or GCS.\n\n— Perch, on behalf of the Support team" },
+  { who: "Tom Byrne", ago: "1h", subject: "Angry: SLA missed twice this week", state: "Escalated", body: "This is the second time our enterprise SLA has been missed. I need someone senior to explain what's changed, today.", meta: "TICKET 4166 · ESCALATION · TOM BYRNE", conf: "confidence 0.22 · sentiment: negative — human required", reply: "Tom — I've routed this to Dana (Head of Support) rather than answering it myself; both breaches were on our side and you deserve a real explanation, not a template.\n\nShe has your account history and will reach out within the hour.\n\n— Perch" }
+];
+
+const MOMENTS = [
+  { meta: "ticket 4182 · billing · confidence 0.94", subject: "Charged twice for the June invoice",
+    ask: "Two charges of $148 on June 3rd for the same invoice (INV-20418). Can one be refunded?",
+    answer: "Refunded the duplicate $148 charge — it clears in 3–5 business days. It came from a retry on our side; I've flagged the account so it can't repeat.",
+    status: "sent · 0.9s" },
+  { meta: "ticket 4179 · api · confidence 0.81", subject: "Webhook retries firing 4× on 200",
+    ask: "We return 200 but the same event.created arrives four times a minute. Node SDK 4.2.1.",
+    answer: "Known bug in SDK 4.2.1 — the ack lands before the body flushes. 4.2.3 fixes it; until then set ackMode: \"early\" in client options.",
+    status: "sent · 1.2s" },
+  { meta: "ticket 4166 · escalation · confidence 0.22", subject: "SLA missed twice this week",
+    ask: "Second SLA miss this week. I need someone senior to explain, today.",
+    answer: "Handed to Dana, Head of Support, with both breach timelines attached. She replies within the hour — this one needs a person, not me.",
+    status: "escalated · 0.4s" }
+];
+
+const HANDLES = [
+  { num: "01", share: "34% of volume", title: "Refunds and billing mix-ups", body: "Checks the charge history, refunds inside your policy limits, and writes the apology the way your team would.", pct: 34 },
+  { num: "02", share: "29% of volume", title: "“How do I…” questions", body: "Answers from your docs and past replies, quotes the exact setting path, and files a docs gap when it wasn't written down.", pct: 29 },
+  { num: "03", share: "18% of volume", title: "Bug reports worth escalating", body: "Matches known issues, attaches SDK version and logs, routes to the right engineer instead of asking the customer twice.", pct: 18 },
+  { num: "04", share: "29% to a human", title: "The ones you should answer", body: "Angry, contractual, or expensive threads never get an automated reply — they arrive summarised, sentiment flagged.", pct: 29 }
+];
+
+const PLANS = [
+  { name: "Solo", tag: "", monthly: 0, blurb: "One inbox, one human. Enough to see whether the drafts sound like you.", cta: "Start free", featured: false,
+    features: ["1 inbox, 1 seat", "200 assisted replies / month", "Email + chat widget", "Community support"] },
+  { name: "Team", tag: "Most picked", monthly: 29, blurb: "For teams that want the queue shorter every week, not longer.", cta: "Get started", featured: true,
+    features: ["Unlimited inboxes", "Unlimited assisted replies", "Autosend with confidence rules", "Tone training on your history", "42 integrations + webhooks", "Priority support"] },
+  { name: "Scale", tag: "", monthly: 79, blurb: "Multi-brand, multi-region, and the audit trail security asks for.", cta: "Talk to us", featured: false,
+    features: ["Everything in Team", "SSO / SCIM + audit log", "Regional data residency", "Custom models per brand", "99.95% uptime SLA", "Named support engineer"] }
+];
+
+const TOOLS = ["Slack", "Linear", "Zendesk", "HubSpot", "Notion", "Jira", "Stripe", "Segment", "Intercom", "Front", "Salesforce", "GitHub"];
+
+class Component extends DCLogic {
+  state = { view: "site", annual: false, active: 0, email: "", draft: "", drafting: false, done: false, sent: false,
+            mIdx: 0, mText: "", mTyping: true, clock: "", counts: [0, 0, 0, 0] };
+
+  momentStep = () => {
+    const full = MOMENTS[this.state.mIdx].answer;
+    this.setState({ mTyping: true, mText: "" });
+    let n = 0;
+    clearInterval(this._mTyper);
+    this._mTyper = setInterval(() => {
+      n += 2;
+      if (n >= full.length) {
+        clearInterval(this._mTyper);
+        this.setState({ mText: full, mTyping: false });
+        this._mNext = setTimeout(() => {
+          this.setState((s) => ({ mIdx: (s.mIdx + 1) % MOMENTS.length, mText: "", mTyping: true }));
+          this._mStart = setTimeout(this.momentStep, 800);
+        }, 4400);
+      } else {
+        this.setState({ mText: full.slice(0, n) });
+      }
+    }, 24);
+  };
+
+  countUp() {
+    const targets = [71, 40, 4.8, 1240];
+    const t0 = Date.now();
+    clearInterval(this._counter);
+    this._counter = setInterval(() => {
+      const p = Math.min(1, (Date.now() - t0) / 1400);
+      const e = 1 - Math.pow(1 - p, 3);
+      this.setState({ counts: targets.map((v) => v * e) });
+      if (p === 1) clearInterval(this._counter);
+    }, 40);
+  }
+
+  componentDidMount() {
+    this.setState({ annual: (this.props.defaultBilling || "monthly") === "annual" });
+    const tickClock = () => {
+      const d = new Date();
+      this.setState({ clock: String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0") + ":" + String(d.getSeconds()).padStart(2, "0") });
+    };
+    tickClock();
+    this._clock = setInterval(tickClock, 1000);
+    setTimeout(() => this.countUp(), 450);
+
+    if (this.props.revealAnimations === false) return;
+    this._seen = new WeakSet();
+    this._pending = [];
+    this._show = () => {
+      if (!this._pending.length) return;
+      const limit = (window.innerHeight || 800) * 0.88;
+      this._pending = this._pending.filter((el) => {
+        if (el.getBoundingClientRect().top >= limit) return true;
+        el.style.transitionDelay = (parseInt(el.getAttribute("data-reveal") || "1", 10) - 1) * 70 + "ms";
+        el.style.opacity = "1";
+        el.style.transform = "none";
+        return false;
+      });
+    };
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => { this._raf = null; this._show(); });
+    };
+    window.addEventListener("scroll", this._onScroll, { passive: true });
+    window.addEventListener("resize", this._onScroll);
+    this._fold = (window.innerHeight || 800) * 0.92;
+    this._t0 = Date.now();
+    this._lastH = -1;
+    this._stable = 0;
+    this._scan = () => {
+      const h = document.body.scrollHeight;
+      this._stable = h === this._lastH ? this._stable + 1 : 0;
+      this._lastH = h;
+      const settled = this._stable >= 2 && Date.now() - this._t0 > 700;
+      document.querySelectorAll("[data-reveal]").forEach((el) => {
+        if (this._seen.has(el)) return;
+        const absTop = el.getBoundingClientRect().top + (window.scrollY || 0);
+        if (absTop >= this._fold) {
+          this._seen.add(el);
+          el.style.transition = "opacity 620ms cubic-bezier(0.2,0.8,0.2,1), transform 620ms cubic-bezier(0.2,0.8,0.2,1)";
+          el.style.opacity = "0";
+          el.style.transform = "translateY(16px)";
+          this._pending.push(el);
+        } else if (settled) {
+          this._seen.add(el);
+        }
+      });
+      this._show();
+    };
+    this._scan();
+    requestAnimationFrame(this._scan);
+    this._tick = setInterval(this._scan, 250);
+    setTimeout(() => { clearInterval(this._tick); this._tick = null; }, 8000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._clock);
+    clearInterval(this._mTyper);
+    clearInterval(this._counter);
+    clearInterval(this._typer);
+    clearTimeout(this._mNext);
+    clearTimeout(this._mStart);
+    if (this._tick) clearInterval(this._tick);
+    if (this._onScroll) {
+      window.removeEventListener("scroll", this._onScroll);
+      window.removeEventListener("resize", this._onScroll);
+    }
+  }
+
+  runDraft = () => {
+    clearInterval(this._typer);
+    const full = TICKETS[this.state.active].reply;
+    this.setState({ drafting: true, done: false, sent: false, draft: "" });
+    let i = 0;
+    this._typer = setInterval(() => {
+      i += Math.max(1, Math.round(full.length / 130));
+      if (i >= full.length) {
+        clearInterval(this._typer);
+        this.setState({ draft: full, drafting: false, done: true });
+      } else {
+        this.setState({ draft: full.slice(0, i) });
+      }
+    }, 22);
+  };
+
+  select(i) {
+    clearInterval(this._typer);
+    this.setState({ active: i, draft: "", drafting: false, done: false, sent: false });
+  }
+
+  renderVals() {
+    const A = this.props.accentColor || "#2438E0";
+    const t = TICKETS[this.state.active];
+    const m = MOMENTS[this.state.mIdx];
+    const annual = this.state.annual;
+    const c = this.state.counts;
+
+    const pillOn = "border: none; border-radius: 8px; padding: 9px 17px; font-size: 13.5px; font-weight: 600; cursor: pointer; background: #14120F; color: #F7F4ED; transition: all 180ms ease;";
+    const pillOff = "border: none; border-radius: 8px; padding: 9px 17px; font-size: 13.5px; font-weight: 500; cursor: pointer; background: none; color: rgba(20,18,15,0.55); transition: all 180ms ease;";
+
+    const heroTones = { Drafting: "#A8B4FF", Queued: "rgba(244,244,246,0.4)", Sent: "#8CE0B0", Human: "#FFB08F" };
+    const heroRows = [
+      { who: "Marisol R.", ago: "2m", subject: "Charged twice for June invoice", state: "Drafting" },
+      { who: "Northwind", ago: "11m", subject: "Webhook retries firing 4×", state: "Queued" },
+      { who: "Priya N.", ago: "34m", subject: "Export conversations to CSV?", state: "Sent" },
+      { who: "Tom B.", ago: "1h", subject: "SLA missed twice this week", state: "Human" }
+    ].map((r, i) => ({
+      who: r.who, ago: r.ago, subject: r.subject, state: r.state,
+      style: {
+        padding: "13px 15px", borderBottom: "1px solid rgba(255,255,255,0.07)",
+        background: i === this.state.mIdx % 4 ? "rgba(36,56,224,0.2)" : "transparent",
+        borderLeft: i === this.state.mIdx % 4 ? "2px solid " + A : "2px solid transparent",
+        transition: "background 300ms ease, border-color 300ms ease"
+      },
+      badgeStyle: {
+        display: "inline-block", padding: "2px 8px", borderRadius: "6px",
+        border: "1px solid " + heroTones[r.state], color: heroTones[r.state],
+        fontFamily: "'IBM Plex Mono', monospace", fontSize: "9.5px", letterSpacing: "0.06em", textTransform: "uppercase"
+      }
+    }));
+
+    const plans = PLANS.map((p) => {
+      const f = p.featured;
+      const muted = f ? "rgba(247,244,237,0.62)" : "rgba(20,18,15,0.6)";
+      return {
+        name: p.name, tag: p.tag, cta: p.cta, features: p.features, blurb: p.blurb,
+        price: p.monthly === 0 ? "$0" : "$" + (annual ? Math.round(p.monthly * 0.8) : p.monthly),
+        per: p.monthly === 0 ? "forever" : "/ seat / mo",
+        cardStyle: {
+          display: "flex", flexDirection: "column", padding: "clamp(22px, 2.4vw, 32px)", borderRadius: "18px",
+          background: f ? "#14120F" : "#FFFFFF", color: f ? "#F7F4ED" : "#14120F",
+          border: f ? "1px solid #14120F" : "1px solid rgba(20,18,15,0.12)",
+          boxShadow: f ? "0 32px 60px -38px rgba(20,18,15,0.85)" : "none",
+          transform: f ? "translateY(-8px)" : "none"
+        },
+        tagStyle: { display: p.tag ? "inline-block" : "none", padding: "4px 9px", borderRadius: "6px", background: A, color: "#FFFFFF", fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: "0.06em", textTransform: "uppercase" },
+        priceStyle: { fontFamily: "'Space Grotesk', sans-serif", fontSize: "clamp(32px, 3.6vw, 46px)", fontWeight: 700, letterSpacing: "-0.055em" },
+        perStyle: { fontSize: "13px", color: muted },
+        blurbStyle: { margin: "11px 0 0", fontSize: "14.5px", lineHeight: 1.55, color: muted, minHeight: "3em" },
+        ctaStyle: {
+          marginTop: "20px", padding: "13px 20px", borderRadius: "10px", fontSize: "14.5px", fontWeight: 600, cursor: "pointer",
+          background: f ? A : "transparent", color: f ? "#FFFFFF" : "#14120F",
+          border: f ? "none" : "1px solid rgba(20,18,15,0.2)"
+        },
+        listStyle: { display: "grid", gap: "9px", marginTop: "22px", paddingTop: "18px", borderTop: f ? "1px solid rgba(247,244,237,0.18)" : "1px solid rgba(20,18,15,0.1)" },
+        featStyle: { display: "flex", gap: "9px", fontSize: "14px", lineHeight: 1.45, color: f ? "rgba(247,244,237,0.86)" : "rgba(20,18,15,0.72)" },
+        dotStyle: { flex: "none", width: "4px", height: "4px", marginTop: "8px", borderRadius: "999px", background: f ? "#8C9BFF" : A }
+      };
+    });
+
+    const tickets = TICKETS.map((x, i) => {
+      const on = i === this.state.active;
+      const tones = { New: A, Waiting: "rgba(20,18,15,0.5)", "Auto-answered": "#1E8A5F", Escalated: "#C2551F" };
+      return {
+        who: x.who, ago: x.ago, subject: x.subject, state: x.state,
+        select: () => this.select(i),
+        rowStyle: {
+          padding: "14px 17px", cursor: "pointer", borderBottom: "1px solid rgba(20,18,15,0.08)",
+          background: on ? "rgba(36,56,224,0.07)" : "transparent",
+          borderLeft: on ? "3px solid " + A : "3px solid transparent",
+          transition: "background 160ms ease"
+        },
+        badgeStyle: {
+          display: "inline-block", padding: "3px 9px", borderRadius: "6px",
+          border: "1px solid " + tones[x.state], color: tones[x.state],
+          fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: "0.05em", textTransform: "uppercase"
+        }
+      };
+    });
+
+    return {
+      isSite: this.state.view === "site",
+      isApp: this.state.view === "app",
+      openApp: () => { this.setState({ view: "app" }); window.scrollTo(0, 0); },
+      closeApp: () => { this.setState({ view: "site" }); window.scrollTo(0, 0); },
+      email: this.state.email,
+      setEmail: (e) => this.setState({ email: e.target.value }),
+      clock: this.state.clock,
+      heroRows,
+      momentMeta: m.meta,
+      momentSubject: m.subject,
+      momentAsk: m.ask,
+      momentAnswer: this.state.mText,
+      momentStatus: this.state.mTyping ? "generating" : m.status,
+      caretStyle: {
+        display: this.state.mTyping ? "inline-block" : "none",
+        width: "7px", height: "0.95em", marginLeft: "2px", verticalAlign: "-0.15em",
+        background: "#A8B4FF", animation: "p-pulse 820ms steps(2) infinite"
+      },
+      n1: Math.round(c[0]) + "%",
+      n2: Math.round(c[1]) + "s",
+      n3: c[2].toFixed(1),
+      n4: Math.round(c[3]).toLocaleString(),
+      handles: HANDLES.map((h) => ({
+        num: h.num, share: h.share, title: h.title, body: h.body,
+        barStyle: { width: h.pct * 2 + "%", height: "100%", background: "#FFFFFF", transformOrigin: "left", animation: "p-bar 1000ms cubic-bezier(0.2,0.8,0.2,1) both" }
+      })),
+      marqueeA: TOOLS.concat(TOOLS),
+      marqueeB: TOOLS.slice(6).concat(TOOLS.slice(0, 6), TOOLS.slice(6), TOOLS.slice(0, 6)),
+      plans,
+      setMonthly: () => this.setState({ annual: false }),
+      setAnnual: () => this.setState({ annual: true }),
+      monthlyBtnStyle: annual ? pillOff : pillOn,
+      annualBtnStyle: annual ? pillOn : pillOff,
+      tickets,
+      openCount: TICKETS.length,
+      activeMeta: t.meta,
+      activeSubject: t.subject,
+      activeBody: t.body,
+      confidenceLabel: t.conf,
+      resolvedToday: this.state.sent ? 15 : 14,
+      runDraft: this.runDraft,
+      sendDraft: () => this.setState({ sent: true }),
+      escalate: () => this.setState({ sent: true }),
+      draftBtnLabel: this.state.sent ? "Reply sent" : this.state.drafting ? "Drafting…" : this.state.done ? "Regenerate draft" : "Draft with Perch",
+      draftBtnStyle: {
+        padding: "12px 21px", border: "none", borderRadius: "10px", fontSize: "14px", fontWeight: 600,
+        cursor: this.state.drafting ? "default" : "pointer",
+        background: this.state.drafting ? "rgba(20,18,15,0.45)" : "#14120F", color: "#F7F4ED",
+        transition: "background 180ms ease"
+      },
+      draftPanelStyle: {
+        display: this.state.draft ? "block" : "none",
+        marginTop: "18px", padding: "20px 22px", borderRadius: "14px",
+        border: "1px solid " + A, background: "#FFFFFF"
+      },
+      draftStatus: this.state.sent ? "sent · logged to ticket" : this.state.drafting ? "generating" : "ready — review before sending",
+      draftText: this.state.draft,
+      appCaretStyle: {
+        display: this.state.drafting ? "inline-block" : "none",
+        width: "8px", height: "1.05em", marginLeft: "2px", verticalAlign: "-0.18em",
+        background: A, animation: "p-pulse 900ms steps(2) infinite"
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
