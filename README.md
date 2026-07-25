@@ -561,7 +561,8 @@ cookie · interactive docs at `/docs`.
 ├── infra/                  # Terraform + deploy / rollback / smoke scripts
 ├── demo_data/              # synthetic statements
 ├── scripts/                # generators and utilities
-└── *.md                    # architecture, security, test and guardrail reports
+├── ARCHITECTURE.md         # module boundaries, data flow, the real formulas
+└── FINANCIAL_GUARDRAILS.md # every guardrail and the test that enforces it
 ```
 
 ---
@@ -678,8 +679,9 @@ cd frontend && npm run typecheck
 | `test_adversarial.py` | 16 | Hostile statements, injection, tampering |
 | `test_spoken_expenses.py` | 15 | Spoken phrasing → structured expense |
 
-Deeper write-ups: `TEST_REPORT.md`, `SECURITY_TEST_REPORT.md`, `FINANCIAL_GUARDRAIL_REPORT.md`,
-`AI_EVALUATION_REPORT.md`, `VERIFICATION_REPORT.md`, `BUGS_FOUND.md`.
+Deeper write-ups: [`ARCHITECTURE.md`](ARCHITECTURE.md) for module boundaries, data flow and the real
+formulas; [`FINANCIAL_GUARDRAILS.md`](FINANCIAL_GUARDRAILS.md) for every guardrail and the test that
+enforces it.
 
 ---
 
