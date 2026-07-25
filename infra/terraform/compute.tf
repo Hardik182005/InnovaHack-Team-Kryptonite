@@ -189,16 +189,41 @@ resource "aws_instance" "backend" {
     LOG_GROUP="${aws_cloudwatch_log_group.backend.name}"
     DOMAIN_NAME_OVERRIDE="${var.domain_name}"
     ACME_EMAIL="${var.acme_email}"
+    EIP_ADDRESS="${aws_eip.backend.public_ip}"
 
+    # The Elastic IP is attached by aws_eip_association AFTER this instance
+    # boots, so right now the instance is still answering on its ephemeral
+    # launch IP. Deriving the hostname from instance metadata here would
+    # produce an sslip.io name for an address that is about to be replaced,
+    # and Caddy would request a Let's Encrypt certificate for a host that no
+    # longer resolves to us — the ACME HTTP-01 challenge would fail and HTTPS
+    # would never come up. So: take the domain from the EIP Terraform already
+    # knows, then wait for the association to land before Caddy starts.
+    # (No dependency cycle — aws_eip.backend is allocated independently of
+    # the instance; only aws_eip_association depends on it.)
     if [ -n "$DOMAIN_NAME_OVERRIDE" ]; then
       DOMAIN="$DOMAIN_NAME_OVERRIDE"
     else
-      TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
-      PUBLIC_IP=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4)
-      DOMAIN="$(echo "$PUBLIC_IP" | tr '.' '-').sslip.io"
+      DOMAIN="$(echo "$EIP_ADDRESS" | tr '.' '-').sslip.io"
     fi
     echo "Backend will serve HTTPS on: https://$DOMAIN"
     echo "$DOMAIN" > /opt/safespare/domain.txt
+
+    echo "Waiting for Elastic IP $EIP_ADDRESS to be associated with this instance..."
+    for attempt in $(seq 1 60); do
+      TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" || true)
+      CURRENT_IP=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4 || true)
+      if [ "$CURRENT_IP" = "$EIP_ADDRESS" ]; then
+        echo "Elastic IP associated after $attempt attempt(s)."
+        break
+      fi
+      if [ "$attempt" -eq 60 ]; then
+        # Don't hard-fail the bootstrap: the container stack is still worth
+        # starting, and Caddy retries ACME on its own schedule.
+        echo "WARNING: Elastic IP still not associated after 5 minutes (metadata reports '$CURRENT_IP'). Continuing; TLS issuance may be delayed."
+      fi
+      sleep 5
+    done
 
     cat > /opt/safespare/.env <<ENVFILE
     AWS_REGION=$AWS_REGION
@@ -212,9 +237,18 @@ resource "aws_instance" "backend" {
     LOG_GROUP=$LOG_GROUP
     ENVFILE
 
+    # Pre-compute the global-options line instead of running a command
+    # substitution inside the heredoc, so an empty ACME_EMAIL cannot leave a
+    # stray non-zero status under `set -e`.
+    if [ -n "$ACME_EMAIL" ]; then
+      CADDY_EMAIL_LINE="email $ACME_EMAIL"
+    else
+      CADDY_EMAIL_LINE=""
+    fi
+
     cat > /opt/safespare/Caddyfile <<CADDYFILE
     {
-      $( [ -n "$ACME_EMAIL" ] && echo "email $ACME_EMAIL" )
+      $CADDY_EMAIL_LINE
     }
 
     $DOMAIN {

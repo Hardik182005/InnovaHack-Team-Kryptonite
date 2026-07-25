@@ -1666,3 +1666,136 @@ table {
     display: none !important;
   }
 }
+
+/* ==========================================================================
+   Voice capture, language switcher, and mobile responsiveness.
+   Added for spoken expense entry and multilingual access.
+   ========================================================================== */
+
+.voice-card { text-align: center; }
+
+.voice-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 12px;
+}
+
+/* Large enough to hit reliably on a phone, and with a visible focus ring —
+   this is the primary control for users who cannot read the rest of the page. */
+.mic {
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  font-size: 34px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+.mic:hover:not(:disabled) { transform: translateY(-2px); background: var(--panel); }
+.mic:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.mic:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.mic--on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  animation: p-pulse 1.4s ease-in-out infinite;
+}
+
+.voice-status {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.voice-interim {
+  font-style: italic;
+  color: var(--ink-60);
+  min-height: 1.5em;
+}
+
+.lang { display: flex; flex-direction: column; gap: 4px; }
+
+/* Script-aware font stacks. Without these, Indic text falls back to a default
+   face that renders conjuncts poorly or not at all. */
+:root[data-script='devanagari'] { --font-body: 'Noto Sans Devanagari', Figtree, sans-serif; }
+:root[data-script='bengali']    { --font-body: 'Noto Sans Bengali', Figtree, sans-serif; }
+:root[data-script='tamil']      { --font-body: 'Noto Sans Tamil', Figtree, sans-serif; }
+:root[data-script='telugu']     { --font-body: 'Noto Sans Telugu', Figtree, sans-serif; }
+:root[data-script='kannada']    { --font-body: 'Noto Sans Kannada', Figtree, sans-serif; }
+:root[data-script='malayalam']  { --font-body: 'Noto Sans Malayalam', Figtree, sans-serif; }
+:root[data-script='gujarati']   { --font-body: 'Noto Sans Gujarati', Figtree, sans-serif; }
+:root[data-script='gurmukhi']   { --font-body: 'Noto Sans Gurmukhi', Figtree, sans-serif; }
+:root[data-script='odia']       { --font-body: 'Noto Sans Oriya', Figtree, sans-serif; }
+:root[data-script='arabic']     { --font-body: 'Noto Nastaliq Urdu', Figtree, sans-serif; }
+
+/* Right-to-left: mirror the axis-dependent utilities only. */
+[dir='rtl'] .row--between { flex-direction: row-reverse; }
+[dir='rtl'] .table th,
+[dir='rtl'] .table td { text-align: right; }
+
+/* --- Mobile ------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  .section { padding-top: 32px; padding-bottom: 32px; }
+
+  .grid, .grid--2, .grid--3, .grid--4 { grid-template-columns: 1fr; }
+
+  .display-1 { font-size: clamp(32px, 9vw, 44px); }
+  .display-2 { font-size: clamp(28px, 8vw, 38px); }
+  .display-3 { font-size: clamp(24px, 7vw, 32px); }
+
+  /* The header collapses to brand + language + one action; the section nav
+     becomes a horizontally scrollable strip rather than wrapping into a wall. */
+  .header .wrap { flex-wrap: wrap; gap: 12px; }
+  .nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-link { white-space: nowrap; }
+
+  /* Wide tables scroll inside their own container so the page never does. */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table { min-width: 720px; }
+
+  .row { flex-wrap: wrap; }
+  .btn { min-height: 44px; }          /* comfortable touch target */
+  .chip { min-height: 40px; }
+  .mic { width: 112px; height: 112px; font-size: 40px; }
+
+  .modal { width: calc(100vw - 32px); max-height: 85vh; overflow-y: auto; }
+  .stat { padding: 16px; }
+  .figure { font-size: 26px; }
+}
+
+@media (max-width: 380px) {
+  .display-1 { font-size: 28px; }
+  .figure { font-size: 22px; }
+}
+
+/* Users who ask for less motion get none of the decorative kind. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .mic--on { animation: none; box-shadow: 0 0 0 4px var(--accent-100); }
+}
