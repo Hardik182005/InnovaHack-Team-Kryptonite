@@ -8,6 +8,7 @@
 
 <br>
 
+[![Demo Video](https://img.shields.io/badge/▶_watch_the_demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=wDqa_rXf8d4)
 [![Live Demo](https://img.shields.io/badge/demo-live-22c55e?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://da2u5q8s30wam.cloudfront.net)
 [![API](https://img.shields.io/badge/API-online-22c55e?style=for-the-badge&logo=fastapi&logoColor=white)](https://100-48-40-252.sslip.io/health)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](#-license)
@@ -45,7 +46,7 @@
 - [The one-sentence pitch](#-the-one-sentence-pitch)
 - [The problem](#-the-problem)
 - [What makes SafeSpare different](#-what-makes-safespare-different)
-- [Live demo](#-live-demo)
+- [Live demo &amp; demo video](#-live-demo)
 - [Feature tour](#-feature-tour)
 - [The Safe Spare engine](#-the-safe-spare-engine)
 - [Architecture](#-architecture)
@@ -185,6 +186,20 @@ and *Safe Spare* are masked out of translation entirely.
 ---
 
 ## 🚀 Live demo
+
+<div align="center">
+
+### 🎬 Watch the demo
+
+[<img src="https://img.youtube.com/vi/wDqa_rXf8d4/maxresdefault.jpg" width="720" alt="SafeSpare AI — demo video">](https://www.youtube.com/watch?v=wDqa_rXf8d4)
+
+**▶ [youtube.com/watch?v=wDqa_rXf8d4](https://www.youtube.com/watch?v=wDqa_rXf8d4)**
+
+*A full walkthrough: statement upload → categorization → Safe Spare → Leak Radar → round-ups → SIP simulation.*
+
+</div>
+
+<br>
 
 | | |
 |---|---|
