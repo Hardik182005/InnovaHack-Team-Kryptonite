@@ -214,7 +214,7 @@ UNDERSTAND → PROTECT → RECOVER → ROUND UP → REDIRECT → SIMULATE → GR
 | **RECOVER** | Recurring payments, silent price hikes, duplicate subscriptions | `recurrence`, `price_changes`, `leak_score` | `/leaks` |
 | **ROUND UP** | Historical vs. *allowed* round-ups, capped by Safe Spare and your rules | `roundups` | `/roundups` |
 | **REDIRECT** | Confirmed recovered spend raises the monthly contribution | `safe_spare.apply_confirmed_recovery` | `/goals` |
-| **SIMULATE** | Future-value projection, principal and growth kept separate | `projections` | `/goals` |
+| **SIMULATE** | Mutual-fund SIP illustration under a chosen return scenario; principal and growth kept separate, contribution sourced and capped by Safe Spare | `projections` | `/goals` |
 | **GROW** | Illustrative only — no trade is ever executed | `projections.ILLUSTRATIVE_DISCLAIMER` | — |
 
 **Also in the product:** dashboard · cashflow-confidence score (0–100, with its components) · Leak
@@ -411,7 +411,10 @@ Enforced deterministically in code and asserted by `backend/tests/test_guardrail
 | **No unused claims** | A subscription is never described as unused without explicit user confirmation |
 | **No account numbers** | Masked at extraction, never stored, never echoed |
 | **Prompt injection** | Statement text and questions are data, never instruction; injection attempts are detected and neutralized |
-| **Illustrative only** | Every projection carries a disclaimer that outcomes may be higher, lower or negative |
+| **Illustrative only** | Every projection carries a disclaimer that outcomes may be higher, lower or negative — shown above *and* below the simulation, because a disclaimer read after the number is read too late |
+| **Contribution is derived, never typed** | The monthly SIP is not a form field. It comes from the Safe Spare engine, and `/goals` shows the breakdown — allowed round-ups + confirmed subscription savings + remaining safe headroom — so the cap is visible rather than asserted |
+| **Zero stays zero** | When Safe Spare is ₹0 the simulation pauses and says why. It does not synthesise a contribution to make the chart look better |
+| **Shortfall extends the date, not the contribution** | When the required monthly exceeds the safe monthly, the advice is a longer horizon — never "invest more" |
 
 ---
 
