@@ -1,0 +1,91 @@
+# SafeSpare AI — backend build context exclusions.
+#
+# Two jobs, in priority order:
+#   1. Keep secrets out of the image. A COPY . /app would otherwise bake any
+#      local .env straight into a world-readable layer (§22, §33). Docker
+#      layers are not a secret store — anyone who can pull the image can
+#      `docker save` it and read every file in it.
+#   2. Keep the context small so builds and ECR pushes stay fast.
+
+######################################################################
+# Secrets — never in an image layer, under any circumstances
+######################################################################
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials
+.aws/
+.netrc
+secrets/
+*secret*
+*.tfvars
+*.tfstate
+*.tfstate.*
+
+######################################################################
+# Python
+######################################################################
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+.eggs/
+*.egg-info/
+build/
+dist/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.hypothesis/
+
+######################################################################
+# Tests and dev tooling — the runtime image has no reason to carry them
+######################################################################
+tests/
+pytest.ini
+.pre-commit-config.yaml
+
+######################################################################
+# VCS, editors, OS noise
+######################################################################
+.git/
+.gitignore
+.github/
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+######################################################################
+# Docker itself
+######################################################################
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+######################################################################
+# Docs and local artifacts
+######################################################################
+*.md
+!README.md
+*.log
+logs/
+tmp/
+.cache/
+demo_data/
+uploads/
