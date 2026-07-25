@@ -173,24 +173,51 @@ def test_thin_history_lowers_confidence():
 
 
 def test_never_described_as_a_credit_score():
+    """The disclaimer must deny it; user-facing text must not affirm it.
+
+    Checked as two separate assertions rather than a keyword ban: the disclaimer
+    legitimately contains "creditworthiness" in order to disclaim it, so a naive
+    substring search would flag the very sentence that provides the protection.
+    """
     result = cc.compute(_statement(), latest_balance=Decimal("4000"))
     assert "not a credit score" in result.disclaimer.lower()
-    blob = " ".join(
-        [result.disclaimer, result.band]
+    assert "never used to assess creditworthiness" in result.disclaimer.lower()
+
+    # Everything *except* the disclaimer must avoid the subject entirely.
+    user_facing = " ".join(
+        [result.band]
         + [c.explanation for c in result.components]
+        + [c.label for c in result.components]
         + result.improvement_suggestions
     ).lower()
-    for forbidden in ("creditworthy", "creditworthiness", "credit rating", "fico"):
-        assert forbidden not in blob
+    for forbidden in ("credit score", "creditworthy", "creditworthiness",
+                      "credit rating", "fico", "loan eligibility"):
+        assert forbidden not in user_facing
 
 
 def test_uses_no_sensitive_personal_attributes():
-    """The scorer only ever sees transactions; assert its inputs stay that way."""
+    """§6.7 forbids protected attributes as inputs.
+
+    Word-boundary matched: a plain substring test flags "age" inside "coverage"
+    and "average", which are ordinary financial vocabulary.
+    """
+    import inspect
+    import re
+
+    source = inspect.getsource(cc).lower()
+    for attribute in ("age", "gender", "race", "ethnicity", "religion",
+                      "marital", "postcode", "zipcode", "nationality"):
+        assert re.search(r"\b%s\b" % attribute, source) is None, (
+            "%s appears as a whole word in the scorer" % attribute
+        )
+
+
+def test_only_transactions_and_balance_are_accepted_as_inputs():
+    """The signature itself is the guarantee: no demographic parameter exists."""
     import inspect
 
-    source = inspect.getsource(cc)
-    for attribute in ("age", "gender", "race", "ethnic", "religion", "marital", "postcode"):
-        assert attribute not in source.lower()
+    params = set(inspect.signature(cc.compute).parameters)
+    assert params == {"transactions", "latest_balance", "balance_is_estimated"}
 
 
 def test_score_is_deterministic():

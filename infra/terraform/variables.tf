@@ -145,6 +145,18 @@ variable "error_alarm_threshold" {
   default     = 5
 }
 
+variable "enable_health_check" {
+  description = "Create a Route 53 health check (~$0.50/month) that probes the backend's /health endpoint over HTTPS from multiple AWS regions, plus the CloudWatch alarm on it. Set false to save the half-dollar; the EC2 StatusCheckFailed alarm still runs either way."
+  type        = bool
+  default     = true
+}
+
+variable "health_check_path" {
+  description = "Path probed by the Route 53 health check and reported by outputs.backend_health_url. Must be a public, unauthenticated endpoint that returns 2xx."
+  type        = string
+  default     = "/health"
+}
+
 variable "alert_email" {
   description = "Email address subscribed to the SNS alerts topic (CloudWatch alarms + budget alerts). Leave blank to skip the email subscription (alarms still fire, just with nowhere to notify — set this before a real demo)."
   type        = string

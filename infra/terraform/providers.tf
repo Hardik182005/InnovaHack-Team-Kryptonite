@@ -44,3 +44,16 @@ provider "aws" {
     tags = local.common_tags
   }
 }
+
+# Route 53 publishes HealthCheckStatus to us-east-1 only, no matter where
+# the rest of the stack lives, so the health alarm in monitoring.tf (and the
+# SNS topic it notifies) must be created there. When var.aws_region is
+# already us-east-1 this alias simply points at the same region.
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+
+  default_tags {
+    tags = local.common_tags
+  }
+}
