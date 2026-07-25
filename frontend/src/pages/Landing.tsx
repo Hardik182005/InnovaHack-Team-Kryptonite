@@ -99,7 +99,7 @@ export default function Landing() {
 
             <Reveal index={6}>
               <div className="row" style={{ gap: 10, marginTop: 18, flexWrap: 'wrap' }}>
-                <Link className="btn btn--ghost" to="/upload?demo=1">{t('cta.demo')}</Link>
+                <Link className="btn btn--ghost" to="/upload">{t('cta.analyze')}</Link>
                 <Link className="btn btn--quiet" to="/speak"><Icon.mic size={16} /> {t('cta.speak')}</Link>
               </div>
             </Reveal>
@@ -292,8 +292,8 @@ export default function Landing() {
               {t('cta.closingBody')}
             </p>
           </div>
-          <Link className="btn btn--lg cta-panel__btn" to="/upload?demo=1">
-            {t('cta.demo')}
+          <Link className="btn btn--lg cta-panel__btn" to="/upload">
+            {t('cta.analyze')}
             <span className="btn__sheen" aria-hidden="true" />
           </Link>
         </div>

@@ -49,6 +49,12 @@ export type StringKey =
   | 'sidebar.account'
   | 'sidebar.thisStatement'
   | 'sidebar.synthetic'
+  | 'sidebar.yourStatement'
+  | 'dash.whatNext.hint'
+  | 'chart.incomeVsSpending.hint'
+  | 'dash.spendIntensity.hint'
+  | 'chart.whereItGoes.hint'
+  | 'chart.surplusTrend.hint'
   | 'sidebar.noMoneyMoved'
   | 'sidebar.demoData'
   | 'nav.transactions'
@@ -127,7 +133,7 @@ const en: Record<StringKey, string> = {
   'cta.listen': 'Listen',
   'cta.speak': 'Speak your expense',
   'cta.stop': 'Stop',
-  'landing.headline': 'Discover what you can safely save—without risking tomorrow’s bills.',
+  'landing.headline': 'Know what’s safe to save.',
   'landing.sub':
     'Upload a statement or just say what you spent. SafeSpare protects your essential bills first, then shows what is genuinely spare.',
   'voice.title': 'Tell us what you spent',
@@ -210,12 +216,18 @@ const en: Record<StringKey, string> = {
   'page.privacy': 'Your data, your call',
 
   'empty.noAnalysis': 'No analysis yet',
-  'empty.noAnalysisBody': 'Upload a statement or try the demo statement, and this page will fill with figures calculated from it.',
+  'empty.noAnalysisBody': 'Upload a statement and this page will fill with figures calculated from it.',
   'nav.safety': 'Safety',
   'cta.newAnalysis': 'New analysis',
   'app.shortTagline': 'Spend · Protect · Grow',
   'sidebar.main': 'Analysis', 'sidebar.assist': 'Assistance', 'sidebar.account': 'Account',
   'sidebar.thisStatement': 'This statement', 'sidebar.synthetic': 'Synthetic demo data',
+  'sidebar.yourStatement': 'Your uploaded statement',
+  'dash.whatNext.hint': 'Three places you could act, with the amount at stake in each.',
+  'chart.incomeVsSpending.hint': 'Money in versus money out, month by month. Bars where spending is taller than income are months you dipped into savings.',
+  'dash.spendIntensity.hint': 'Each square is a day. Darker means you spent more that day, so clusters of dark squares show your heaviest stretches.',
+  'chart.whereItGoes.hint': 'Your spending split by category. The four largest are listed below with exact amounts.',
+  'chart.surplusTrend.hint': 'What was left after every expense each month. Above zero means you ended the month ahead; below zero means you spent more than you earned.',
   'sidebar.noMoneyMoved': 'No money moved', 'sidebar.demoData': 'Demo data',
   'nav.transactions': 'Transactions',
   'dash.transactions': 'transactions', 'dash.protectedFirst': 'Protected before anything is spared',
@@ -275,7 +287,7 @@ const hi: Dict = {
   'nav.coach': 'सहायक', 'nav.privacy': 'गोपनीयता',
   'cta.analyze': 'मेरा खर्च देखें', 'cta.demo': 'नमूना विवरण आज़माएँ',
   'cta.listen': 'सुनें', 'cta.speak': 'अपना खर्च बोलें', 'cta.stop': 'रोकें',
-  'landing.headline': 'जानें आप सुरक्षित रूप से कितना बचा सकते हैं—कल के बिलों को जोखिम में डाले बिना।',
+  'landing.headline': 'जानें कितना बचाना सुरक्षित है।',
   'landing.sub': 'विवरण अपलोड करें या बस बोलें कि आपने क्या खर्च किया। SafeSpare पहले आपके ज़रूरी बिल सुरक्षित रखता है।',
   'voice.title': 'बताइए आपने क्या खर्च किया', 'voice.prompt': 'माइक दबाएँ और राशि तथा कारण बोलें।',
   'voice.listening': 'सुन रहे हैं…', 'voice.unsupported': 'आपका ब्राउज़र सुन नहीं सकता। आप टाइप कर सकते हैं।',
@@ -327,6 +339,12 @@ const hi: Dict = {
   'app.shortTagline': 'खर्च · सुरक्षा · वृद्धि',
   'sidebar.main': 'विश्लेषण', 'sidebar.assist': 'सहायता', 'sidebar.account': 'खाता',
   'sidebar.thisStatement': 'यह विवरण', 'sidebar.synthetic': 'नमूना डेटा',
+  'sidebar.yourStatement': 'आपका अपलोड किया गया विवरण',
+  'dash.whatNext.hint': 'तीन जगहें जहाँ आप कदम उठा सकते हैं, हर एक में दाँव पर लगी राशि के साथ।',
+  'chart.incomeVsSpending.hint': 'हर महीने आया हुआ और खर्च हुआ पैसा। जिन महीनों में खर्च आय से ऊँचा है, उनमें आपने बचत में से लिया।',
+  'dash.spendIntensity.hint': 'हर वर्ग एक दिन है। गहरा रंग यानी उस दिन ज़्यादा खर्च हुआ।',
+  'chart.whereItGoes.hint': 'श्रेणी के अनुसार आपका खर्च। सबसे बड़ी चार नीचे सही राशि के साथ दी गई हैं।',
+  'chart.surplusTrend.hint': 'हर महीने सब खर्च के बाद जो बचा। शून्य से ऊपर यानी महीना बचत के साथ खत्म हुआ।',
   'sidebar.noMoneyMoved': 'कोई पैसा नहीं हटा', 'sidebar.demoData': 'नमूना डेटा',
   'nav.transactions': 'लेनदेन', 'dash.transactions': 'लेनदेन',
   'dash.protectedFirst': 'बचत से पहले सुरक्षित', 'dash.seeBreakdown': 'पूरी गणना देखें',
@@ -402,7 +420,7 @@ const bn: Dict = {
   'nav.coach': 'সহায়ক', 'nav.privacy': 'গোপনীয়তা',
   'cta.analyze': 'আমার খরচ দেখুন', 'cta.demo': 'নমুনা বিবরণী দেখুন',
   'cta.listen': 'শুনুন', 'cta.speak': 'আপনার খরচ বলুন', 'cta.stop': 'থামুন',
-  'landing.headline': 'জানুন আপনি নিরাপদে কতটা সঞ্চয় করতে পারেন—আগামীকালের বিল ঝুঁকিতে না ফেলে।',
+  'landing.headline': 'জানুন কতটা সঞ্চয় করা নিরাপদ।',
   'voice.title': 'বলুন আপনি কী খরচ করেছেন', 'voice.prompt': 'মাইক চাপুন এবং পরিমাণ ও কারণ বলুন।',
   'voice.listening': 'শুনছি…', 'voice.added': 'যোগ করা হয়েছে',
   'voice.example': 'যেমন: “আমি সবজিতে ২৫০ টাকা খরচ করেছি”',
@@ -414,7 +432,7 @@ const bn: Dict = {
 
 const ta: Dict = {
   'hero.badge': 'ஃபின்டெக் · சிக்கல் அறிக்கை 2',
-  'landing.headline': 'நாளைய கட்டணங்களை ஆபத்தில் ஆழ்த்தாமல் — நீங்கள் பாதுகாப்பாக எவ்வளவு சேமிக்கலாம் என அறியுங்கள்.',
+  'landing.headline': 'எவ்வளவு சேமிப்பது பாதுகாப்பானது என அறியுங்கள்.',
   'landing.sub': 'அறிக்கையை பதிவேற்றுங்கள் அல்லது நீங்கள் என்ன செலவழித்தீர்கள் என்று சொல்லுங்கள். SafeSpare முதலில் உங்கள் அத்தியாவசிய கட்டணங்களைப் பாதுகாக்கிறது.',
   'hero.note': 'அட்டை இல்லை · வங்கியுடன் இணைப்பு இல்லை · பணம் நகர்த்தப்படுவதில்லை',
   'hero.orbitCaption': 'பாதுகாப்பாக மீதம்', 'hero.barSpare': 'சில்லறை', 'hero.barCommitted': 'ஏற்கனவே ஒதுக்கியது',
@@ -539,7 +557,7 @@ const pa: Dict = {
 
 const ur: Dict = {
   'hero.badge': 'فِن ٹیک · مسئلہ بیان 2',
-  'landing.headline': 'جانیں آپ محفوظ طریقے سے کتنا بچا سکتے ہیں—کل کے بلوں کو خطرے میں ڈالے بغیر۔',
+  'landing.headline': 'جانیں کتنا بچانا محفوظ ہے۔',
   'landing.sub': 'اسٹیٹمنٹ اپلوڈ کریں یا بس بولیں کہ آپ نے کیا خرچ کیا۔ SafeSpare پہلے آپ کے ضروری بل محفوظ رکھتا ہے۔',
   'hero.emailLabel': 'آپ کا ای میل', 'hero.note': 'کوئی کارڈ نہیں · بینک سے کچھ منسلک نہیں · پیسہ کبھی منتقل نہیں ہوتا',
   'hero.orbitCaption': 'محفوظ طریقے سے فاضل', 'hero.barSpare': 'کھلے پیسے', 'hero.barCommitted': 'پہلے سے مختص',
@@ -615,4 +633,11 @@ export function translationCoverage(code: string): number {
 
 export function translate(code: string, key: StringKey): string {
   return TRANSLATIONS[code]?.[key] ?? en[key];
+}
+
+/** Keys with no curated translation in `code` — the set machine translation fills. */
+export function missingKeys(code: string): StringKey[] {
+  if (code === 'en') return [];
+  const dict = TRANSLATIONS[code] ?? {};
+  return (Object.keys(en) as StringKey[]).filter((key) => dict[key] === undefined);
 }

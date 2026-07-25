@@ -224,15 +224,6 @@ export default function Upload() {
           >
             {start.pending ? 'Starting…' : 'Analyze my spending'}
           </button>
-
-          <button
-            type="button"
-            className="btn btn--ghost btn--block"
-            onClick={() => void start.run(true)}
-            disabled={start.pending}
-          >
-            Try demo statement instead
-          </button>
         </div>
       </form>
     </div>

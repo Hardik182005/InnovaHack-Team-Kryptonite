@@ -156,7 +156,52 @@ def classify_transactions(transactions: Iterable[Transaction]) -> List[Transacti
         if t.category is Category.REFUND_REIMBURSEMENT:
             t.is_reimbursement = True
         out.append(t)
+    mark_pass_through(out)
     return out
+
+
+def mark_pass_through(transactions: List[Transaction]) -> List[Transaction]:
+    """Flag money that arrived and left again on the same day as a transfer.
+
+    A credit and a debit of the *identical* amount on the *same date* is money
+    passing through the account — a redemption routed onward, a payment received
+    and forwarded, a parked deposit — not income and not spending. The
+    description rules cannot catch these: the two legs are worded nothing alike
+    ("RTGSCR-...FRANKLINTEMPLETON" in, "TPT-..." out), so neither matches the
+    transfer pattern.
+
+    Leaving them in is not a cosmetic error. One real statement carried a
+    ₹25,00,000 pass-through on a ₹23,000 account; it counted as a month of
+    spending, which put that month's outflow 100x above its neighbours, which
+    made the volatility reserve ₹7,12,200, which drove Safe Spare to zero and
+    told the user they had nothing to spare. It also reported their total
+    spending as ₹26 lakh.
+
+    Deliberately strict — exact amount, exact date, each leg consumed once — so
+    that ordinary same-day activity is never swallowed. Rows the user has
+    already corrected are left alone.
+    """
+    by_key: Dict[tuple, List[Transaction]] = {}
+    for t in transactions:
+        if t.user_overridden or t.excluded or not t.is_credit:
+            continue
+        by_key.setdefault((t.date, t.amount), []).append(t)
+
+    for t in transactions:
+        if t.user_overridden or t.excluded or not t.is_debit:
+            continue
+        matches = by_key.get((t.date, t.amount))
+        if not matches:
+            continue
+        credit = matches.pop()          # consumed, so one credit pairs one debit
+        for leg in (credit, t):
+            leg.category = Category.INTERNAL_TRANSFER
+            leg.is_internal_transfer = True
+            leg.category_method = "pass_through_pair"
+            leg.category_rule = "same_day_matched_credit_and_debit"
+            leg.category_confidence = 0.9
+            leg.essentiality = Essentiality.UNKNOWN
+    return transactions
 
 
 def category_breakdown(transactions: Iterable[Transaction]) -> Dict[Category, Dict]:

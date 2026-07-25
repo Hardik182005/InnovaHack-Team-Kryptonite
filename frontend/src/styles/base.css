@@ -1887,7 +1887,10 @@ table {
   min-height: min(72vh, 620px);
 }
 
-.hero__headline { margin: 22px 0 0; max-width: 13ch; }
+/* The hero line is the first thing read, not the loudest thing on the page:
+   display-1 tops out at 74px, which turned a full sentence into a five-line
+   wall. Shorter copy plus a smaller ceiling keeps it a headline. */
+.hero__headline { margin: 22px 0 0; max-width: 15ch; font-size: clamp(34px, 4vw, 54px); }
 .hero__lede { margin-top: 22px; max-width: 44ch; }
 
 .hero__cta {

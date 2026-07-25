@@ -7,6 +7,7 @@ figure, so none can invent one (§3.7, §3.8).
 
 from __future__ import annotations
 
+import re
 from typing import Any, Dict, List
 
 from fastapi import APIRouter, Depends, Request
@@ -44,7 +45,9 @@ def coach(
     fallback = _deterministic_answer(payload.question, facts, repos, analysis)
     context = validation_context(repos, analysis)
 
-    answer, provider, offline, rejected = coach_reply(context, payload.question, fallback)
+    answer, provider, offline, rejected = coach_reply(
+        context, payload.question, fallback, facts, _coach_evidence(repos, analysis)
+    )
 
     record = AIInsight(
         analysis_id=analysis.id,
@@ -71,6 +74,43 @@ def coach(
         "disclaimer": DISCLAIMER,
         "evidence": _evidence(facts),
     }
+
+
+def _coach_evidence(repos: Repositories, analysis) -> List[Dict[str, Any]]:
+    """The largest spends, as citable rows.
+
+    Totals alone cannot answer "what is my biggest expense?" — that needs the
+    individual transactions. The prompt builder caps and redacts these, so the
+    only decision here is which rows are worth the budget: the biggest debits,
+    because those are what the questions are almost always about.
+    """
+    rows = [
+        t for t in repos.transactions.list_for_analysis(analysis.id)
+        if t.counts_toward_spending
+    ]
+    rows.sort(key=lambda t: t.amount, reverse=True)
+    return [
+        {
+            "id": t.id,
+            "date": t.date.isoformat(),
+            "amount": str(t.amount),
+            "merchant": t.normalized_merchant or t.description,
+        }
+        for t in rows[:8]
+    ]
+
+
+#: "how much can I spare / save / set aside", however the user phrases it.
+_ASKS_HOW_MUCH_SPARE = re.compile(
+    r"(?:how much|what).{0,30}\b(?:safe(?:ly)?|spare|save|set aside|put aside)\b"
+    r"|\bsafe(?:ly)? spare\b",
+    re.I,
+)
+
+
+def _rupees(value: Any) -> str:
+    """Format a stored money fact for display. Facts arrive as strings."""
+    return "₹%s" % value
 
 
 def _deterministic_answer(question: str, facts: Dict[str, Any], repos, analysis) -> str:
@@ -106,6 +146,24 @@ def _deterministic_answer(question: str, facts: Dict[str, Any], repos, analysis)
         )
     if "gym" in q or "did i use" in q or "unused" in q:
         return _usage_answer(repos, analysis)
+    # "how much can I safely spare?" is the question this whole product exists to
+    # answer, and it is the wording the Coach's own suggestion chips use — but it
+    # contains "safely spare", not the literal "safe spare", so it used to fall
+    # past every branch here and land on the generic "open Spending Intelligence"
+    # reply. Match the amount question first, and answer it with the amount.
+    asks_reason = "why" in q or "capped" in q or "limit" in q
+    if _ASKS_HOW_MUCH_SPARE.search(q) and not asks_reason:
+        amount = facts.get("safe_spare_now")
+        monthly = facts.get("safe_monthly_contribution")
+        if amount is not None:
+            answer = "You can safely spare %s right now." % _rupees(amount)
+            if monthly is not None:
+                answer += (
+                    " Over a month that works out to %s." % _rupees(monthly)
+                )
+            reason = facts.get("safe_spare_reason")
+            return "%s %s" % (answer, reason) if reason else answer
+
     if "safe spare" in q or "capped" in q or "why" in q:
         return facts.get("safe_spare_reason") or (
             "Your Safe Spare amount is what remains after protecting upcoming "

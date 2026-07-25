@@ -206,6 +206,7 @@ def _register_routers(app: FastAPI) -> None:
         leaks,
         settings_routes,
         transactions,
+        translate,
         uploads,
         voice_entry,
     )
@@ -219,6 +220,7 @@ def _register_routers(app: FastAPI) -> None:
     app.include_router(goals.router)
     app.include_router(insights.router)
     app.include_router(voice_entry.router)
+    app.include_router(translate.router)
 
 
 app = create_app()

@@ -154,12 +154,33 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
         parsed = raw;
       }
     }
-    if (!res.ok) throw ApiError.fromStatus(res.status, parsed);
+    if (!res.ok) {
+      const failure = ApiError.fromStatus(res.status, parsed);
+      forgetAnalysisIfGone(failure);
+      throw failure;
+    }
     return parsed as T;
   } catch (err) {
     throw toApiError(err);
   } finally {
     window.clearTimeout(timer);
+  }
+}
+
+/**
+ * Drop the stored analysis pointer once the backend says that analysis is gone.
+ *
+ * The backend keeps analyses in process memory only, so every container restart
+ * or redeploy destroys them all while the browser goes on holding the id in
+ * localStorage. Without this the app asks for a dead analysis on every route and
+ * renders the generic error page forever, and reloading cannot help because the
+ * dead id is exactly what survives a reload. Clearing it sends the user back to
+ * the "no analysis yet" state, which is the truth and is recoverable.
+ */
+function forgetAnalysisIfGone(err: ApiError): void {
+  if (err.code === 'ANALYSIS_NOT_FOUND' && activeAnalysisId()) {
+    setActiveAnalysisId(null);
+    clearStore();
   }
 }
 
@@ -362,6 +383,27 @@ function leaksOf(store: FixtureStore): LeaksResponse {
     map.set(id, patch as Partial<LeakFinding>);
   }
   return fixtureLeaks(map);
+}
+
+/** The subset of a goal the API will accept, named the way the API names it.
+ *
+ * `GoalRequest` is the *client's* idea of a goal and carries four fields the
+ * backend has never had — `kind`, `include_round_ups`,
+ * `include_confirmed_recovered` and `annual_return_rate` — plus `kind` where
+ * the schema says `goal_type`. `GoalRequest` on the server sets
+ * `extra="forbid"`, so posting the object wholesale was rejected every time
+ * with "some of the details supplied were not accepted" and no goal could be
+ * created at all. Send exactly the accepted fields; the rest stay client-side.
+ */
+function goalWirePayload(req: GoalRequest): Record<string, unknown> {
+  return {
+    analysis_id: req.analysis_id,
+    name: req.name,
+    goal_type: req.kind,
+    target_amount: req.target_amount,
+    target_date: req.target_date,
+    starting_principal: req.starting_principal,
+  };
 }
 
 function simulationOf(store: FixtureStore, goal: Goal): SimulationResponse {
@@ -888,9 +930,13 @@ export const api = {
   createGoal(req: GoalRequest): Promise<Goal> {
     return call(
       async () => {
-        const goal = await request<Goal>('POST', '/api/goals', req);
-        setStoredGoal(goal);
-        return goal;
+        const goal = await request<Goal>('POST', '/api/goals', goalWirePayload(req));
+        // The response carries only the fields the backend stores. Preferences
+        // like the return rate live on the client, so merge them back on or the
+        // simulation loses the rate the user just picked.
+        const merged = { ...req, ...goal };
+        setStoredGoal(merged);
+        return merged;
       },
       () => {
         const store = need(req.analysis_id);
@@ -905,9 +951,17 @@ export const api = {
   updateGoal(goalId: string, req: GoalRequest): Promise<Goal> {
     return call(
       async () => {
-        const goal = await request<Goal>('PATCH', `/api/goals/${goalId}`, req);
-        setStoredGoal(goal);
-        return goal;
+        // GoalPatch accepts only these four; analysis_id and goal_type are not
+        // patchable and would be rejected outright.
+        const goal = await request<Goal>('PATCH', `/api/goals/${goalId}`, {
+          name: req.name,
+          target_amount: req.target_amount,
+          target_date: req.target_date,
+          starting_principal: req.starting_principal,
+        });
+        const merged = { ...req, ...goal };
+        setStoredGoal(merged);
+        return merged;
       },
       () => {
         const store = need(req.analysis_id);
@@ -919,9 +973,13 @@ export const api = {
     );
   },
 
-  simulateGoal(analysisId: string, goalId: string): Promise<SimulationResponse> {
+  simulateGoal(analysisId: string, goalId: string, annualReturnRate?: number): Promise<SimulationResponse> {
     return call(
-      () => request<SimulationResponse>('POST', `/api/goals/${goalId}/simulate`, { analysis_id: analysisId }),
+      // SimulateRequest takes the projection assumptions and nothing else — the
+      // goal id in the path already identifies the analysis, and sending
+      // `analysis_id` in the body was rejected as an unexpected field.
+      () => request<SimulationResponse>('POST', `/api/goals/${goalId}/simulate`,
+        annualReturnRate === undefined ? {} : { annual_return_rate: String(annualReturnRate) }),
       () => {
         const store = need(analysisId);
         if (!store.goal || store.goal.id !== goalId) throw new ApiError('not_found');

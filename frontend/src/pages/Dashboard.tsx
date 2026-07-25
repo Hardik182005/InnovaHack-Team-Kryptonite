@@ -34,8 +34,8 @@ function Metric({ label, value, hint, tone }: {
   );
 }
 
-function Card({ icon, title, action, children }: {
-  icon: ReactNode; title: string; action?: ReactNode; children: ReactNode;
+function Card({ icon, title, hint, action, children }: {
+  icon: ReactNode; title: string; hint?: string; action?: ReactNode; children: ReactNode;
 }) {
   return (
     <section className="pcard">
@@ -44,6 +44,10 @@ function Card({ icon, title, action, children }: {
         <span className="pcard__title">{title}</span>
         {action}
       </div>
+      {/* A chart title alone says what is plotted, not what it means. The hint
+          is the one-sentence reading of it, so the card can be understood
+          without hovering a tooltip or already knowing the vocabulary. */}
+      {hint ? <p className="pcard__hint">{hint}</p> : null}
       {children}
     </section>
   );
@@ -138,7 +142,7 @@ export default function Dashboard() {
             <Metric label={t('dash.discretionary')} value={money(s.discretionary_spending, c)} />
           </div>
 
-          <Card icon={<Icon.target size={17} />} title={t('dash.whatNext')}>
+          <Card icon={<Icon.target size={17} />} title={t('dash.whatNext')} hint={t('dash.whatNext.hint')}>
             <div className="tiles">
               <Link className="tile" to="/leak-radar">
                 <span className="tile__k">{t('nav.leakRadar')}</span>
@@ -162,6 +166,7 @@ export default function Dashboard() {
           <Card
             icon={<Icon.chart size={17} />}
             title={t('chart.incomeVsSpending')}
+            hint={t('chart.incomeVsSpending.hint')}
             action={<Link className="pcard__action" to="/spending">{t('dash.viewAll')} <Icon.arrowRight size={13} /></Link>}
           >
             <ResponsiveContainer width="100%" height={215}>
@@ -178,7 +183,7 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </Card>
 
-          <Card icon={<Icon.grid size={17} />} title={t('dash.spendIntensity')}>
+          <Card icon={<Icon.grid size={17} />} title={t('dash.spendIntensity')} hint={t('dash.spendIntensity.hint')}>
             <div className="heat">
               {cells.map((level, i) => (
                 <span key={i} className={level ? `heat__cell heat__cell--${level}` : 'heat__cell'} />
@@ -194,7 +199,7 @@ export default function Dashboard() {
           </Card>
 
           <div className="grid-2">
-            <Card icon={<Icon.coins size={17} />} title={t('chart.whereItGoes')}>
+            <Card icon={<Icon.coins size={17} />} title={t('chart.whereItGoes')} hint={t('chart.whereItGoes.hint')}>
               <ResponsiveContainer width="100%" height={150}>
                 <PieChart>
                   <Pie data={series(s.charts.category_breakdown)} dataKey="value" nameKey="label"
@@ -219,7 +224,7 @@ export default function Dashboard() {
               </ul>
             </Card>
 
-            <Card icon={<Icon.chart size={17} />} title={t('chart.surplusTrend')}>
+            <Card icon={<Icon.chart size={17} />} title={t('chart.surplusTrend')} hint={t('chart.surplusTrend.hint')}>
               <ResponsiveContainer width="100%" height={205}>
                 <AreaChart data={surplus}>
                   <defs>

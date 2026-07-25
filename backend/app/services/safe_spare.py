@@ -83,12 +83,49 @@ class SafeSpareResult:
     source_transaction_ids: List[str] = field(default_factory=list)
 
 
+#: A month is treated as an outlier past this multiple of the median month.
+#: Four is deliberately loose: real spending genuinely doubles in a festival or
+#: wedding month and that volatility is exactly what the reserve should price
+#: in. What it must not price in is a one-off an order of magnitude out.
+_OUTLIER_MULTIPLE = Decimal("4")
+
+
+def _without_outlier_months(values: Sequence[Decimal]) -> List[Decimal]:
+    """Drop months so far above the median that they describe an event, not a habit.
+
+    Standard deviation is the wrong tool on its own here, because it is dominated
+    by exactly the observations that are least representative. A single ₹25 lakh
+    pass-through in one month of a ₹28,000-a-month account produced a ₹7,12,200
+    volatility reserve — larger than the account had ever held — and Safe Spare
+    came out as zero with the reason "no safe capacity". The user's actual
+    month-to-month variation was a few thousand rupees.
+
+    Trimming rather than winsorising, and only from above: an unusually *cheap*
+    month is real information about how low outflows can go, while an unusually
+    expensive one is usually a single event that will not recur. At least two
+    months are always kept, since a reserve of zero is its own kind of wrong.
+    """
+    if len(values) < 3:
+        return list(values)
+    ordered = sorted(values)
+    median = ordered[len(ordered) // 2]
+    if median <= 0:
+        return list(values)
+    ceiling = median * _OUTLIER_MULTIPLE
+    kept = [v for v in values if v <= ceiling]
+    return kept if len(kept) >= 2 else list(values)
+
+
 def _stdev(values: Sequence[Decimal]) -> Decimal:
     """Population-free sample standard deviation in Decimal.
 
     Kept in Decimal rather than `statistics.stdev` so no float rounding can leak
     into a figure that reduces someone's contribution.
     """
+    n = len(values)
+    if n < 2:
+        return ZERO
+    values = _without_outlier_months(values)
     n = len(values)
     if n < 2:
         return ZERO
@@ -243,7 +280,10 @@ def _explain(result: SafeSpareResult) -> str:
 
 
 def _fmt(value: Decimal) -> str:
-    return "$%s" % money(value)
+    # Rupees. Every statement this product reads is INR, and these strings are
+    # user-facing: a dollar sign on an Indian figure reads as a bug or, worse,
+    # as a currency conversion that never happened.
+    return "₹%s" % money(value)
 
 
 # ---------------------------------------------------------------------------

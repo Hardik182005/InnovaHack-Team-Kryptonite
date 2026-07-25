@@ -16,7 +16,7 @@ Three concerns live here:
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from fastapi import Request
 
@@ -120,6 +120,28 @@ def verified_facts(repos: Repositories, analysis: AnalysisSession) -> Dict[str, 
     totals = repos.calculations.get_state(analysis.id, STATE_RECOVERABLE, {}) or {}
     facts.update({("recoverable_" + k): v for k, v in totals.items()})
     facts["currency"] = analysis.currency
+
+    # The Safe Spare breakdown. Without it the coach knows the *answer* to "how
+    # much can I spare" but nothing about how it got there, so "why was it
+    # capped?" — the question the page most invites — could only be answered with
+    # "that figure is not available". The snapshot has carried `reason` and
+    # `limiting_factor` all along; they were simply never handed over.
+    snapshot = repos.calculations.get_safe_spare(analysis.id)
+    if snapshot is not None:
+        facts.update(
+            {
+                "safe_spare_reason": snapshot.reason,
+                "safe_spare_limiting_factor": snapshot.limiting_factor,
+                "safety_buffer": snapshot.safety_buffer,
+                "volatility_reserve": snapshot.volatility_reserve,
+                "upcoming_essential_outflows": snapshot.upcoming_essential_outflows,
+                "projected_balance_before_next_income": (
+                    snapshot.projected_balance_before_next_income
+                ),
+                "latest_verified_balance": snapshot.latest_verified_balance,
+                "expected_income": snapshot.expected_income,
+            }
+        )
     return facts
 
 
@@ -233,15 +255,43 @@ def _is_offline(payload: Optional[Dict[str, Any]]) -> bool:
 
 
 def coach_reply(
-    context: Any, question: str, fallback_answer: str
+    context: Any,
+    question: str,
+    fallback_answer: str,
+    facts: Optional[Dict[str, Any]] = None,
+    evidence_rows: Optional[Sequence[Dict[str, Any]]] = None,
 ) -> Tuple[str, Optional[str], bool, bool]:
-    """Return ``(answer, provider, generated_offline, validation_rejected)``."""
-    payload = call_ai("coach_reply", context, question)
+    """Return ``(answer, provider, generated_offline, validation_rejected)``.
+
+    `facts` is the whole point of the call. The router signature is
+    ``coach_reply(context, question, facts=None, evidence_rows=None)`` and this
+    wrapper used to pass only the first two, so the model received an empty
+    VERIFIED_BACKEND_FACTS block and truthfully answered "that figure is not
+    available" to every question — including ones whose answer the endpoint was
+    simultaneously returning to the browser in `evidence`. The coach cannot know
+    anything about the dashboard unless the figures are actually handed to it.
+    """
+    payload = call_ai("coach_reply", context, question, facts, evidence_rows)
     answer = _first_str(payload, "answer", "text", "reply", "explanation", "message")
     rejected = bool(payload.get("validation_rejected")) if payload else False
     if not answer or rejected:
         return fallback_answer, _provider_of(payload), True, rejected
-    return answer, _provider_of(payload), _is_offline(payload), rejected
+
+    offline = _is_offline(payload)
+    refusal = bool(payload.get("refusal_reason")) if payload else False
+    if offline and not refusal:
+        # The router always produces *something*, and with no provider available
+        # that something is its last-resort composer: every verified fact, joined
+        # by semicolons — "allowed round ups: 26.64; average monthly surplus:
+        # ₹6921.80; ..." — which is accurate and unreadable. `fallback_answer` is
+        # the same information written for a person to read, so it wins whenever
+        # no model actually answered.
+        #
+        # A refusal is the exception and passes through untouched: those are the
+        # §24 guardrail replies, and a deterministic fallback must never be able
+        # to talk over one.
+        return fallback_answer, _provider_of(payload), True, rejected
+    return answer, _provider_of(payload), offline, rejected
 
 
 def draft_action(

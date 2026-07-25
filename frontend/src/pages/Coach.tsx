@@ -6,6 +6,8 @@ import { api, activeAnalysisId } from '../api/client';
 import { ErrorState, NeedsAnalysis, SectionHead } from '../components/common';
 import { useMutation } from '../hooks/useResource';
 import { AppShell } from '../components/AppShell';
+import { Icon } from '../components/Icon';
+import { useDictation, useSpeaker } from '../hooks/useSpeech';
 import { useI18n } from '../i18n/I18nProvider';
 
 interface Turn {
@@ -15,10 +17,10 @@ interface Turn {
 }
 
 const SUGGESTIONS = [
+  'How much can I safely spare?',
+  'What is my biggest expense?',
   'Why was my Safe Spare capped?',
-  'Why were my round-ups limited?',
-  'Did I use the gym?',
-  'Which transaction proves the price increase?',
+  'Where is my money leaking?',
 ];
 
 export default function Coach() {
@@ -29,12 +31,22 @@ export default function Coach() {
   const [transcript, setTranscript] = useState<string | null>(null);
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [handsFree, setHandsFree] = useState(false);
+  const speaker = useSpeaker();
 
   const ask = useMutation(async (q: string) => {
     setTurns((t) => [...t, { who: 'user', text: q }]);
     const out = await api.chat({ analysis_id: analysisId as string, question: q });
     setTurns((t) => [...t, { who: 'coach', text: out.answer, offline: out.generated_offline }]);
+    // Only auto-speak when the question itself was spoken. Reading every typed
+    // reply aloud unprompted is startling in a room with other people.
+    if (handsFree) speaker.speak(out.answer);
     return out;
+  });
+
+  const dictation = useDictation((text) => {
+    setHandsFree(true);
+    void ask.run(text);
   });
 
   const speak = useMutation(async () => {
@@ -70,6 +82,16 @@ export default function Coach() {
           {turns.map((turn, i) => (
             <div key={i} className={turn.who === 'user' ? 'bubble bubble--user' : 'bubble bubble--coach'}>
               <p className="prose">{turn.text}</p>
+              {turn.who === 'coach' && speaker.supported ? (
+                <button
+                  type="button"
+                  className="chip"
+                  onClick={() => (speaker.speaking ? speaker.cancel() : speaker.speak(turn.text))}
+                  aria-label={speaker.speaking ? 'Stop reading' : 'Read this answer aloud'}
+                >
+                  {speaker.speaking ? 'Stop' : 'Listen'}
+                </button>
+              ) : null}
               {turn.offline ? <p className="micro t-muted">Answered from verified figures, no model used.</p> : null}
             </div>
           ))}
@@ -89,12 +111,28 @@ export default function Coach() {
         <form onSubmit={submit} className="row" style={{ gap: 8, marginTop: 16 }}>
           <label className="sr-only" htmlFor="coach-input">Your question</label>
           <input id="coach-input" className="input" value={question}
-                 placeholder="Ask about a figure on your dashboard"
+                 placeholder={dictation.listening ? (dictation.interim || 'Listening…') : 'Ask about a figure on your dashboard'}
                  onChange={(e) => setQuestion(e.target.value)} />
+          {dictation.supported ? (
+            <button
+              type="button"
+              className={dictation.listening ? 'btn btn--dark' : 'btn btn--ghost'}
+              onClick={() => (dictation.listening ? dictation.stop() : dictation.start())}
+              aria-pressed={dictation.listening}
+              aria-label={dictation.listening ? 'Stop listening' : 'Ask by voice'}
+            >
+              <Icon.mic size={16} />
+            </button>
+          ) : null}
           <button className="btn btn--primary" type="submit" disabled={ask.pending || !question.trim()}>
             Ask
           </button>
         </form>
+        {dictation.error ? (
+          <p className="micro t-muted" role="status">
+            The microphone could not be used ({dictation.error}). You can type instead.
+          </p>
+        ) : null}
       </div>
 
       <div className="card" style={{ marginTop: 24 }}>

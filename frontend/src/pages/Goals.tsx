@@ -44,8 +44,11 @@ export default function Goals() {
     return created;
   });
 
-  const run = useMutation(async (goalId: string) => {
-    const out = await api.simulateGoal(analysisId as string, goalId);
+  // The rate is passed in rather than read from state: a scenario chip calls
+  // setRate and simulates in the same handler, and state has not updated yet at
+  // that point, so reading `rate` here would simulate the *previous* scenario.
+  const run = useMutation(async (goalId: string, annual: string = rate) => {
+    const out = await api.simulateGoal(analysisId as string, goalId, Number.parseFloat(annual));
     setSim(out);
     return out;
   });
@@ -99,7 +102,7 @@ export default function Goals() {
                 aria-pressed={rate === s.rate}
                 onClick={() => {
                   setRate(s.rate);
-                  void run.run(goal.id);
+                  void run.run(goal.id, s.rate);
                 }}>
                 {s.label}
               </button>

@@ -271,7 +271,12 @@ class AnalysisPipeline:
             raise PipelineError(
                 409, "NOT_AWAITING_REVIEW", "This analysis is not waiting for confirmation."
             )
-        return self.run(analysis)
+        # _derive, not run: run() bails out whenever the status is still
+        # AWAITING_REVIEW and auto_confirm is false, which is exactly the state
+        # every confirmation arrives in. Delegating to it made confirming a
+        # permanent no-op, so an uploaded statement could never leave review --
+        # only demo analyses, which set auto_confirm, ever reached the dashboard.
+        return self._derive(analysis)
 
     def recalculate(self, analysis: AnalysisSession) -> AnalysisSession:
         """Re-derive everything after a user correction (§6.3).

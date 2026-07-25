@@ -136,7 +136,11 @@ export function AppShell({
             <span className="sidebar__avatar" aria-hidden="true">YOU</span>
             <span style={{ minWidth: 0 }}>
               <span className="sidebar__who" style={{ display: "block" }}>{t('sidebar.thisStatement')}</span>
-              <span className="sidebar__meta" style={{ display: "block" }}>{t('sidebar.synthetic')}</span>
+              {/* Hardcoding "Synthetic demo data" mislabelled a real uploaded
+                  statement as sample data on every page. */}
+              <span className="sidebar__meta" style={{ display: "block" }}>
+                {t(dataSource.usingFixtures ? 'sidebar.synthetic' : 'sidebar.yourStatement')}
+              </span>
             </span>
           </div>
           <span className="sidebar__chip sidebar__chip--ok">{t('sidebar.noMoneyMoved')}</span>
@@ -167,7 +171,11 @@ export function AppShell({
           <div className="topbar__right">
             {actions}
             <LanguageSwitcher compact />
-            {dataSource.mode !== 'live' ? (
+            {/* usingFixtures, not mode !== 'live': the default mode is 'auto',
+                which serves real backend data and only drops to fixtures if the
+                API is unreachable. Keying off the mode labelled every live
+                deployment "Demo data" even while it showed genuine figures. */}
+            {dataSource.usingFixtures ? (
               <span className="demo-tag">{t('sidebar.demoData')}</span>
             ) : null}
           </div>

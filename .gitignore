@@ -60,6 +60,27 @@ Acct Statement*.pdf
 hardik*.pdf
 avinash*.pdf
 
+# Debugging scratch left at the repo root: captured API responses, AWS CLI
+# output, one-off repro scripts and screenshots pasted during a session. Rooted
+# with a leading slash so package.json, tsconfig.json and friends are untouched.
+/an.json
+/cf.json
+/logs.json
+/pr.json
+/pre.json
+/r.json
+/s3.json
+/ssmres.json
+/sum.json
+/tfout.json
+/tx.json
+/repro.py
+/image*.png
+frontend/ctx.txt
+frontend/live.js
+frontend/up.js
+frontend/v.js
+
 # OS metadata
 .DS_Store
 Thumbs.db

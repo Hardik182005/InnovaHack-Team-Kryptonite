@@ -90,16 +90,25 @@ def _run_pipeline(
     settings: Settings,
     analysis_id: str,
     password: Optional[str] = None,
+    resume_after_review: bool = False,
 ) -> None:
     """Background worker. Never raises — failures are recorded on the analysis.
 
     `password` is passed by value and never persisted (§22).
+
+    `resume_after_review` picks up from a user confirmation instead of starting
+    a fresh run; the two entry points are different because `run` deliberately
+    halts at the review gate that `confirm` exists to pass.
     """
     analysis = repos.analyses.get(analysis_id)
     if analysis is None:
         return
     try:
-        AnalysisPipeline(repos, settings, password=password).run(analysis)
+        pipeline = AnalysisPipeline(repos, settings, password=password)
+        if resume_after_review:
+            pipeline.confirm(analysis)
+        else:
+            pipeline.run(analysis)
     except PipelineError as exc:
         logger.info("analysis %s failed: %s", analysis_id, exc.code)
     except Exception:  # pragma: no cover - defensive
@@ -274,7 +283,9 @@ def confirm_analysis(
         raise ApiError(
             409, "NOT_AWAITING_REVIEW", "This analysis is not waiting for confirmation."
         )
-    background.add_task(_run_pipeline, repos, settings, analysis.id)
+    background.add_task(
+        _run_pipeline, repos, settings, analysis.id, None, True
+    )
     return serializers.analysis_status(analysis)
 
 

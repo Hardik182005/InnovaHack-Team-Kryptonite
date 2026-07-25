@@ -238,7 +238,10 @@ def _explain(result: RoundUpResult, safe_monthly_contribution: Optional[Decimal]
 
 
 def _fmt(value: Decimal) -> str:
-    return "$%s" % money(value)
+    # Rupees. Every statement this product reads is INR, and these strings are
+    # user-facing: a dollar sign on an Indian figure reads as a bug or, worse,
+    # as a currency conversion that never happened.
+    return "₹%s" % money(value)
 
 
 def group_by_merchant(result: RoundUpResult) -> Dict[str, Decimal]:

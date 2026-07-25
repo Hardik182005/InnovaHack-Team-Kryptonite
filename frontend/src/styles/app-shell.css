@@ -188,15 +188,39 @@ body:has(.app) { background: var(--app-bg); }
 .panel__title { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; }
 .panel__sub { font-size: 12.5px; color: var(--app-ink-3); margin-top: 3px; line-height: 1.45; }
 
-.metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-.metric { background: var(--app-surface); border: 1px solid var(--app-line); border-radius: var(--r-app); padding: 16px 18px; }
+/* Four INR amounts of wildly different lengths sit side by side here and the
+   grid hands each the same width regardless. At a fixed 25px a lakh-scale
+   figure (₹25,83,562.00 — 13 glyphs) is wider than its own card and simply
+   spilled past the border, because a grid item's default min-width is
+   min-content and nothing was allowed to shrink. Three things fix it: the
+   track has a real minimum and wraps instead of crushing, the item may shrink
+   below its content, and the value scales with the column. */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+  gap: 14px;
+}
+.metric {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--app-surface); border: 1px solid var(--app-line);
+  border-radius: var(--r-app); padding: 16px 18px;
+}
 .metric__label {
   font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--app-ink-3); font-weight: 600;
+  line-height: 1.2;
+  /* Two lines are reserved whether or not the label needs them. "Essential
+     spending" wraps where "Total income" does not, and without this the four
+     values sit at four different heights. Translated labels wrap even more
+     readily, so this is what keeps the row aligned in every language. */
+  min-height: 2.4em;
 }
 .metric__value {
   margin-top: 8px;
-  font-size: 25px; font-weight: 660; letter-spacing: -0.03em;
+  font-size: clamp(18px, 1.9vw, 25px);
+  font-weight: 660; letter-spacing: -0.03em;
   line-height: 1.15;
   font-variant-numeric: tabular-nums;
   color: var(--app-ink);
@@ -204,7 +228,9 @@ body:has(.app) { background: var(--app-bg); }
 .metric__value--blue { color: var(--app-blue); }
 .metric__value--green { color: var(--app-green); }
 .metric__value--red { color: var(--app-red); }
-.metric__hint { margin-top: 6px; font-size: 12.5px; color: var(--app-ink-3); line-height: 1.4; }
+/* `auto` pins hints to the bottom edge, so the one card that has a hint does
+   not leave the others looking like they are missing something. */
+.metric__hint { margin-top: auto; padding-top: 8px; font-size: 12.5px; color: var(--app-ink-3); line-height: 1.4; }
 .metric__hint a { color: var(--app-blue); text-decoration: none; font-weight: 550; }
 .metric__hint a:hover { text-decoration: underline; }
 
@@ -448,6 +474,15 @@ body:has(.app) { background: var(--app-bg); }
 .pcard__head { display: flex; align-items: center; gap: 9px; margin-bottom: 15px; }
 .pcard__icon { color: var(--app-ink-3); flex: none; display: inline-flex; }
 .pcard__title { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; color: var(--app-ink); }
+/* Chart caption: readable body text, not fine print -- it is the sentence that
+   makes the chart above it legible to someone seeing it for the first time. */
+.pcard__hint {
+  margin: 2px 0 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--app-muted, #5b6577);
+  max-width: 62ch;
+}
 .pcard__action {
   margin-left: auto; font-size: 12.5px; font-weight: 600;
   color: var(--app-blue); text-decoration: none;

@@ -177,9 +177,14 @@ def _dec(facts: Dict[str, Any], key: str) -> Optional[Decimal]:
 
 
 def _money(value: Any) -> str:
-    """`$31.00`. No thousands separators — the amount validator parses this back."""
+    """`₹31.00`. No thousands separators — the amount validator parses this back.
+
+    The symbol was `$` while every statement the product reads is in rupees, so
+    composed answers put dollar signs on Indian figures. `₹` is in the validator's
+    currency class already, so nothing downstream has to change.
+    """
     amount = _q(value)
-    return "$%s" % (amount if amount is not None else "0.00")
+    return "₹%s" % (amount if amount is not None else "0.00")
 
 
 def _band(confidence: Optional[float]) -> str:
@@ -981,6 +986,28 @@ class AIRouter:
                     return True
         return False
 
+    @staticmethod
+    def _plain_text(text: str) -> str:
+        """Strip markdown a model emitted despite being told not to.
+
+        The UI renders these answers as text, so `**7,103.69**` reaches the user
+        with the asterisks visible and a heading marker turns into a stray `##`
+        mid-sentence. Asking nicely in the prompt gets this right most of the
+        time; most of the time is not good enough for something the user reads
+        on every reply, so it is also enforced here.
+        """
+        if not text:
+            return text
+        out = re.sub(r"\*\*(.+?)\*\*", r"\1", text)     # bold
+        out = re.sub(r"(?<!\w)\*(?!\s)(.+?)(?<!\s)\*(?!\w)", r"\1", out)  # italic
+        out = re.sub(r"`+", "", out)                     # code ticks
+        out = re.sub(r"(?m)^\s{0,3}#{1,6}\s*", "", out)  # headings
+        out = re.sub(r"(?m)^\s*[-*+]\s+", "", out)       # bullet markers
+        out = re.sub(r"(?m)^\s*>\s?", "", out)           # block quotes
+        # Collapse the blank lines those removals leave behind.
+        out = re.sub(r"\n{3,}", "\n\n", out)
+        return out.strip()
+
     def _self_check(
         self,
         text: str,
@@ -1529,7 +1556,7 @@ class AIRouter:
                     provider = attempt.provider
                     model_id = attempt.model
 
-        answer = self._self_check(answer, ctx)
+        answer = self._plain_text(self._self_check(answer, ctx))
         result = {
             "answer": answer,
             "citations": citations,
@@ -1557,7 +1584,15 @@ class AIRouter:
                 "Answer the question in USER_QUESTION using ONLY the values in "
                 "VERIFIED_BACKEND_FACTS and the listed evidence rows. If the answer "
                 "is not in those values, say that the figure is not available. Never "
-                "compute a new number. Never describe a service as unused."
+                "compute a new number. Never describe a service as unused.\n"
+                "Voice: warm, dry and a little funny — the friend who is good with "
+                "money, not a bank letter. One light touch per answer is plenty; "
+                "the number always comes first and stays exact. Never joke about "
+                "the user being broke, bad with money, or about a shortfall, debt "
+                "or a missed bill — money stress is the one thing that is not "
+                "funny. Be playful about spending habits, never about the person.\n"
+                "Write plain sentences. No markdown whatsoever: no *, **, #, ##, "
+                "-, bullet lists or headings. Two or three short sentences."
             ),
             verified_facts=facts,
             evidence_rows=rows,

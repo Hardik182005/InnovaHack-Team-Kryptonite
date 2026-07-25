@@ -3,7 +3,8 @@
 import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { DEFAULT_LANGUAGE, LanguageDef, findLanguage } from './languages';
-import { StringKey, translate, translationCoverage } from './strings';
+import { EN, StringKey, missingKeys, translate, translationCoverage } from './strings';
+import * as machine from './machine';
 
 const STORAGE_KEY = 'safespare.language';
 
@@ -33,6 +34,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [code, setCode] = useState<string>(initialLanguage);
   const lang = useMemo(() => findLanguage(code), [code]);
 
+  // Bumped whenever machine translations arrive. They land asynchronously,
+  // after render, so without this they would sit in the cache unseen until
+  // some unrelated state change happened to force a repaint.
+  const [revision, setRevision] = useState(0);
+  useEffect(() => machine.subscribe(() => setRevision((n) => n + 1)), []);
+
   useEffect(() => {
     // Setting these on <html> is what makes screen readers switch voice and
     // right-to-left scripts lay out correctly.
@@ -46,8 +53,31 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     }
   }, [lang]);
 
+  useEffect(() => {
+    // Ask for every key the curated dictionary lacks, in one batch, as soon as
+    // the language changes. Requesting the whole gap up front rather than
+    // per-component means the page fills in a single pass instead of visibly
+    // translating itself line by line.
+    const gaps = missingKeys(lang.code);
+    if (gaps.length === 0) return;
+    void machine.request(lang.code, gaps.map((key) => EN[key]));
+  }, [lang.code]);
+
   const setLang = useCallback((next: string) => setCode(findLanguage(next).code), []);
-  const t = useCallback((key: StringKey) => translate(lang.code, key), [lang.code]);
+
+  const t = useCallback(
+    (key: StringKey) => {
+      const curated = translate(lang.code, key);
+      // `translate` returns English when the key is missing, and that is the
+      // only case machine translation may fill: a curated string is a reviewed
+      // decision and always wins, even when it happens to match English.
+      if (curated !== EN[key]) return curated;
+      return machine.lookup(lang.code, EN[key]) ?? curated;
+    },
+    // `revision` is a real dependency -- it is what makes `t` a new function
+    // once translations arrive, which is what re-renders every consumer.
+    [lang.code, revision],
+  );
 
   const value = useMemo(
     () => ({ lang, setLang, t, coverage: translationCoverage(lang.code) }),

@@ -29,12 +29,35 @@ request_id_ctx: ContextVar[str] = ContextVar("request_id", default="-")
 _TRUE = {"1", "true", "yes", "on", "y"}
 
 
+#: What the deployment templates write into a parameter nobody has supplied a
+#: real value for. Terraform seeds every optional SSM parameter with REPLACE_ME
+#: and the container copies SSM into its environment verbatim, so these arrive
+#: looking exactly like configuration.
+#:
+#: Treating them as set is worse than having nothing at all. `OPENAI_MODEL=
+#: REPLACE_ME` does not fall through to a default — it is truthy, so every
+#: request went out asking for a model literally named REPLACE_ME and came back
+#: 404, taking the AI Coach and machine translation down with it. An unset value
+#: at least reaches a working default.
+_PLACEHOLDERS = frozenset(
+    {"replace_me", "replaceme", "change_me", "changeme", "todo", "tbd",
+     "none", "null", "unset", "xxx", "your_key_here"}
+)
+
+
+def is_placeholder(value: Optional[str]) -> bool:
+    """True for a value that is a deployment stub rather than a real setting."""
+    return value is not None and value.strip().lower() in _PLACEHOLDERS
+
+
 def _env(name: str, default: Optional[str] = None) -> Optional[str]:
     value = os.environ.get(name)
     if value is None:
         return default
     value = value.strip()
-    return value or default
+    if not value or is_placeholder(value):
+        return default
+    return value
 
 
 def _env_bool(name: str, default: bool = False) -> bool:

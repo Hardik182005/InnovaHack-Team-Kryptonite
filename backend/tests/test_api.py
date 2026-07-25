@@ -593,3 +593,62 @@ def test_demo_loads_with_no_configured_path_and_no_repo_root():
     filename, content = _load_demo_statement(Settings(demo_statement_path=""))
     assert filename == "demo_statement.csv"
     assert content and b"Transaction Date" in content
+
+
+def test_confirming_an_upload_actually_finishes_the_analysis(client, session):
+    """The review gate must be passable without auto_confirm.
+
+    `confirm` used to delegate to `run`, which returns immediately while the
+    status is AWAITING_REVIEW and auto_confirm is false -- the exact state every
+    confirmation arrives in. Uploaded statements were therefore stuck in review
+    forever and only demo analyses ever reached COMPLETED, which is why the
+    happy-path demo tests never caught it.
+    """
+    from app.api.analyses import _load_demo_statement
+    from app.config import Settings
+
+    _, content = _load_demo_statement(Settings(demo_statement_path=""))
+
+    presign = client.post(
+        "/api/uploads/presign",
+        json={
+            "filename": "statement.csv",
+            "content_type": "text/csv",
+            "size_bytes": len(content),
+        },
+        headers=session,
+    )
+    assert presign.status_code == 201, presign.text
+    upload_id = presign.json()["upload_id"]
+
+    put = client.put(
+        "/api/uploads/%s/content" % upload_id,
+        content=content,
+        headers={**session, "Content-Type": "text/csv"},
+    )
+    assert put.status_code == 200, put.text
+
+    created = client.post(
+        "/api/analyses",
+        json={"upload_id": upload_id, "consent_confirmed": True},
+        headers=session,
+    )
+    assert created.status_code == 202, created.text
+    analysis_id = created.json()["analysis_id"]
+
+    # No auto_confirm, so the pipeline must stop and wait for the user.
+    state = client.get("/api/analyses/%s/status" % analysis_id, headers=session).json()
+    assert state["state"] == "AWAITING_REVIEW", state
+
+    confirmed = client.post(
+        "/api/analyses/%s/confirm" % analysis_id, json={}, headers=session
+    )
+    assert confirmed.status_code == 200, confirmed.text
+
+    state = client.get("/api/analyses/%s/status" % analysis_id, headers=session).json()
+    assert state["state"] == "COMPLETED", state
+    assert state["progress_percent"] == 100
+
+    summary = client.get("/api/analyses/%s/summary" % analysis_id, headers=session)
+    assert summary.status_code == 200, summary.text
+    assert summary.json()["transaction_count"] > 0
