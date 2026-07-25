@@ -1,0 +1,27 @@
+# Local development stack. Production uses infra/terraform.
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: safespare-api:local
+    ports:
+      - "8000:8000"
+    env_file:
+      # Optional: the app runs fully without it, in deterministic mode.
+      - path: ./backend/.env
+        required: false
+    environment:
+      ENVIRONMENT: development
+      CORS_ALLOW_ORIGINS: http://localhost:5173
+      DEMO_MODE: "true"
+    volumes:
+      # The synthetic demo statement, mounted read-only.
+      - ./demo_data:/app/demo_data:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped

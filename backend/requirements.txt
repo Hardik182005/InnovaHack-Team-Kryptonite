@@ -1,0 +1,24 @@
+# SafeSpare AI — backend runtime dependencies.
+# The deterministic financial core (app/services, app/models) deliberately needs
+# NONE of these: it is importable and testable with the standard library alone.
+
+fastapi==0.128.8
+uvicorn[standard]==0.34.0
+pydantic==2.13.4
+python-multipart==0.0.20
+
+# Extraction (§7). pdfplumber pulls in pdfminer.six for the text layer.
+pdfplumber==0.11.8
+
+# HTTP client for AI provider adapters (§14). No provider SDK is required —
+# the adapters speak plain REST so a missing key degrades to deterministic mode.
+httpx==0.28.1
+
+# --- optional, feature-detected at runtime ---------------------------------
+# pandas + openpyxl   -> XLSX statements (§7)
+# rapidfuzz           -> faster merchant fuzzy matching (falls back to difflib)
+# sentence-transformers -> local embeddings (LOCAL_EMBEDDING_MODEL)
+# chardet             -> encoding detection (falls back to a codec ladder)
+
+# --- test / dev -------------------------------------------------------------
+pytest==8.4.2
